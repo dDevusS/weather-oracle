@@ -1,3 +1,13 @@
 spring:
   application:
     name: weather-oracle
+  datasource:
+    username: postgres
+    password: pass
+    url: jdbc:postgresql://localhost:5433/postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties.hibernate:
+      hbm2ddl.auto: validate
+      show_sql: true
+      format_sql: true
