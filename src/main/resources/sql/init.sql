@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS locations (
     id SERIAL PRIMARY KEY,
     name VARCHAR(32),
-    user_id INT REFERENCES users (id),
+    user_id INT REFERENCES users (id) ON DELETE CASCADE,
     latitude DECIMAL,
     longitude DECIMAL
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
     id VARCHAR PRIMARY KEY,
-    user_id INT REFERENCES users (id),
+    user_id INT REFERENCES users (id) ON DELETE CASCADE,
     expires_at TIMESTAMP
 );
