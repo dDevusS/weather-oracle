@@ -20,7 +20,9 @@ public class Session implements BaseEntity<String> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private Integer userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     private Timestamp expiresAt;
 }

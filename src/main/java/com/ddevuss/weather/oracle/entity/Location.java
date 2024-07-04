@@ -22,7 +22,9 @@ public class Location implements BaseEntity<Integer> {
 
     private String name;
 
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     private BigDecimal latitude;
 
