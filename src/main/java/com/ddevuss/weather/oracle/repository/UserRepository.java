@@ -17,27 +17,26 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByLoginAndPassword(String login, String password);
 
     @Modifying
-    @Query(nativeQuery = true,
-            value = "DELETE FROM users " +
-                    "WHERE login = :login " +
-                    "AND password = :password")
-    int deleteByLoginAndPassword(@Param("login") String login, @Param("password") String password);
+    @Query(value = "DELETE FROM User u " +
+                   "WHERE u.login = :login " +
+                   "AND u.password = :password")
+    int deleteByLoginAndPassword(@Param("login") String login,
+                                 @Param("password") String password);
 
     @Modifying
-    @Query(nativeQuery = true,
-    value = "UPDATE users " +
-            "SET login = :newLogin " +
-            "WHERE login = :login " +
-            "AND password = :password")
+    @Query(value = "UPDATE User u " +
+                   "SET u.login = :newLogin " +
+                   "WHERE u.login = :login " +
+                   "AND u.password = :password")
     int updateLoginByLoginAndPassword(@Param("login") String login,
-                                                 @Param("password") String password,
-                                                 @Param("newLogin") String newLogin);
+                                      @Param("password") String password,
+                                      @Param("newLogin") String newLogin);
+
     @Modifying
-    @Query(nativeQuery = true,
-            value = "UPDATE users " +
-                    "SET password = :newPassword " +
-                    "WHERE login = :login " +
-                    "AND password = :password")
+    @Query(value = "UPDATE User u " +
+                   "SET u.password = :newPassword " +
+                   "WHERE u.login = :login " +
+                   "AND u.password = :password")
     int updatePasswordByLoginAndPassword(@Param("login") String login,
                                          @Param("password") String password,
                                          @Param("newPassword") String newPassword);
