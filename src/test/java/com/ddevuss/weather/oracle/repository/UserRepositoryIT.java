@@ -1,16 +1,14 @@
 package com.ddevuss.weather.oracle.repository;
 
-import com.ddevuss.weather.oracle.annotation.IntegrationTest;
+import com.ddevuss.weather.oracle.IntegrationTestBase;
 import com.ddevuss.weather.oracle.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@IntegrationTest
 @RequiredArgsConstructor
-class UserRepositoryIT {
+class UserRepositoryIT extends IntegrationTestBase {
 
     private final UserRepository userRepository;
 

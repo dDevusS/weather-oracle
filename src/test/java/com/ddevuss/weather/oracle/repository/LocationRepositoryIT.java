@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.repository;
 
-import com.ddevuss.weather.oracle.annotation.IntegrationTest;
+import com.ddevuss.weather.oracle.IntegrationTestBase;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +10,8 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@IntegrationTest
 @RequiredArgsConstructor
-class LocationRepositoryIT {
+class LocationRepositoryIT extends IntegrationTestBase {
 
     private final LocationRepository locationRepository;
 

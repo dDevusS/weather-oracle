@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.repository;
 
-import com.ddevuss.weather.oracle.annotation.IntegrationTest;
+import com.ddevuss.weather.oracle.IntegrationTestBase;
 import com.ddevuss.weather.oracle.entity.Session;
 import com.ddevuss.weather.oracle.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +12,8 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@IntegrationTest
 @RequiredArgsConstructor
-class SessionRepositoryIT {
+class SessionRepositoryIT extends IntegrationTestBase {
 
     private final SessionRepository sessionRepository;
 
