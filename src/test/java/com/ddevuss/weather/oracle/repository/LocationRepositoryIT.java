@@ -17,7 +17,7 @@ class LocationRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findByUserId() {
-        var locations = locationRepository.findByUserId(1);
+        var locations = locationRepository.findAllByUserId(1);
 
         assertThat(locations).hasSize(2);
     }
@@ -40,7 +40,7 @@ class LocationRepositoryIT extends IntegrationTestBase {
     void save() {
         Location newLocation = Location.builder()
                 .name("Location")
-                .userId(User.builder()
+                .user(User.builder()
                         .id(1)
                         .build())
                 .latitude(BigDecimal.valueOf(40.2345))

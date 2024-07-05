@@ -24,7 +24,7 @@ public class Location implements BaseEntity<Integer> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     private BigDecimal latitude;
 

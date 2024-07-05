@@ -28,7 +28,7 @@ class SessionRepositoryIT extends IntegrationTestBase {
     @Test
     void saveSession() {
         Session newSession = Session.builder()
-                .userId(User.builder()
+                .user(User.builder()
                         .id(7)
                         .build())
                 .expiresAt(Timestamp.valueOf(LocalDateTime.now().minusMonths(1)))

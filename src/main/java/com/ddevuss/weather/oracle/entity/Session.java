@@ -22,7 +22,7 @@ public class Session implements BaseEntity<String> {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     private Timestamp expiresAt;
 }

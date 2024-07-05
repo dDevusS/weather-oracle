@@ -13,11 +13,9 @@ public interface SessionRepository extends JpaRepository<Session, String> {
     @Modifying
     @Query(value = "update Session s " +
                    "set s.expiresAt = :expiresAt " +
-                   "where s.userId.id = :userId")
+                   "where s.user.id = :userId")
     int updateExpiresTimeByUserId(Integer userId, Timestamp expiresAt);
 
-    @Query(value = "select s " +
-                   "from  Session s " +
-                   "where s.userId.id = :userId")
     Optional<Session> findByUserId(Integer userId);
+
 }
