@@ -14,9 +14,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByLoginAndPassword(String login, String password);
 
     @Modifying
-    @Query(value = "DELETE FROM User u " +
-                   "WHERE u.login = :login " +
-                   "AND u.password = :password")
     int deleteByLoginAndPassword(String login,
                                  String password);
 
@@ -37,4 +34,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int updatePasswordByLoginAndPassword(String login,
                                          String password,
                                          String newPassword);
+
 }
