@@ -18,7 +18,8 @@ public class SessionService {
 
     private final SessionRepository sessionRepository;
 
-    public Session createNewSession(Integer userId) {
+    @Transactional
+    public Session createSession(Integer userId) {
         User user = User.builder()
                 .id(userId)
                 .build();
@@ -28,7 +29,7 @@ public class SessionService {
 
     public UUID getSessionUuidByUserId(Integer userId) {
         Session session = sessionRepository.findByUserId(userId)
-                .orElse(this.createNewSession(userId));
+                .orElse(this.createSession(userId));
         return UUID.fromString(session.getId());
     }
 }
