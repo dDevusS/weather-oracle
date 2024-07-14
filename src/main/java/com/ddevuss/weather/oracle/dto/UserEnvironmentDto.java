@@ -15,5 +15,4 @@ public class UserEnvironmentDto {
 
     List<Location> locations;
 
-    UUID sessionId;
 }

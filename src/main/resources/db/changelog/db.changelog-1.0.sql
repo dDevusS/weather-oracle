@@ -15,10 +15,3 @@ CREATE TABLE IF NOT EXISTS locations (
     latitude DECIMAL,
     longitude DECIMAL
 );
-
---changeset ddevuss:3
-CREATE TABLE IF NOT EXISTS sessions (
-    id VARCHAR PRIMARY KEY,
-    user_id INT REFERENCES users (id) ON DELETE CASCADE,
-    expires_at TIMESTAMP
-);

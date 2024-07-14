@@ -19,7 +19,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
-    private final SessionService sessionService;
     private final UserReadDtoMapper userReadDtoMapper;
 
     //TODO: realize request to another service instead repository
@@ -28,12 +27,10 @@ public class UserService {
         var user = userRepository.findById(id)
                 .map(userReadDtoMapper::map)
                 .orElseThrow();
-        UUID sessionId = sessionService.getSessionUuidByUserId(user.getId());
         List<Location> locations = locationRepository.findAllByUserId(user.getId());
 
         return new UserEnvironmentDto(user.getId(),
                 user.getLogin(),
-                locations,
-                sessionId);
+                locations);
     }
 }

@@ -20,8 +20,3 @@ VALUES (1, 'Location1_User1', 1, 40.7128, -74.0060),
        (9, 'Location1_User5', 5, 52.5200, 13.4050),
        (10, 'Location2_User5', 5, 40.4168, -3.7038);
 SELECT SETVAL('locations_id_seq', (SELECT MAX(id) from locations));
-
--- inserting sessions
-INSERT INTO sessions (id, user_id, expires_at)
-VALUES ('e819b5f1-23c4-4a26-a1c0-0b37b21896f8', 1, '2024-07-04 12:00:00'),
-       ('de0b20c8-6f2e-4f8a-9ea5-2b7a58d6c1f2', 2, '2024-07-04 12:00:00');
