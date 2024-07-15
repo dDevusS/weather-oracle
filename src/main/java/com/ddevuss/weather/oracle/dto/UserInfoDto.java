@@ -8,7 +8,7 @@ import java.util.List;
 
 @Value
 @Builder
-public class UserEnvironmentDto {
+public class UserInfoDto {
 
     Integer id;
 

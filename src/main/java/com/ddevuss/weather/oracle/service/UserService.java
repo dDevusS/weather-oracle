@@ -43,11 +43,12 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public UserEnvironmentDto getUserEnvironmentById(Integer id) {
-        var user = userRepository.findById(id)
+    public UserEnvironmentDto getUserEnvironmentByLogin(String login) {
+        var user = userRepository.findByLogin(login)
                 .map(userReadDtoFromEntityMapper::entityToDto)
                 .orElseThrow();
         List<Location> locations = locationRepository.findAllByUserId(user.getId());
+
         return UserEnvironmentDto.builder()
                 .id(user.getId())
                 .login(user.getLogin())
@@ -61,6 +62,7 @@ public class UserService implements UserDetailsService {
             throw new LoginNotUniqueException();
         }
         User user = userCreateDtoToEntityMapper.dtoToEntity(userCreateDto);
+
         return userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
     }
 }
