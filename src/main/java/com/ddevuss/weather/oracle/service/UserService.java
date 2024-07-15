@@ -5,8 +5,8 @@ import com.ddevuss.weather.oracle.dto.UserEnvironmentDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
-import com.ddevuss.weather.oracle.mapper.UserCreateDtoMapper;
-import com.ddevuss.weather.oracle.mapper.UserReadDtoMapper;
+import com.ddevuss.weather.oracle.mapper.UserCreateDtoToEntityMapper;
+import com.ddevuss.weather.oracle.mapper.UserReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import com.ddevuss.weather.oracle.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -25,8 +25,8 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
-    private final UserReadDtoMapper userReadDtoMapper;
-    private final UserCreateDtoMapper userCreateDtoMapper;
+    private final UserReadDtoFromEntityMapper userReadDtoFromEntityMapper;
+    private final UserCreateDtoToEntityMapper userCreateDtoToEntityMapper;
 
     //TODO: realize request to another service instead repository
 
@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
 
     public UserEnvironmentDto getUserEnvironmentById(Integer id) {
         var user = userRepository.findById(id)
-                .map(userReadDtoMapper::entityToDto)
+                .map(userReadDtoFromEntityMapper::entityToDto)
                 .orElseThrow();
         List<Location> locations = locationRepository.findAllByUserId(user.getId());
         return UserEnvironmentDto.builder()
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserReadDto save(UserCreateDto userCreateDto) {
-        User user = userCreateDtoMapper.dtoToEntity(userCreateDto);
-        return userReadDtoMapper.entityToDto(userRepository.saveAndFlush(user));
+        User user = userCreateDtoToEntityMapper.dtoToEntity(userCreateDto);
+        return userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
     }
 }
