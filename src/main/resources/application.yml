@@ -1,4 +1,8 @@
 spring:
+  session:
+    jdbc:
+      table-name: SPRING_SESSION
+    timeout: 2h
   application:
     name: weather-oracle
   datasource:

@@ -29,6 +29,11 @@ public class SecurityConfiguration {
                         .logoutSuccessUrl("/")
                         .deleteCookies("JSESSIONID")
                 )
+                .sessionManagement(session -> session
+                        .invalidSessionUrl("/")
+                        .maximumSessions(3)
+                        .expiredUrl("/")
+                )
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
