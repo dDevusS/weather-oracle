@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
-import com.ddevuss.weather.oracle.dto.UserEnvironmentDto;
+import com.ddevuss.weather.oracle.dto.UserInfoDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
@@ -43,13 +43,13 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public UserEnvironmentDto getUserEnvironmentByLogin(String login) {
+    public UserInfoDto getUserInfoByLogin(String login) {
         var user = userRepository.findByLogin(login)
                 .map(userReadDtoFromEntityMapper::entityToDto)
                 .orElseThrow();
         List<Location> locations = locationRepository.findAllByUserId(user.getId());
 
-        return UserEnvironmentDto.builder()
+        return UserInfoDto.builder()
                 .id(user.getId())
                 .login(user.getLogin())
                 .locations(locations)
