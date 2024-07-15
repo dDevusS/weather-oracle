@@ -5,7 +5,7 @@ import com.ddevuss.weather.oracle.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserReadDtoMapper implements Mapper<UserReadDto, User> {
+public class UserReadDtoFromEntityMapper implements EntityToDtoMapper<UserReadDto, User> {
 
     @Override
     public UserReadDto entityToDto(User entity) {
