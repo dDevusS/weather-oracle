@@ -1,14 +1,13 @@
 package com.ddevuss.weather.oracle.service;
 
+import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.dto.UserInfoDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
-import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.exception.LoginNotUniqueException;
 import com.ddevuss.weather.oracle.mapper.UserCreateDtoToEntityMapper;
 import com.ddevuss.weather.oracle.mapper.UserReadDtoFromEntityMapper;
-import com.ddevuss.weather.oracle.repository.LocationRepository;
 import com.ddevuss.weather.oracle.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,11 +24,9 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final LocationRepository locationRepository;
+    private final LocationService locationService;
     private final UserReadDtoFromEntityMapper userReadDtoFromEntityMapper;
     private final UserCreateDtoToEntityMapper userCreateDtoToEntityMapper;
-
-    //TODO: realize request to another service instead repository
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -47,7 +44,7 @@ public class UserService implements UserDetailsService {
         var user = userRepository.findByLogin(login)
                 .map(userReadDtoFromEntityMapper::entityToDto)
                 .orElseThrow();
-        List<Location> locations = locationRepository.findAllByUserId(user.getId());
+        List<LocationReadDto> locations = locationService.findAllByUserId(user.getId());
 
         return UserInfoDto.builder()
                 .id(user.getId())
