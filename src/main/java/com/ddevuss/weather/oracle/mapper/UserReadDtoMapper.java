@@ -5,13 +5,13 @@ import com.ddevuss.weather.oracle.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserReadDtoMapper implements Mapper<User, UserReadDto> {
+public class UserReadDtoMapper implements Mapper<UserReadDto, User> {
 
     @Override
-    public UserReadDto map(User object) {
+    public UserReadDto entityToDto(User entity) {
         return UserReadDto.builder()
-                .id(object.getId())
-                .login(object.getLogin())
+                .id(entity.getId())
+                .login(entity.getLogin())
                 .build();
     }
 }

@@ -13,10 +13,10 @@ public class UserCreateDtoMapper implements Mapper<UserCreateDto, User> {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User map(UserCreateDto object) {
+    public User dtoToEntity(UserCreateDto dto) {
         return User.builder()
-                .login(object.getLogin())
-                .password(passwordEncoder.encode(object.getRawPassword()))
+                .login(dto.getLogin())
+                .password(passwordEncoder.encode(dto.getRawPassword()))
                 .build();
     }
 }
