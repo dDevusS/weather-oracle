@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.exception;
 
-public class LoginNotUniqException extends RuntimeException {
+public class LoginNotUniqueException extends RuntimeException {
 
-    public LoginNotUniqException() {
+    public LoginNotUniqueException() {
         super("User with this login already exists");
     }
 }
