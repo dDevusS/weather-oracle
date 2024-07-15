@@ -5,7 +5,7 @@ import com.ddevuss.weather.oracle.dto.UserEnvironmentDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
-import com.ddevuss.weather.oracle.exception.LoginNotUniqException;
+import com.ddevuss.weather.oracle.exception.LoginNotUniqueException;
 import com.ddevuss.weather.oracle.mapper.UserCreateDtoToEntityMapper;
 import com.ddevuss.weather.oracle.mapper.UserReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
@@ -58,7 +58,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserReadDto save(UserCreateDto userCreateDto) {
         if (userRepository.findByLogin(userCreateDto.getLogin()).isPresent()) {
-            throw new LoginNotUniqException();
+            throw new LoginNotUniqueException();
         }
         User user = userCreateDtoToEntityMapper.dtoToEntity(userCreateDto);
         return userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
