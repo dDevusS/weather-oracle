@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 @AllArgsConstructor
 @SessionAttributes({
-        "userEnvironment"
+        "userInfo"
 })
 @Controller("/")
 public class MainController {
@@ -25,8 +25,8 @@ public class MainController {
 
         if (!"anonymousUser".equals(authentication.getName())) {
             String login = authentication.getName();
-            UserInfoDto userEnvironment = userService.getUserInfoByLogin(login);
-            model.addAttribute("userEnvironment", userEnvironment);
+            UserInfoDto userInfo = userService.getUserInfoByLogin(login);
+            model.addAttribute("userInfo", userInfo);
         }
         return "main";
     }
