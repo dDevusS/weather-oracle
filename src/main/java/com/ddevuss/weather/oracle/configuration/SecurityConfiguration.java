@@ -1,6 +1,5 @@
 package com.ddevuss.weather.oracle.configuration;
 
-import com.ddevuss.weather.oracle.controller.LoggingController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,11 +11,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LoggingController loggingController) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers("/login", "/registration", "/").permitAll()
                         .anyRequest().authenticated()
@@ -25,7 +23,7 @@ public class SecurityConfiguration {
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
                 )
-                .logout(logoutController -> logoutController
+                .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .deleteCookies("JSESSIONID")
