@@ -5,9 +5,9 @@ import lombok.Value;
 
 @Value
 @Builder
-public class UserReadDto {
-
-    Integer id;
+public class UserCreateDto {
 
     String login;
+
+    String rawPassword;
 }

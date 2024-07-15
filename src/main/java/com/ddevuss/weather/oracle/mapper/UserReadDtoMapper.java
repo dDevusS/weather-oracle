@@ -9,6 +9,9 @@ public class UserReadDtoMapper implements Mapper<User, UserReadDto> {
 
     @Override
     public UserReadDto map(User object) {
-        return new UserReadDto(object.getId(), object.getLogin());
+        return UserReadDto.builder()
+                .id(object.getId())
+                .login(object.getLogin())
+                .build();
     }
 }
