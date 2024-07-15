@@ -21,6 +21,7 @@ public class SecurityConfiguration {
                 )
                 .formLogin(logging -> logging
                         .loginPage("/login")
+                        .usernameParameter("login")
                         .defaultSuccessUrl("/")
                 )
                 .logout(logout -> logout
