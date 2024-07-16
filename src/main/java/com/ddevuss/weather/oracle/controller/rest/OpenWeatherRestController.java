@@ -1,5 +1,6 @@
 package com.ddevuss.weather.oracle.controller.rest;
 
+import com.ddevuss.weather.oracle.dto.LocationResponseDto;
 import com.ddevuss.weather.oracle.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ public class OpenWeatherRestController {
     private final LocationService locationService;
     private final RestTemplate restTemplate;
     private final String appId;
+    private final static String KEY_FOR_APP_ID = "&appid=";
     private final static String OPEN_WEATHER_URL = "https://api.openweathermap.org";
     private final static StringBuilder stringBuilder = new StringBuilder();
 
@@ -41,15 +43,15 @@ public class OpenWeatherRestController {
     }
 
     @GetMapping("/search")
-    public String searchLocation(@RequestParam String locationName) {
+    public LocationResponseDto[] searchLocation(@RequestParam String locationName) {
         String url = stringBuilder.append(OPEN_WEATHER_URL)
                 .append(GEO_API_FRAGMENT)
                 .append(KEY_FOR_QUESTION)
                 .append(locationName)
                 .append(LIMIT_5_FOR_RESPONSE)
+                .append(KEY_FOR_APP_ID)
                 .append(appId).toString();
 
-        String response = restTemplate.getForObject(url, String.class);
-        return response;
+        return restTemplate.getForObject(url, LocationResponseDto[].class);
     }
 }
