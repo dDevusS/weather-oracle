@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Value
 @Builder
@@ -14,7 +13,7 @@ public class LocationReadDto implements Serializable {
 
     String name;
 
-    BigDecimal latitude;
+    Double latitude;
 
-    BigDecimal longitude;
+    Double longitude;
 }
