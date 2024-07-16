@@ -18,7 +18,7 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationReadDtoFromEntityMapper locationReadDtoFromEntityMapper;
 
-    public List<LocationReadDto> findAllByUserId(Integer userId) {
+    public List<LocationReadDto> findAllByUserId(Long userId) {
         return locationRepository.findAllByUserId(userId).stream()
                 .map(locationReadDtoFromEntityMapper::entityToDto)
                 .toList();
@@ -30,7 +30,7 @@ public class LocationService {
     }
 
     @Transactional
-    public void deleteById(Integer locationId) {
+    public void deleteById(Long locationId) {
         locationRepository.deleteById(locationId);
     }
 }
