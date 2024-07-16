@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 
-public interface LocationRepository extends JpaRepository<Location, Integer> {
+public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    List<Location> findAllByUserId(Integer userId);
+    List<Location> findAllByUserId(Long userId);
 
     @Modifying
-    int deleteAllByUserId(Integer userId);
+    int deleteAllByUserId(Long userId);
 
 }

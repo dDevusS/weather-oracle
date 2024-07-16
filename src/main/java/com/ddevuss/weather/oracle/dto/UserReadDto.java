@@ -7,7 +7,7 @@ import lombok.Value;
 @Builder
 public class UserReadDto {
 
-    Integer id;
+    Long id;
 
     String login;
 }

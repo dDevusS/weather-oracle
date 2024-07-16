@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Builder
 public class LocationReadDto implements Serializable {
 
-    Integer id;
+    Long id;
 
     String name;
 

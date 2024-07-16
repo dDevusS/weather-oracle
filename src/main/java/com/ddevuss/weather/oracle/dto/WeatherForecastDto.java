@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Builder
 public class WeatherForecastDto implements Serializable {
 
-    Integer locationId;
+    Long locationId;
     String locationName;
     String countryCode;
     String description;

@@ -10,10 +10,10 @@ import java.util.List;
 @Builder
 public class UserInfoDto implements Serializable {
 
-    Integer id;
+    Long id;
 
     String login;
 
-    List<LocationReadDto> locations;
+    List<WeatherForecastDto> forecasts;
 
 }
