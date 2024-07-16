@@ -71,15 +71,16 @@ public class OpenWeatherService {
                     .toString();
 
             WeatherForecastResponseDto forecastResponse = restTemplate.getForObject(url, WeatherForecastResponseDto.class);
-            forecasts.add(convertFromResponseDto(forecastResponse, location.getName()));
+            forecasts.add(convertFromResponseDto(forecastResponse, location));
         }
 
         return forecasts;
     }
 
-    private WeatherForecastDto convertFromResponseDto(WeatherForecastResponseDto response, String locationName) {
+    private WeatherForecastDto convertFromResponseDto(WeatherForecastResponseDto response, LocationReadDto location) {
         return WeatherForecastDto.builder()
-                .locationName(locationName)
+                .locationId(location.getId())
+                .locationName(location.getName())
                 .countryCode(response.getSys().getCountry())
                 .description(response.getWeather()[0].getDescription())
                 .temperature(response.getMain().getTemp())
