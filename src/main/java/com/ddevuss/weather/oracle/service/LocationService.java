@@ -28,4 +28,9 @@ public class LocationService {
     public LocationReadDto save(Location location) {
         return locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
     }
+
+    @Transactional
+    public void deleteById(Integer locationId) {
+        locationRepository.deleteById(locationId);
+    }
 }
