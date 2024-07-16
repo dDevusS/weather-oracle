@@ -16,5 +16,7 @@ spring:
       show_sql: true
       format_sql: true
 
+openweather.api.key: e2ddfdfb3e5aa91ef56467e12096117d
+
 server:
   port: 8081
