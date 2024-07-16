@@ -15,46 +15,14 @@ import java.util.List;
 @Service
 public class OpenWeatherService {
 
-//    private final RestTemplate restTemplate;
-//    private final String port;
-//    private final static String BASE_URL = "localhost:";
-//    private final static String FRAGMENT_URL = "/api/v1/search?";
-//    private final static String PARAM_KEY_LOCATION = "locationName=";
-//    private final static StringBuilder stringBuilder = new StringBuilder();
-//
-//    @Autowired
-//    public OpenWeatherService(RestTemplate restTemplate,
-//                              @Value("${server.port}") String port) {
-//        this.restTemplate = restTemplate;
-//        this.port = port;
-//    }
-//
-//    public List<LocationResponseDto> searchLocation(String locationName) {
-//        String url = stringBuilder
-//                .append(BASE_URL)
-//                .append(port)
-//                .append(FRAGMENT_URL)
-//                .append(PARAM_KEY_LOCATION)
-//                .append(locationName)
-//                .toString();
-//
-//        var response = restTemplate.getForObject(url, LocationResponseDto[].class);
-//
-//        return Arrays.stream(Objects.requireNonNull(response)).toList();
-//    }
-
     private final RestTemplate restTemplate;
     private final String appId;
     private final static String KEY_FOR_APP_ID = "&appid=";
     private final static String OPEN_WEATHER_URL = "https://api.openweathermap.org";
 
-    // http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
-
     private final static String GEO_API_FRAGMENT = "/geo/1.0/direct?";
     private final static String KEY_FOR_QUESTION = "q=";
     private final static String LIMIT_5_FOR_RESPONSE = "&limit=5";
-
-    // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
     private final static String WEATHER_API_FRAGMENT = "/data/2.5/weather?";
     private final static String KEY_FOR_LATITUDE = "lat=";
@@ -68,7 +36,9 @@ public class OpenWeatherService {
         this.appId = appId;
     }
 
-    public LocationResponseDto[] searchLocation(String locationName) {
+    // http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
+
+    public LocationResponseDto[] searchLocationByName(String locationName) {
         String url = new StringBuilder()
                 .append(OPEN_WEATHER_URL)
                 .append(GEO_API_FRAGMENT)
@@ -81,6 +51,8 @@ public class OpenWeatherService {
 
         return restTemplate.getForObject(url, LocationResponseDto[].class);
     }
+
+    // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
     public List<WeatherForecastDto> getWeatherForecast(List<LocationReadDto> locations) {
         List<WeatherForecastDto> forecasts = new ArrayList<>();
