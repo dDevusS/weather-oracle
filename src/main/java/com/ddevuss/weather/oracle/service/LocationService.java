@@ -5,6 +5,7 @@ import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +26,13 @@ public class LocationService {
     }
 
     @Transactional
+    @PreAuthorize("@securityService.hasPermissionToSaveLocation(#location)")
     public LocationReadDto save(Location location) {
         return locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
     }
 
     @Transactional
+    @PreAuthorize("@securityService.hasPermissionToDeleteLocation(#locationId)")
     public void deleteById(Long locationId) {
         locationRepository.deleteById(locationId);
     }
