@@ -6,6 +6,8 @@ import com.ddevuss.weather.oracle.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +31,12 @@ public class LoggingController {
     }
 
     @PostMapping("/registration")
-    public String registration(UserCreateDto user, String confirmRawPassword, RedirectAttributes redirectAttributes) {
-        if (!confirmRawPassword.equals(user.getRawPassword())) {
+    public String registration(@Validated UserCreateDto user,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userLogin", user.getLogin());
-            //TODO: use BindingResult . ?
-            redirectAttributes.addFlashAttribute("errorMessage", "Passwords do not match");
+            redirectAttributes.addFlashAttribute("errorMessages", bindingResult.getAllErrors());
             return "redirect:/registration";
         }
 
@@ -41,29 +44,11 @@ public class LoggingController {
             userService.save(user);
         }
         catch (LoginNotUniqueException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("NotUniqueLoginMessage", e.getMessage());
             return "redirect:/registration";
         }
 
         return "redirect:/login";
-
-//        if (result.hasErrors()) {
-//            return "authentication/registration";
-//        }
-//
-//        if (!confirmRawPassword.equals(user.getPassword())) {
-//            result.rejectValue("password", "error.user", "Passwords do not match");
-//            return "authentication/registration";
-//        }
-//
-//        try {
-//            userService.registerUser(user);
-//            redirectAttributes.addFlashAttribute("userLogin", user.getUsername());
-//            return "redirect:/login";
-//        } catch (UsernameAlreadyExistsException e) {
-//            result.rejectValue("username", "error.user", "Username already exists");
-//            return "authentication/registration";
-//        }
     }
 
 }
