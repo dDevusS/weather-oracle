@@ -13,7 +13,8 @@ public class AuthenticationAndRegistrationHandler {
     @ExceptionHandler(value = {LoginNotUniqueException.class})
     public String handleLoginNotUniqueException(LoginNotUniqueException e,
                                                 RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage",
+                "User with this login already exists");
         return "redirect:/registration";
     }
 
