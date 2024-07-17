@@ -21,7 +21,7 @@ public class OpenWeatherService {
     private final static String OPEN_WEATHER_URL = "https://api.openweathermap.org";
 
     private final static String GEO_API_FRAGMENT = "/geo/1.0/direct?";
-    private final static String KEY_FOR_QUESTION = "q=";
+    private final static String KEY_FOR_CITY_NAME = "q=";
     private final static String LIMIT_5_FOR_RESPONSE = "&limit=5";
 
     private final static String WEATHER_API_FRAGMENT = "/data/2.5/weather?";
@@ -42,7 +42,7 @@ public class OpenWeatherService {
         String url = new StringBuilder()
                 .append(OPEN_WEATHER_URL)
                 .append(GEO_API_FRAGMENT)
-                .append(KEY_FOR_QUESTION)
+                .append(KEY_FOR_CITY_NAME)
                 .append(locationName)
                 .append(LIMIT_5_FOR_RESPONSE)
                 .append(KEY_FOR_APP_ID)
