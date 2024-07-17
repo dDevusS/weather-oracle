@@ -47,7 +47,12 @@ public class MainController {
 
     @GetMapping("location/search")
     public String searchLocation(Model model,
-                                 @RequestParam String locationName) {
+                                 @RequestParam(required = false) String locationName) {
+        if (locationName == null || locationName.isBlank()) {
+            return "redirect:/";
+        }
+
+        locationName = locationName.trim();
         LocationResponseDto[] locations = openWeatherService.searchLocationByName(locationName);
         model.addAttribute("locations", locations);
         return "searching";
@@ -56,11 +61,10 @@ public class MainController {
     @PostMapping("location/save")
     public String saveLocation(@ModelAttribute("location") LocationResponseDto locationResponseDto,
                                @SessionAttribute("userInfo") UserSessionInfoDto userInfo) {
-        //TODO: checking for authorization for operation
-
         locationService.save(Location.builder()
                 .user(User.builder()
                         .id(userInfo.getId())
+                        .login(userInfo.getLogin())
                         .build())
                 .name(locationResponseDto.getName())
                 .latitude(locationResponseDto.getLat())
@@ -72,8 +76,6 @@ public class MainController {
 
     @PostMapping("location/delete")
     public String deleteLocation(Long locationId) {
-        //TODO: checking for authorization for operation
-
         locationService.deleteById(locationId);
         return "redirect:/";
     }
