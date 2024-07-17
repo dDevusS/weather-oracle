@@ -1,7 +1,6 @@
 package com.ddevuss.weather.oracle.controller;
 
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
-import com.ddevuss.weather.oracle.exception.LoginNotUniqueException;
 import com.ddevuss.weather.oracle.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -40,14 +39,7 @@ public class LoggingController {
             return "redirect:/registration";
         }
 
-        try {
-            userService.save(user);
-        }
-        catch (LoginNotUniqueException e) {
-            redirectAttributes.addFlashAttribute("NotUniqueLoginMessage", e.getMessage());
-            return "redirect:/registration";
-        }
-
+        userService.save(user);
         return "redirect:/login";
     }
 
