@@ -49,7 +49,9 @@ public class MainController {
     public String searchLocation(Model model,
                                  @RequestParam(required = false) String locationName) {
         if (locationName == null || locationName.isBlank()) {
-            return "redirect:/";
+            model.addAttribute("blankParameterWarning",
+                    "Name of location was empty.");
+            return "searching";
         }
 
         locationName = locationName.trim();
