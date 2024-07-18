@@ -20,3 +20,12 @@ openweather.api.key: e2ddfdfb3e5aa91ef56467e12096117d
 
 server:
   port: 8081
+
+logging:
+  file:
+    name: log-note.log
+    path: /
+  level:
+    org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: OFF
+    com.ddevuss.weather.oracle: INFO
+    root: warn
