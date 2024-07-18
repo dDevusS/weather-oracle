@@ -4,6 +4,7 @@ import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.LocationResponseDto;
 import com.ddevuss.weather.oracle.dto.WeatherForecastDto;
 import com.ddevuss.weather.oracle.dto.WeatherForecastResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class OpenWeatherService {
 
@@ -36,8 +38,6 @@ public class OpenWeatherService {
         this.appId = appId;
     }
 
-    // http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}
-
     public LocationResponseDto[] searchLocationByName(String locationName) {
         String url = new StringBuilder()
                 .append(OPEN_WEATHER_URL)
@@ -49,10 +49,16 @@ public class OpenWeatherService {
                 .append(appId)
                 .toString();
 
-        return restTemplate.getForObject(url, LocationResponseDto[].class);
+        try {
+            return restTemplate.getForObject(url, LocationResponseDto[].class);
+        }
+        catch (Exception e) {
+            String templateUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}";
+            log.error("Bad response with this url: {}", url);
+            log.error("Request template for searchLocationByName: {}", templateUrl);
+            throw e;
+        }
     }
-
-    // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
 
     public List<WeatherForecastDto> getWeatherForecast(List<LocationReadDto> locations) {
         List<WeatherForecastDto> forecasts = new ArrayList<>();
@@ -70,8 +76,16 @@ public class OpenWeatherService {
                     .append(UNITS_MEASUREMENT)
                     .toString();
 
-            WeatherForecastResponseDto forecastResponse = restTemplate.getForObject(url, WeatherForecastResponseDto.class);
-            forecasts.add(convertFromResponseDto(forecastResponse, location));
+            try {
+                WeatherForecastResponseDto forecastResponse = restTemplate.getForObject(url, WeatherForecastResponseDto.class);
+                forecasts.add(convertFromResponseDto(forecastResponse, location));
+            }
+            catch (Exception e) {
+                String templateUrl = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}";
+                log.error("Bad response with this url: {}", url);
+                log.error("Request template for getWeatherForecast: {}", templateUrl);
+                throw e;
+            }
         }
 
         return forecasts;
