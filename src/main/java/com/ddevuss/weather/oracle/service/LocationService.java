@@ -2,6 +2,7 @@ package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.entity.Location;
+import com.ddevuss.weather.oracle.exception.DuplicatedLocationException;
 import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,12 @@ public class LocationService {
     @Transactional
     @PreAuthorize("@securityService.hasPermissionToSaveLocation(#location)")
     public void save(Location location) {
+        locationRepository.findByUserIdAndLocationLatitudeAndLocationLongitude(location.getUser().getId(),
+                location.getLatitude(),
+                location.getLongitude()).ifPresent(existingLocation -> {
+            throw new DuplicatedLocationException();
+        });
+
         locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
     }
 
