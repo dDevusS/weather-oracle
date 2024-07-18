@@ -25,23 +25,23 @@ public class RestTemplateExceptionHandler implements ResponseErrorHandler {
         var statusCode = response.getStatusCode();
 
         if (statusCode == HttpStatus.BAD_REQUEST) {
-            log.error("Bad request exception to API server");
+            log.error("400 Bad request exception to API server");
             throw new BadRequestApiServerException();
         }
         else if (statusCode == HttpStatus.NOT_FOUND) {
-            log.error("Not found exception from API server");
+            log.error("404 Not found exception from API server");
             throw new BadRequestApiServerException();
         }
         else if (statusCode == HttpStatus.UNAUTHORIZED) {
-            log.error("Unauthorized exception from API server");
+            log.error("401 Unauthorized exception from API server");
             throw new BadRequestApiServerException();
         }
         else if (statusCode == HttpStatus.TOO_MANY_REQUESTS) {
-            log.warn("Too many requests exception to API server");
+            log.warn("429 Too many requests exception to API server");
             throw new QuotaFinishException();
         }
         else if (statusCode.is5xxServerError()) {
-            log.error("Server error exception from API server");
+            log.error("5xx Server error exception from API server");
             throw new ApiServerErrorException();
         }
     }
