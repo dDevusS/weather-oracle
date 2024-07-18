@@ -3,10 +3,12 @@ package com.ddevuss.weather.oracle.controller.exceptionHandler;
 import com.ddevuss.weather.oracle.exception.ApiServerErrorException;
 import com.ddevuss.weather.oracle.exception.BadRequestApiServerException;
 import com.ddevuss.weather.oracle.exception.QuotaFinishException;
+import org.springframework.core.annotation.Order;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+@Order(2)
 @ControllerAdvice
 public class OpenWeatherApiExceptionHandler {
 
@@ -30,4 +32,5 @@ public class OpenWeatherApiExceptionHandler {
                 "Something went wrong due to error on API server provided by openweathermap.org Please try again later.");
         return "error";
     }
+
 }
