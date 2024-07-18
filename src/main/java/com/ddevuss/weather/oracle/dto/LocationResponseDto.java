@@ -1,13 +1,11 @@
 package com.ddevuss.weather.oracle.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -16,9 +14,6 @@ import java.util.Map;
 public class LocationResponseDto implements Serializable {
 
     String name;
-
-    @JsonProperty("local_names")
-    Map<String, String> localNames;
 
     Double lat;
 
