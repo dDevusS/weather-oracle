@@ -3,7 +3,7 @@ package com.ddevuss.weather.oracle.service;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.UserInfoDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
-import com.ddevuss.weather.oracle.dto.WeatherForecastDto;
+import com.ddevuss.weather.oracle.dto.api.WeatherForecastDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

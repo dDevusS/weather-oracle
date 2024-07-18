@@ -1,9 +1,9 @@
 package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
-import com.ddevuss.weather.oracle.dto.LocationResponseDto;
-import com.ddevuss.weather.oracle.dto.WeatherForecastDto;
-import com.ddevuss.weather.oracle.dto.WeatherForecastResponseDto;
+import com.ddevuss.weather.oracle.dto.api.LocationResponseDto;
+import com.ddevuss.weather.oracle.dto.api.WeatherForecastDto;
+import com.ddevuss.weather.oracle.dto.api.WeatherForecastResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

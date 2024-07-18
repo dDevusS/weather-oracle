@@ -1,5 +1,6 @@
 package com.ddevuss.weather.oracle.dto;
 
+import com.ddevuss.weather.oracle.dto.api.WeatherForecastDto;
 import lombok.Builder;
 import lombok.Value;
 

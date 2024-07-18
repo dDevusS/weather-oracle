@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.controller;
 
-import com.ddevuss.weather.oracle.dto.LocationResponseDto;
 import com.ddevuss.weather.oracle.dto.UserInfoDto;
 import com.ddevuss.weather.oracle.dto.UserSessionInfoDto;
+import com.ddevuss.weather.oracle.dto.api.LocationResponseDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.exception.DuplicatedLocationException;

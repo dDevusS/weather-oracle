@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.dto;
+package com.ddevuss.weather.oracle.dto.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
