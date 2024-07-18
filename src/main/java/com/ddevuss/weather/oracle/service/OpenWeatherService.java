@@ -38,7 +38,7 @@ public class OpenWeatherService {
         this.appId = appId;
     }
 
-    public LocationResponseDto[] searchLocationByName(String locationName) {
+    public LocationResponseDto[] searchLocationsByName(String locationName) {
         String url = new StringBuilder()
                 .append(OPEN_WEATHER_URL)
                 .append(GEO_API_FRAGMENT)
