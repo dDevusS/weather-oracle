@@ -27,8 +27,8 @@ public class LocationService {
 
     @Transactional
     @PreAuthorize("@securityService.hasPermissionToSaveLocation(#location)")
-    public LocationReadDto save(Location location) {
-        return locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
+    public void save(Location location) {
+        locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
     }
 
     @Transactional
