@@ -10,9 +10,7 @@ import java.util.List;
 @Builder
 public class UserInfoDto implements Serializable {
 
-    Long id;
-
-    String login;
+    UserReadDto user;
 
     List<ForecastDto> forecasts;
 

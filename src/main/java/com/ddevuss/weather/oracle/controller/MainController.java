@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.controller;
 
 import com.ddevuss.weather.oracle.dto.UserInfoDto;
-import com.ddevuss.weather.oracle.dto.UserSessionInfoDto;
+import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
@@ -40,11 +40,7 @@ public class MainController {
             UserInfoDto userInfo = mainService.getUserInfoByLogin(login);
 
             model.addAttribute("forecasts", userInfo.getForecasts());
-            model.addAttribute("userInfo",
-                    UserSessionInfoDto.builder()
-                            .id(userInfo.getId())
-                            .login(userInfo.getLogin())
-                            .build());
+            model.addAttribute("userInfo", userInfo.getUser());
         }
 
         return "main";
@@ -73,7 +69,7 @@ public class MainController {
     public String saveLocation(Model model,
                                @ModelAttribute("locationName") String locationName,
                                @ModelAttribute("location") LocationApiResponseDto locationResponseDto,
-                               @SessionAttribute("userInfo") UserSessionInfoDto userInfo) {
+                               @SessionAttribute("userInfo") UserReadDto userInfo) {
         try {
             locationService.save(Location.builder()
                     .user(User.builder()

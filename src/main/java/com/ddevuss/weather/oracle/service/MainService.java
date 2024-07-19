@@ -23,8 +23,7 @@ public class MainService {
         List<ForecastDto> forecasts = openWeatherService.getWeatherForecast(locations);
 
         return UserInfoDto.builder()
-                .id(user.getId())
-                .login(user.getLogin())
+                .user(user)
                 .forecasts(forecasts)
                 .build();
     }
