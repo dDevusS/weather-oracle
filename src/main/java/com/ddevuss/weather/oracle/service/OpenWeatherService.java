@@ -1,9 +1,9 @@
 package com.ddevuss.weather.oracle.service;
 
+import com.ddevuss.weather.oracle.dto.ForecastDto;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
-import com.ddevuss.weather.oracle.dto.api.LocationResponseDto;
-import com.ddevuss.weather.oracle.dto.api.WeatherForecastDto;
-import com.ddevuss.weather.oracle.dto.api.WeatherForecastResponseDto;
+import com.ddevuss.weather.oracle.dto.api.ForecastApiResponseDto;
+import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class OpenWeatherService {
         this.appId = appId;
     }
 
-    public LocationResponseDto[] searchLocationsByName(String locationName) {
+    public LocationApiResponseDto[] searchLocationsByName(String locationName) {
         String url = new StringBuilder()
                 .append(OPEN_WEATHER_URL)
                 .append(GEO_API_FRAGMENT)
@@ -50,7 +50,7 @@ public class OpenWeatherService {
                 .toString();
 
         try {
-            return restTemplate.getForObject(url, LocationResponseDto[].class);
+            return restTemplate.getForObject(url, LocationApiResponseDto[].class);
         }
         catch (Exception e) {
             String templateUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}";
@@ -60,8 +60,8 @@ public class OpenWeatherService {
         }
     }
 
-    public List<WeatherForecastDto> getWeatherForecast(List<LocationReadDto> locations) {
-        List<WeatherForecastDto> forecasts = new ArrayList<>();
+    public List<ForecastDto> getWeatherForecast(List<LocationReadDto> locations) {
+        List<ForecastDto> forecasts = new ArrayList<>();
 
         for (LocationReadDto location : locations) {
             String url = new StringBuilder()
@@ -77,7 +77,7 @@ public class OpenWeatherService {
                     .toString();
 
             try {
-                WeatherForecastResponseDto forecastResponse = restTemplate.getForObject(url, WeatherForecastResponseDto.class);
+                ForecastApiResponseDto forecastResponse = restTemplate.getForObject(url, ForecastApiResponseDto.class);
                 forecasts.add(convertFromResponseDto(forecastResponse, location));
             }
             catch (Exception e) {
@@ -91,8 +91,8 @@ public class OpenWeatherService {
         return forecasts;
     }
 
-    private WeatherForecastDto convertFromResponseDto(WeatherForecastResponseDto response, LocationReadDto location) {
-        return WeatherForecastDto.builder()
+    private ForecastDto convertFromResponseDto(ForecastApiResponseDto response, LocationReadDto location) {
+        return ForecastDto.builder()
                 .locationId(location.getId())
                 .locationName(location.getName())
                 .countryCode(response.getSys().getCountry())

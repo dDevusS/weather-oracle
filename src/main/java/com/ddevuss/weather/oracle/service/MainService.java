@@ -1,9 +1,9 @@
 package com.ddevuss.weather.oracle.service;
 
+import com.ddevuss.weather.oracle.dto.ForecastDto;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.UserInfoDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
-import com.ddevuss.weather.oracle.dto.api.WeatherForecastDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class MainService {
     public UserInfoDto getUserInfoByLogin(String login) {
         UserReadDto user = userService.findByLogin(login);
         List<LocationReadDto> locations = locationService.findAllByUserId(user.getId());
-        List<WeatherForecastDto> forecasts = openWeatherService.getWeatherForecast(locations);
+        List<ForecastDto> forecasts = openWeatherService.getWeatherForecast(locations);
 
         return UserInfoDto.builder()
                 .id(user.getId())

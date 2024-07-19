@@ -1,6 +1,5 @@
 package com.ddevuss.weather.oracle.dto;
 
-import com.ddevuss.weather.oracle.dto.api.WeatherForecastDto;
 import lombok.Builder;
 import lombok.Value;
 
@@ -15,6 +14,6 @@ public class UserInfoDto implements Serializable {
 
     String login;
 
-    List<WeatherForecastDto> forecasts;
+    List<ForecastDto> forecasts;
 
 }

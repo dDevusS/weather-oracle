@@ -2,10 +2,10 @@ package com.ddevuss.weather.oracle.controller;
 
 import com.ddevuss.weather.oracle.dto.UserInfoDto;
 import com.ddevuss.weather.oracle.dto.UserSessionInfoDto;
-import com.ddevuss.weather.oracle.dto.api.LocationResponseDto;
+import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
-import com.ddevuss.weather.oracle.exception.DuplicatedLocationException;
+import com.ddevuss.weather.oracle.exception.NotUniqueLocationException;
 import com.ddevuss.weather.oracle.service.LocationService;
 import com.ddevuss.weather.oracle.service.MainService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
@@ -63,7 +63,7 @@ public class MainController {
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("locationName", locationName);
         locationName = locationName.trim();
-        LocationResponseDto[] locations = openWeatherService.searchLocationsByName(locationName);
+        LocationApiResponseDto[] locations = openWeatherService.searchLocationsByName(locationName);
         model.addAttribute("locations", locations);
         return "searching";
     }
@@ -72,7 +72,7 @@ public class MainController {
     @PostMapping("location/save")
     public String saveLocation(Model model,
                                @ModelAttribute("locationName") String locationName,
-                               @ModelAttribute("location") LocationResponseDto locationResponseDto,
+                               @ModelAttribute("location") LocationApiResponseDto locationResponseDto,
                                @SessionAttribute("userInfo") UserSessionInfoDto userInfo) {
         try {
             locationService.save(Location.builder()
@@ -85,7 +85,7 @@ public class MainController {
                     .longitude(locationResponseDto.getLon())
                     .build());
         }
-        catch (DuplicatedLocationException e) {
+        catch (NotUniqueLocationException e) {
             String encodedLocationName = URLEncoder.encode(locationName, StandardCharsets.UTF_8);
             String encodedErrorMessage = URLEncoder.encode("This location already exists", StandardCharsets.UTF_8);
             return "redirect:/location/search?locationName=" + encodedLocationName + "&errorMessage=" + encodedErrorMessage;

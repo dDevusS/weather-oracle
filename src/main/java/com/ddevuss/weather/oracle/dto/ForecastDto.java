@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.dto.api;
+package com.ddevuss.weather.oracle.dto;
 
 import lombok.Builder;
 import lombok.Value;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Value
 @Builder
-public class WeatherForecastDto implements Serializable {
+public class ForecastDto implements Serializable {
 
     Long locationId;
     String locationName;
