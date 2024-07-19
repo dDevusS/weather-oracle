@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.controller.exceptionHandler;
 
-import com.ddevuss.weather.oracle.exception.ApiServerErrorException;
-import com.ddevuss.weather.oracle.exception.BadRequestApiServerException;
-import com.ddevuss.weather.oracle.exception.QuotaFinishException;
+import com.ddevuss.weather.oracle.exception.api.ApiServerErrorException;
+import com.ddevuss.weather.oracle.exception.api.BadRequestApiServerException;
+import com.ddevuss.weather.oracle.exception.api.QuotaApiFinishException;
 import org.springframework.core.annotation.Order;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,7 +19,7 @@ public class OpenWeatherApiExceptionHandler {
         return "error";
     }
 
-    @ExceptionHandler(value = QuotaFinishException.class)
+    @ExceptionHandler(value = QuotaApiFinishException.class)
     public String handleQuotaFinishException(Model model) {
         model.addAttribute("errorMessage",
                 "Unfortunately, quota has been reached. Please, wait a minute and try again.");

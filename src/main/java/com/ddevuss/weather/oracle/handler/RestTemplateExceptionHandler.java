@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.handler;
 
-import com.ddevuss.weather.oracle.exception.ApiServerErrorException;
-import com.ddevuss.weather.oracle.exception.BadRequestApiServerException;
-import com.ddevuss.weather.oracle.exception.QuotaFinishException;
+import com.ddevuss.weather.oracle.exception.api.ApiServerErrorException;
+import com.ddevuss.weather.oracle.exception.api.BadRequestApiServerException;
+import com.ddevuss.weather.oracle.exception.api.QuotaApiFinishException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
@@ -38,7 +38,7 @@ public class RestTemplateExceptionHandler implements ResponseErrorHandler {
         }
         else if (statusCode == HttpStatus.TOO_MANY_REQUESTS) {
             log.warn("429 Too many requests exception to API server");
-            throw new QuotaFinishException();
+            throw new QuotaApiFinishException();
         }
         else if (statusCode.is5xxServerError()) {
             log.error("5xx Server error exception from API server");
