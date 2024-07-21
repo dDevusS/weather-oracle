@@ -1,46 +1,39 @@
 package com.ddevuss.weather.oracle.controller;
 
-import com.ddevuss.weather.oracle.dto.UserInfoDto;
-import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.exception.NotUniqueLocationException;
 import com.ddevuss.weather.oracle.service.LocationService;
-import com.ddevuss.weather.oracle.service.MainService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @AllArgsConstructor
-@SessionAttributes({
-        "userInfo"
-})
 @Controller("/")
 public class MainController {
 
-    private final MainService mainService;
     private final LocationService locationService;
     private final OpenWeatherService openWeatherService;
 
     @GetMapping
     public String mainPage(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if (!"anonymousUser".equals(authentication.getName())) {
-            String login = authentication.getName();
-            UserInfoDto userInfo = mainService.getUserInfoByLogin(login);
-
-            model.addAttribute("forecasts", userInfo.getForecasts());
-            model.addAttribute("userInfo", userInfo.getUser());
+        if (!"anonymousUser".equals(login)) {
+            var locations = locationService.findAllByUserLogin(login);
+            model.addAttribute("forecasts",
+                    openWeatherService.getWeatherForecast(locations));
         }
 
         return "main";
@@ -68,13 +61,13 @@ public class MainController {
     @PostMapping("location/save")
     public String saveLocation(Model model,
                                @ModelAttribute("locationName") String locationName,
-                               @ModelAttribute("location") LocationApiResponseDto locationResponseDto,
-                               @SessionAttribute("userInfo") UserReadDto userInfo) {
+                               @ModelAttribute("location") LocationApiResponseDto locationResponseDto) {
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+
         try {
             locationService.save(Location.builder()
                     .user(User.builder()
-                            .id(userInfo.getId())
-                            .login(userInfo.getLogin())
+                            .login(login)
                             .build())
                     .name(locationResponseDto.getName())
                     .latitude(locationResponseDto.getLat())
