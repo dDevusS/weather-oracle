@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
-    List<Location> findAllByUserId(Long userId);
-
     @Modifying
     int deleteAllByUserId(Long userId);
 
@@ -21,4 +19,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
                    "and  l.longitude = :longitude")
     Optional<Location> findByUserIdAndLocationLatitudeAndLocationLongitude(Long userId, Double latitude, Double longitude);
 
+    List<Location> findAllByUserLogin(String login);
 }
