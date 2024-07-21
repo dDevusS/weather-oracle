@@ -24,6 +24,8 @@ public class ForecastApiResponseDto {
     public static class WeatherDescription {
 
         String description;
+        
+        String icon;
     }
 
     @Data

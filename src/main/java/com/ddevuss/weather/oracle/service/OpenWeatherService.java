@@ -31,6 +31,9 @@ public class OpenWeatherService {
     private final static String KEY_FOR_LONGITUDE = "&lon=";
     private final static String UNITS_MEASUREMENT = "&units=metric";
 
+    private final static String ICON_URL_PATH = "/img/weather_ico/";
+    private final static String ICON_SUFFIX = ".png";
+
     @Autowired
     public OpenWeatherService(RestTemplate restTemplate,
                               @Value("${openweather.api.key}") String appId) {
@@ -96,12 +99,17 @@ public class OpenWeatherService {
                 .locationId(location.getId())
                 .locationName(location.getName())
                 .countryCode(response.getSys().getCountry())
+                .iconUrl(createIconUrl(response))
                 .description(response.getWeather()[0].getDescription())
                 .temperature(response.getMain().getTemp())
                 .feelsLikeTemperature(response.getMain().getFeelsLike())
                 .pressure(response.getMain().getPressure())
                 .humidity(response.getMain().getHumidity())
                 .build();
+    }
+
+    private String createIconUrl(ForecastApiResponseDto response) {
+        return ICON_URL_PATH + response.getWeather()[0].getIcon() + ICON_SUFFIX;
     }
 
 }
