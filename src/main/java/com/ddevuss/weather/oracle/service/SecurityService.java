@@ -1,8 +1,6 @@
 package com.ddevuss.weather.oracle.service;
 
-import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
-import com.ddevuss.weather.oracle.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecurityService {
 
-    private final UserRepository userRepository;
     private final LocationRepository locationRepository;
 
     public boolean hasPermissionToDeleteLocation(Long locationId) {
@@ -21,8 +18,4 @@ public class SecurityService {
                 .orElseThrow();
     }
 
-    public boolean hasPermissionToSaveLocation(Location location) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        return login.equals(location.getUser().getLogin());
-    }
 }
