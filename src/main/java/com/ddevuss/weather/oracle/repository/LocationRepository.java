@@ -1,11 +1,12 @@
 package com.ddevuss.weather.oracle.repository;
 
 import com.ddevuss.weather.oracle.entity.Location;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
@@ -19,5 +20,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
                    "and  l.longitude = :longitude")
     Optional<Location> findByUserIdAndLocationLatitudeAndLocationLongitude(Long userId, Double latitude, Double longitude);
 
-    List<Location> findAllByUserLogin(String login);
+    Slice<Location> findAllByUserLogin(String login, Pageable pageable);
 }
