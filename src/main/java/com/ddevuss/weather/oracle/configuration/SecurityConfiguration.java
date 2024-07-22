@@ -20,6 +20,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers("/login",
                                 "/registration",
+                                "/forecast",
                                 "/",
                                 "error",
                                 "/css/**",
@@ -31,17 +32,17 @@ public class SecurityConfiguration {
                 .formLogin(logging -> logging
                         .loginPage("/login")
                         .usernameParameter("login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/forecast")
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/forecast")
                         .deleteCookies("JSESSIONID")
                 )
                 .sessionManagement(session -> session
-                        .invalidSessionUrl("/")
+                        .invalidSessionUrl("/forecast")
                         .maximumSessions(3)
-                        .expiredUrl("/")
+                        .expiredUrl("/forecast")
                 )
                 .csrf(AbstractHttpConfigurer::disable);
 

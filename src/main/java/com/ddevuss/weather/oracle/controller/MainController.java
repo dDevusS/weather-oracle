@@ -17,18 +17,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @AllArgsConstructor
-@Controller("/")
+@Controller
 public class MainController {
 
     private final LocationService locationService;
     private final OpenWeatherService openWeatherService;
 
-    @GetMapping
+    @GetMapping("/")
+    public String redirectToMainPage() {
+        return "redirect:/forecast";
+    }
+
+    @GetMapping("/forecast")
     public String mainPage(Model model,
                            @RequestParam(required = false) Integer page) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -50,7 +56,7 @@ public class MainController {
         return "main";
     }
 
-    @GetMapping("location/search")
+    @GetMapping("/location/search")
     public String searchLocation(Model model,
                                  @RequestParam(required = false) String locationName,
                                  @RequestParam(required = false) String errorMessage) {
@@ -69,10 +75,11 @@ public class MainController {
     }
 
     @SneakyThrows
-    @PostMapping("location/save")
+    @PostMapping("/location/save")
     public String saveLocation(Model model,
                                @ModelAttribute("locationName") String locationName,
-                               @ModelAttribute("location") LocationApiResponseDto locationResponseDto) {
+                               @ModelAttribute("location") LocationApiResponseDto locationResponseDto,
+                               RedirectAttributes redirectAttributes) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
 
         try {
@@ -86,20 +93,21 @@ public class MainController {
                     .build());
         }
         catch (NotUniqueLocationException e) {
+            redirectAttributes.addFlashAttribute("duplicatedLocation", locationResponseDto);
             String encodedLocationName = URLEncoder.encode(locationName, StandardCharsets.UTF_8);
             String encodedErrorMessage = URLEncoder.encode("This location already exists", StandardCharsets.UTF_8);
             return "redirect:/location/search?locationName=" + encodedLocationName + "&errorMessage=" + encodedErrorMessage;
         }
 
-        return "redirect:/";
+        return "redirect:/forecast";
     }
 
-    @PostMapping("location/delete")
+    @PostMapping("/location/delete")
     public String deleteLocation(Long locationId, Integer numberObjects, Integer page) {
         if (numberObjects == 1 && page != 0) {
             page--;
         }
         locationService.deleteById(locationId);
-        return "redirect:/?page=" + page;
+        return "redirect:/forecast?page=" + page;
     }
 }
