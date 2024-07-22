@@ -1,5 +1,6 @@
 package com.ddevuss.weather.oracle.controller;
 
+import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
@@ -8,6 +9,7 @@ import com.ddevuss.weather.oracle.service.LocationService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +29,22 @@ public class MainController {
     private final OpenWeatherService openWeatherService;
 
     @GetMapping
-    public String mainPage(Model model) {
+    public String mainPage(Model model,
+                           @RequestParam(required = false) Integer page) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (!"anonymousUser".equals(login)) {
-            var locations = locationService.findAllByUserLogin(login);
+            Slice<LocationReadDto> sliceLocations;
+            if (page == null) {
+                sliceLocations = locationService.findAllByUserLogin(login, 0);
+            }
+            else {
+                sliceLocations = locationService.findAllByUserLogin(login, page);
+            }
+
             model.addAttribute("forecasts",
-                    openWeatherService.getWeatherForecast(locations));
+                    openWeatherService.getWeatherForecast(sliceLocations.getContent()));
+            model.addAttribute("slice", sliceLocations);
         }
 
         return "main";
@@ -84,8 +95,11 @@ public class MainController {
     }
 
     @PostMapping("location/delete")
-    public String deleteLocation(Long locationId) {
+    public String deleteLocation(Long locationId, Integer numberObjects, Integer page) {
+        if (numberObjects == 1 && page != 0) {
+            page--;
+        }
         locationService.deleteById(locationId);
-        return "redirect:/";
+        return "redirect:/?page=" + page;
     }
 }
