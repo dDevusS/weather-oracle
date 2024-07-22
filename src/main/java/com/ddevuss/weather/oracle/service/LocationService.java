@@ -8,11 +8,12 @@ import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import com.ddevuss.weather.oracle.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Transactional(readOnly = true)
@@ -23,10 +24,10 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationReadDtoFromEntityMapper locationReadDtoFromEntityMapper;
 
-    public List<LocationReadDto> findAllByUserLogin(String login) {
-        return locationRepository.findAllByUserLogin(login).stream()
-                .map(locationReadDtoFromEntityMapper::entityToDto)
-                .toList();
+    public Slice<LocationReadDto> findAllByUserLogin(String login, Integer pageNumber) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, 4, Sort.by("id"));
+        return locationRepository.findAllByUserLogin(login, pageRequest)
+                .map(locationReadDtoFromEntityMapper::entityToDto);
     }
 
     @Transactional
