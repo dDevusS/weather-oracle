@@ -1,0 +1,194 @@
+:root {
+    --color1: rgb(0, 0, 0);
+    --color2: rgba(0, 113, 252, 0.3);
+    --color3: rgba(0, 0, 0, 0.8);
+    --color4: rgb(232, 151, 69);
+    --color5: rgb(241, 203, 74);
+    --color6: rgb(255, 248, 156);
+    --color7: rgba(248, 253, 101, 0.4);
+    --color8: rgba(251, 197, 11, 0.05);
+    --color9: rgba(8, 42, 161, 0.6);
+    --collor10: rgb(177, 1, 1);
+}
+
+.app-block {
+    background-color: var(--color3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color2);
+    border-radius: 5px;
+    padding: 50px;
+}
+
+.error-text {
+    color: var(--collor10);
+}
+
+.light-text {
+    color: var(--color5);
+}
+
+.light-text:hover {
+    color: var(--color6);
+}
+
+.common-text {
+    color: var(--color4);
+    font-size: small;
+}
+
+.forecast-text {
+    font-size: 1vw;
+    margin-bottom: 2px;
+}
+
+.app-button {
+    background: var(--color2);
+}
+
+.app-button:hover {
+    background-color: var(--color9);
+}
+
+footer {
+    padding: 100px 0;
+}
+
+.container-fluid {
+    flex: 1;
+    padding: 0 100px 0 100px;
+}
+
+.dropdown-menu {
+    background: var(--color3);
+}
+
+.forecast-card {
+    border: 1px solid var(--color2);
+    margin: 5px 5px 5px 10px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: var(--color3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 170px;
+    min-width: 300px;
+
+    flex: 0 1 300px;
+}
+
+.forecast-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dropdown-element {
+    color: var(--color5);
+}
+
+.dropdown-element:hover {
+    color: var(--color6);
+    background-color: var(--color3);
+}
+
+header, .search-container {
+    padding-bottom: 30px;
+}
+
+.app-input {
+    color: var(--color5);
+    background-color: var(--color3);
+    border: 1px solid var(--color2);
+
+}
+
+.app-input:hover, .app-input:focus {
+    background-color: var(--color9);
+    color: var(--color5);
+}
+
+.save-link {
+    background: rgba(2, 10, 155, 0);
+}
+
+.save-link:hover {
+    background-color: rgba(7, 77, 253, 0.3);
+}
+
+.header-background {
+    background: linear-gradient(to bottom, var(--color1) 20%, var(--color2) 100%);
+}
+
+footer {
+    padding: 0 10px 0 10px;
+    margin-top: 50px;
+    height: 70px;
+}
+
+.footer-background {
+    background: linear-gradient(to top, var(--color1) 20%, var(--color2) 100%);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background-image: url('/img/background_img.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.m-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Это выровняет элементы по вертикальной оси */
+    width: 100%; /* Убедитесь, что блок растягивается на всю ширину контейнера */
+}
+
+.card-text {
+    margin: auto; /* Автоматическое выравнивание по центру */
+}
+
+.forecast-column-left {
+    display: flex;
+    flex-direction: column; /* Устанавливаем направление элементов в колонку */
+    align-items: center; /* Выравниваем элементы по центру по горизонтали */
+    justify-content: center; /* Опционально: выравнивание по центру по вертикали */
+}
+
+.forecast-column-right {
+    display: flex;
+    flex-direction: column;
+    align-items: start; /* Выравнивание всех внутренних элементов по левому краю */
+}
+
+.triangle-left {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 150px 20px 150px 0;
+    border-color: transparent var(--color8) transparent transparent;
+}
+
+.triangle-right {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 150px 0 150px 20px;
+    border-color: transparent transparent transparent var(--color8);
+}
+
+.triangle-left:hover {
+    border-color: transparent var(--color7) transparent transparent;
+}
+
+.triangle-right:hover {
+    border-color: transparent transparent transparent var(--color7);
+}
+
+

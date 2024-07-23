@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.configuration;
 
-import com.ddevuss.weather.oracle.handler.RestTemplateExceptionHandler;
+import com.ddevuss.weather.oracle.configuration.handler.RestTemplateExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

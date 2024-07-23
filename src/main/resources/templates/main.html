@@ -2,12 +2,91 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <title>Weather Oracle</title>
 </head>
 <body>
-<div th:insert="~{fragments :: header-nav}"></div>
-<div id="main-container">
+<div th:insert="~{fragments.html :: header-nav}">Navigation panel</div>
 
+<div class="container-fluid">
+    <div th:if="${#authorization.expression('isAuthenticated()')}" th:insert="~{fragments.html :: search-panel}">Search
+        panel
+    </div>
+
+    <div class="row" th:if="${forecasts}">
+
+        <div class="col-md-1 d-flex align-items-center justify-content-center">
+            <div th:if="${slice.hasPrevious()}" class="d-flex align-items-center justify-content-center">
+                <a th:href="|/forecast?page=${slice.previousPageable().getPageNumber()}|" class="triangle-left"></a>
+            </div>
+        </div>
+
+        <div class="col-md-10 d-flex justify-content-center">
+            <div class="row d-flex justify-content-center">
+                <div th:each="forecast : ${forecasts}" class="col-md-6 mb-5" style="flex: 0 0 50%;">
+                    <div class="forecast-card">
+                        <div class="d-flex justify-content-center m-flex">
+                            <p class="forecast-text light-text card-text" style="font-size: 1.5vw"
+                               th:text="|${forecast.locationName} ${forecast.countryCode}|">location name</p>
+                            <form th:action="@{/location/delete}" method="post">
+                                <input type="hidden" name="locationId" th:value="${forecast.locationId}"/>
+                                <input type="hidden" name="page" th:value="${slice.getPageable().getPageNumber()}"/>
+                                <input type="hidden" name="numberObjects" th:value="${slice.getNumberOfElements()}"/>
+                                <button type="submit" class="btn light-text" style="font-size: 10px;">X</button>
+                            </form>
+                        </div>
+                        <div class="forecast-container">
+                            <div class="forecast-column-left d-flex justify-content-center">
+                                <div>
+                                    <img th:src="${forecast.getIconUrl()}"
+                                         style="height: 50px; width: 50px; margin: 10px"
+                                         alt="ico">
+                                </div>
+                                <div>
+                                    <p class="common-text" th:text="${forecast.description}">location name</p>
+                                </div>
+                            </div>
+                            <div class="forecast-column-right d-flex justify-content-start">
+                                <div class="d-flex justify-content-md-start align-items-center">
+                                    <img src="/img/weather_ico/temperature.png" style="height: 20px; width: 20px"
+                                         alt="temperature">
+                                    <p class="common-text" style="padding-left: 10px"
+                                       th:text="|${forecast.temperature}℃|">
+                                        temperature</p>
+                                </div>
+                                <div class="d-flex justify-content-md-start align-items-center">
+                                    <img src="/img/weather_ico/humidity.png" style="height: 20px; width: 20px"
+                                         alt="humidity">
+                                    <p class="common-text" style="padding-left: 10px"
+                                       th:text="|${forecast.humidity}%|">
+                                        humidity</p>
+                                </div>
+                                <div class="d-flex justify-content-md-start align-items-center">
+                                    <img src="/img/weather_ico/pressure.png" style="height: 20px; width: 20px"
+                                         alt="pressure">
+                                    <p class="common-text" style="padding-left: 10px"
+                                       th:text="|${forecast.pressure} inHg|">
+                                        pressure</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 d-flex align-items-center justify-content-center">
+            <div th:if="${slice.hasNext()}" class="d-flex align-items-center justify-content-center">
+                <a th:href="|/forecast?page=${slice.nextPageable().getPageNumber()}|" class="triangle-right"></a>
+            </div>
+        </div>
+
+    </div>
 </div>
+
+<div th:insert="~{fragments.html :: footer}">Footer</div>
+<script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

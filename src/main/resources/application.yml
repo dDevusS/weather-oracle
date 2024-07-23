@@ -28,4 +28,4 @@ logging:
   level:
     org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: OFF
     com.ddevuss.weather.oracle: INFO
-    root: warn
+    root: WARN
