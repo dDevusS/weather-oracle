@@ -102,7 +102,6 @@ public class OpenWeatherService {
                 .iconUrl(createIconUrl(response))
                 .description(response.getWeather()[0].getDescription())
                 .temperature(response.getMain().getTemp())
-                .feelsLikeTemperature(response.getMain().getFeelsLike())
                 .pressure(response.getMain().getPressure())
                 .humidity(response.getMain().getHumidity())
                 .build();

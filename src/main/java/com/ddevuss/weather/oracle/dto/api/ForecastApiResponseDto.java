@@ -1,7 +1,6 @@
 package com.ddevuss.weather.oracle.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +23,7 @@ public class ForecastApiResponseDto {
     public static class WeatherDescription {
 
         String description;
-        
+
         String icon;
     }
 
@@ -33,9 +32,6 @@ public class ForecastApiResponseDto {
     public static class MainInfo {
 
         Float temp;
-
-        @JsonProperty("feels-like")
-        Float feelsLike;
 
         Integer pressure;
 

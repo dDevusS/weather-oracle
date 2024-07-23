@@ -15,7 +15,6 @@ public class ForecastDto implements Serializable {
     String iconUrl;
     String description;
     Float temperature;
-    Float feelsLikeTemperature;
     Integer pressure;
     Integer humidity;
 
