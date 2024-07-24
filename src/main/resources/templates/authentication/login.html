@@ -12,44 +12,41 @@
 <body>
 <div th:insert="~{fragments.html :: header-nav-authentication}"></div>
 
-<div class="container-fluid" style="padding: 50px 0 50px 0">
+<div class="container-fluid py-5">
     <div class="row">
         <div class="col"></div>
-        <div class="col app-block">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-12 app-block">
             <form action="/login" method="post">
-                <div class="row">
-                    <div class="col d-flex justify-content-start" style="padding-bottom: 25px">
-                        <label class="common-text" for="login-input-field">Login:
-                            <input class="app-input" id="login-input-field" type="text" name="login">
-                        </label>
+                <div class="form-group row pb-3">
+                    <label class="col-sm-4 col-form-label text-right label-text" for="login">Login:</label>
+                    <div class="col-sm-8">
+                        <input class="form-control app-input" type="text" id="login" name="login">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col d-flex justify-content-start">
-                        <label class="common-text" for="password-input-field">Password:
-                            <input class="app-input" id="password-input-field" type="password" name="password">
-                        </label>
+                <div class="form-group row pb-3">
+                    <label class="col-sm-4 col-form-label text-right label-text" for="password">Password:</label>
+                    <div class="col-sm-8">
+                        <input class="form-control app-input" type="password" id="password" name="password">
                     </div>
                 </div>
 
-                <div class="row" style="padding: 25px 0 25px 0">
-                    <div class="col d-flex justify-content-start">
-                        <button class="btn app-button light-text" type="submit">Sign-in
-                        </button>
+                <div class="form-group row py-3">
+                    <div class="col-sm-8 offset-sm-4">
+                        <button class="btn app-button light-text" type="submit">Sign-in</button>
                     </div>
                 </div>
             </form>
 
-            <div class="row">
-                <div class="col d-flex justify-content-start">
+            <div class="row py-3">
+                <div class="col">
                     <div th:insert="~{fragments.html :: return-button}"></div>
                 </div>
             </div>
 
             <div th:if="${param.error}">
-                <div class="row" style="padding-top: 25px">
-                    <div class="col justify-content-start">
+                <div class="row pt-3">
+                    <div class="col">
                         <p class="error-text">Invalid login or password.</p>
                     </div>
                 </div>

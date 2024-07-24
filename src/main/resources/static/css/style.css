@@ -36,6 +36,10 @@
     font-size: small;
 }
 
+.label-text {
+    color: var(--color4);
+}
+
 .forecast-text {
     font-size: 1vw;
     margin-bottom: 2px;
@@ -146,25 +150,25 @@ body {
 .m-flex {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Это выровняет элементы по вертикальной оси */
-    width: 100%; /* Убедитесь, что блок растягивается на всю ширину контейнера */
+    align-items: center;
+    width: 100%;
 }
 
 .card-text {
-    margin: auto; /* Автоматическое выравнивание по центру */
+    margin: auto;
 }
 
 .forecast-column-left {
     display: flex;
-    flex-direction: column; /* Устанавливаем направление элементов в колонку */
-    align-items: center; /* Выравниваем элементы по центру по горизонтали */
-    justify-content: center; /* Опционально: выравнивание по центру по вертикали */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .forecast-column-right {
     display: flex;
     flex-direction: column;
-    align-items: start; /* Выравнивание всех внутренних элементов по левому краю */
+    align-items: start;
 }
 
 .triangle-left {

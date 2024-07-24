@@ -10,53 +10,52 @@
 <body>
 <div th:insert="~{fragments.html :: header-nav-authentication}"></div>
 
-<div class="container-fluid" style="padding: 50px 0 50px 0">
+<div class="container-fluid py-5">
     <div class="row">
         <div class="col"></div>
-        <div class="col app-block">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-12 app-block">
             <form action="/registration" method="post">
-                <div class="row">
-                    <div class="col d-flex justify-content-start" style="padding-bottom: 25px">
-                        <label class="common-text" for="login-input-field">Login:
-                            <input class="app-input" id="login-input-field" type="text" name="login"
-                                   th:value="${userLogin}">
-                        </label>
+                <div class="form-group row pb-3">
+                    <label class="col-sm-5 col-form-label text-right label-text" for="login">Login:</label>
+                    <div class="col-sm-7">
+                        <input class="form-control app-input" type="text" id="login" name="login"
+                               th:value="${userLogin}">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col d-flex justify-content-start" style="padding-bottom: 10px">
-                        <label class="common-text" for="password-input-field">Password:
-                            <input class="app-input" id="password-input-field" type="password" name="rawPassword">
-                        </label>
+                <div class="form-group row pb-3">
+                    <label class="col-sm-5 col-form-label text-right label-text" for="rawPassword">Password:</label>
+                    <div class="col-sm-7">
+                        <input class="form-control app-input" type="password" id="rawPassword" name="rawPassword">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col d-flex justify-content-start" style="padding-bottom: 25px">
-                        <label class="common-text" for="confirm-password-input-field">Confirm password:
-                            <input class="app-input" id="confirm-password-input-field" type="password"
-                                   name="confirmRawPassword">
-                        </label>
+
+                <div class="form-group row pb-3">
+                    <label class="col-sm-5 col-form-label text-right label-text" for="confirmRawPassword">Confirm
+                        password:</label>
+                    <div class="col-sm-7">
+                        <input class="form-control app-input" type="password" id="confirmRawPassword"
+                               name="confirmRawPassword">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col d-flex justify-content-start" style="padding-bottom: 25px">
-                        <button class="btn app-button light-text" type="submit">Submit
-                        </button>
+
+                <div class="form-group row pb-3">
+                    <div class="col-sm-7 offset-sm-5">
+                        <button class="btn app-button light-text" type="submit">Submit</button>
                     </div>
                 </div>
             </form>
 
-            <div class="row">
-                <div class="col d-flex justify-content-start" style="padding-bottom: 25px">
+            <div class="row pb-3">
+                <div class="col">
                     <div th:insert="~{fragments.html :: return-button}"></div>
                 </div>
             </div>
 
             <div class="errors" th:if="${errorMessages}">
                 <div th:each="error : ${errorMessages}">
-                    <div class="row">
-                        <div class="col justify-content-start" style="padding-bottom: 15px">
+                    <div class="row pb-2">
+                        <div class="col">
                             <p class="error-text" th:text="${error.getDefaultMessage()}">Error message</p>
                         </div>
                     </div>
@@ -64,7 +63,7 @@
             </div>
             <div class="errors" th:if="${errorMessage}">
                 <div class="row">
-                    <div class="col justify-content-start">
+                    <div class="col">
                         <p class="error-text" th:text="${errorMessage}">Error message</p>
                     </div>
                 </div>
