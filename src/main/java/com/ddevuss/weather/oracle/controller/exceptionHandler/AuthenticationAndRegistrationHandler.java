@@ -3,10 +3,12 @@ package com.ddevuss.weather.oracle.controller.exceptionHandler;
 import com.ddevuss.weather.oracle.exception.LoginNotUniqueException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -31,6 +33,7 @@ public class AuthenticationAndRegistrationHandler {
     }
 
     @ExceptionHandler(value = {AuthenticationServiceException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleAuthenticationServiceException(AuthenticationServiceException e,
                                                        RedirectAttributes redirectAttributes) {
         log.error("AuthenticationServiceException", e);
