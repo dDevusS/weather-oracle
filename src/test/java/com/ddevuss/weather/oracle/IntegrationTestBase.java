@@ -13,7 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 })
 public abstract class IntegrationTestBase {
 
-    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:latest");
+    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15.7");
 
     @BeforeAll
     static void runContainer() {
