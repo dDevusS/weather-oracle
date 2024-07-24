@@ -22,13 +22,13 @@ public class LoggingController {
 
     @GetMapping("/login")
     public String login() {
-        return "/authentication/login";
+        return "authentication/login";
     }
 
     @GetMapping("/registration")
     public String registration(@ModelAttribute("userLogin") String userLogin, Model model) {
         model.addAttribute("userLogin", userLogin);
-        return "/authentication/registration";
+        return "authentication/registration";
     }
 
     @PostMapping("/registration")

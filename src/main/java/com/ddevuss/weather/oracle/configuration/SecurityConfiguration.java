@@ -19,6 +19,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers("/login",
+                                "/authentication/**",
                                 "/registration",
                                 "/forecast",
                                 "/",
