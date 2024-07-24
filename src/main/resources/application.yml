@@ -15,11 +15,13 @@ spring:
       hbm2ddl.auto: validate
       show_sql: true
       format_sql: true
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
 
-openweather.api.key: e2ddfdfb3e5aa91ef56467e12096117d
+openweather.api.key: your_api_key
 
 server:
-  port: 8081
+  port: 8080
 
 logging:
   file:
@@ -28,4 +30,4 @@ logging:
   level:
     org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: OFF
     com.ddevuss.weather.oracle: INFO
-    root: WARN
+    root: INFO
