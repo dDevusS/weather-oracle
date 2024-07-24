@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:15.7'
+    environment:
+      - 'POSTGRES_DB=weather-oracle'
+      - 'POSTGRES_PASSWORD=pass'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432'
