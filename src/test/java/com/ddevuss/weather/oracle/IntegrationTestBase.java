@@ -13,7 +13,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 })
 public abstract class IntegrationTestBase {
 
-    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15.7");
+    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15.7")
+            .withDatabaseName("test_db")
+            .withUsername("test")
+            .withPassword("test");
 
     @BeforeAll
     static void runContainer() {

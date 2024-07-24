@@ -17,6 +17,7 @@ spring:
       format_sql: true
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
 
 openweather.api.key: your_api_key
 

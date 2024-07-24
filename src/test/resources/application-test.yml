@@ -1,7 +1,13 @@
 spring:
-  jpa:
-    properties.hibernate:
-      hbm2ddl.auto: validate
   datasource:
+    url: jdbc:tc:postgresql:15.7:///weather_oracle_db
     username: test
     password: test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+

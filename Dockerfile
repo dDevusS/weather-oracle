@@ -1,10 +1,11 @@
-FROM gradle:latest AS build
+# Используем официальный образ Gradle
+FROM gradle:latest
+
+# Устанавливаем рабочую директорию
 WORKDIR /app
+
+# Копируем содержимое текущей директории в контейнер
 COPY . /app
-RUN gradle build --no-daemon
 
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/build/libs/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Указываем команду для сборки проекта
+CMD ["gradle", "build", "--no-daemon"]
