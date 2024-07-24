@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <title>Weather Oracle</title>
+</head>
+<body>
+<div th:insert="~{fragments.html :: header-nav-authentication}"></div>
+
+<div class="container-fluid" style="padding: 50px 0 50px 0">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col app-block">
+            <form action="/login" method="post">
+                <div class="row">
+                    <div class="col d-flex justify-content-start" style="padding-bottom: 25px">
+                        <label class="common-text" for="login-input-field">Login:
+                            <input class="app-input" id="login-input-field" type="text" name="login">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col d-flex justify-content-start">
+                        <label class="common-text" for="password-input-field">Password:
+                            <input class="app-input" id="password-input-field" type="password" name="password">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row" style="padding: 25px 0 25px 0">
+                    <div class="col d-flex justify-content-start">
+                        <button class="btn app-button light-text" type="submit">Sign-in
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="col d-flex justify-content-start">
+                    <div th:insert="~{fragments.html :: return-button}"></div>
+                </div>
+            </div>
+
+            <div th:if="${param.error}">
+                <div class="row" style="padding-top: 25px">
+                    <div class="col justify-content-start">
+                        <p class="error-text">Invalid login or password.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<div th:insert="~{fragments.html :: footer}">Footer</div>
+<script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,3 +1,5 @@
 databaseChangeLog:
-  - include: 
+  - include:
       file: db/changelog/db.changelog-1.0.sql
+  - include:
+      file: db/changelog/db.changelog-postgres-Session-Security.sql

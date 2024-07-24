@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <title>Weather Oracle</title>
+</head>
+<body>
+<div th:insert="~{fragments.html :: header-nav}">Navigation panel</div>
+
+<div class="container-fluid">
+    <div th:insert="~{fragments.html :: search-panel}">Search panel</div>
+
+    <div th:each="location : ${locations}">
+        <div class="row d-flex justify-content-start">
+            <div class="col-12 d-flex justify-content-start align-items-center">
+                <form th:action="@{/location/save}" method="post">
+                    <input type="hidden" name="name" th:value="${location.name}"/>
+                    <input type="hidden" name="lat" th:value="${location.lat}"/>
+                    <input type="hidden" name="lon" th:value="${location.lon}"/>
+                    <input type="hidden" name="locationName" th:value="${locationName}"/>
+                    <button class="btn save-link" type="submit" style="padding: 20px 0 20px 0">
+                        <span class="light-text"
+                              th:text="|${location.name}&nbsp;/&nbsp;${location.country}&nbsp;/&nbsp;${location.state}&nbsp;&nbsp;&nbsp;&nbsp;${location.lat}&nbsp;&nbsp;:&nbsp;&nbsp;${location.lon}|"></span>
+                        <span th:if="${duplicatedLocation != null and location.lat == duplicatedLocation.lat and location.lon == duplicatedLocation.lon}"
+                              class="error-text"
+                              th:text="|&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;${errorMessage}|"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:insert="~{fragments.html :: return-button}"></div>
+</div>
+
+<div th:insert="~{fragments.html :: footer}">Footer</div>
+<script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

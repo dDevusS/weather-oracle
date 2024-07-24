@@ -1,10 +1,14 @@
 spring:
+  session:
+    jdbc:
+      table-name: SPRING_SESSION
+    timeout: 2h
   application:
     name: weather-oracle
   datasource:
     username: postgres
     password: pass
-    url: jdbc:postgresql://localhost:5433/postgres
+    url: jdbc:postgresql://localhost:5432/postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     properties.hibernate:
@@ -12,5 +16,16 @@ spring:
       show_sql: true
       format_sql: true
 
+openweather.api.key: e2ddfdfb3e5aa91ef56467e12096117d
+
 server:
   port: 8081
+
+logging:
+  file:
+    name: log-note.log
+    path: /
+  level:
+    org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: OFF
+    com.ddevuss.weather.oracle: INFO
+    root: WARN

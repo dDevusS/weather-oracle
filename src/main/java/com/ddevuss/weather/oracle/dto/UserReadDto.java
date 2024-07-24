@@ -1,11 +1,15 @@
 package com.ddevuss.weather.oracle.dto;
 
+import lombok.Builder;
 import lombok.Value;
 
-@Value
-public class UserReadDto {
+import java.io.Serializable;
 
-    Integer id;
+@Value
+@Builder
+public class UserReadDto implements Serializable {
+
+    Long id;
 
     String login;
 }
