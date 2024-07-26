@@ -49,7 +49,7 @@ To run this project locally, follow these steps:
 
 2. **Setup docker-compose.yml**
     - change ports for weather-oracle_db, weather-oracle_app and another options if it is necessary
-    - set OPENWEATHER_API_KEY (your have to get your own key on [Open Weather](https://openweathermap.org/)
+    - set OPENWEATHER_API_KEY (your have to get your own key on [Open Weather](https://openweathermap.org/))
    
 3. **Build images and run containers:**
    
