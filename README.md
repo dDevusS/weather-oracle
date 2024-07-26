@@ -1,15 +1,14 @@
 # Weather Oracle
 
-This is web application for viewing current weather forecast.
-Just need to sign up and find any city or another location with the name. List of saved locations will be showed you every time when you sign in application again.
+This web application allows you to view the current weather forecast. Simply sign up and search for any city or location by name. Your list of saved locations will be displayed each time you sign in to the application.
 
-It was developed foreducational purposes as part of the [Java Backend Learning Course](https://zhukovsd.github.io/java-backend-learning-course/) by Sergey Zhukov.
+It was developed for educational purposes as part of the [Java Backend Learning Course](https://zhukovsd.github.io/java-backend-learning-course/) by Sergey Zhukov.
 
 **You can check in this application on:**
 
 http://45.95.203.87:8081/Tennis-Scoreboard/
 
-though the application might work uncorrect because of bad connection to Open Weather API server
+Please note that the application might not work correctly due to potential issues with the connection to the Open Weather API server.
 
 ![Снимок экрана от 2024-07-26 14-24-09](https://github.com/user-attachments/assets/a12e8813-5605-48c8-8ba9-e232fcd837a4)
 
