@@ -43,6 +43,7 @@ public class LoggingController {
 
         userService.save(user);
         log.info("New user with login '{}' was created", user.getLogin());
+        redirectAttributes.addFlashAttribute("successMessage", "User successfully was created.");
         return "redirect:/login";
     }
 
