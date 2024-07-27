@@ -12,6 +12,7 @@ public class ForecastDto implements Serializable {
     Long locationId;
     String locationName;
     String countryCode;
+    String state;
     String iconUrl;
     String description;
     Float temperature;

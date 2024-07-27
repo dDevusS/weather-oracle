@@ -13,6 +13,8 @@ public class LocationReadDto implements Serializable {
 
     String name;
 
+    String state;
+
     Double latitude;
 
     Double longitude;
