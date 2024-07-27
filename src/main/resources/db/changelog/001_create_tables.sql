@@ -13,11 +13,11 @@ CREATE TABLE users
 CREATE TABLE locations
 (
     id        BIGSERIAL PRIMARY KEY,
-    name      VARCHAR(32),
-    state     VARCHAR(32),
-    user_id   BIGINT REFERENCES users (id) ON DELETE CASCADE,
-    latitude  DOUBLE PRECISION,
-    longitude DOUBLE PRECISION
+    name      VARCHAR(32) NOT NULL,
+    state     VARCHAR(32) NOT NULL,
+    user_id   BIGINT REFERENCES users (id) NOT NULL ON DELETE CASCADE,
+    latitude  DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL
 );
 
 --changeset ddevuss:3
