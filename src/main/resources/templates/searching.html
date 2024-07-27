@@ -13,9 +13,17 @@
 <div class="container-fluid">
     <div th:insert="~{fragments.html :: search-panel}">Search panel</div>
 
+    <div class="error-text" th:if="${wrongParameterWarning}">
+        <div class="row">
+            <div class="col d-flex justify-content-start align-items-center">
+                <p th:text="${wrongParameterWarning}">Wrong parameter warning</p>
+            </div>
+        </div>
+    </div>
+
     <div th:each="location : ${locations}">
         <div class="row d-flex justify-content-start">
-            <div class="col-12 d-flex justify-content-start align-items-center">
+            <div class="col d-flex justify-content-start align-items-center">
                 <form th:action="@{/location/save}" method="post">
                     <input type="hidden" name="name" th:value="${location.name}"/>
                     <input type="hidden" name="lat" th:value="${location.lat}"/>

@@ -10,7 +10,8 @@ import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Slice;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,11 +37,12 @@ public class MainController {
 
     @GetMapping("/forecast")
     public String mainPage(Model model,
-                           @RequestParam(required = false) Integer page) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        if (!"anonymousUser".equals(login)) {
+                           @RequestParam(required = false) Integer page,
+                           @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            String login = userDetails.getUsername();
             Slice<LocationReadDto> sliceLocations;
+
             if (page == null) {
                 sliceLocations = locationService.findAllByUserLogin(login, 0);
             }
@@ -60,9 +62,9 @@ public class MainController {
     public String searchLocation(Model model,
                                  @RequestParam(required = false) String locationName,
                                  @RequestParam(required = false) String errorMessage) {
-        if (locationName == null || locationName.isBlank()) {
-            model.addAttribute("blankParameterWarning",
-                    "Name of location was empty.");
+        if (locationName == null || locationName.isBlank() || locationName.length() <= 2) {
+            model.addAttribute("wrongParameterWarning",
+                    "Name of location should not be blank or contain at least two characters.");
             return "searching";
         }
 
@@ -79,13 +81,12 @@ public class MainController {
     public String saveLocation(Model model,
                                @ModelAttribute("locationName") String locationName,
                                @ModelAttribute("location") LocationApiResponseDto locationResponseDto,
+                               @AuthenticationPrincipal UserDetails userDetails,
                                RedirectAttributes redirectAttributes) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
-
         try {
             locationService.save(Location.builder()
                     .user(User.builder()
-                            .login(login)
+                            .login(userDetails.getUsername())
                             .build())
                     .name(locationResponseDto.getName())
                     .latitude(locationResponseDto.getLat())
