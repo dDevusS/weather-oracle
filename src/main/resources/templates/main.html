@@ -29,7 +29,8 @@
                     <div class="forecast-card">
                         <div class="d-flex justify-content-center m-flex">
                             <p class="forecast-text light-text card-text" style="font-size: 1.5vw"
-                               th:text="|${forecast.locationName} ${forecast.countryCode}|">location name</p>
+                               th:text="|${forecast.locationName}&nbsp;&nbsp;${forecast.countryCode}&nbsp;&nbsp;${forecast.state}|">
+                                location name</p>
                             <form th:action="@{/location/delete}" method="post">
                                 <input type="hidden" name="locationId" th:value="${forecast.locationId}"/>
                                 <input type="hidden" name="page" th:value="${slice.getPageable().getPageNumber()}"/>

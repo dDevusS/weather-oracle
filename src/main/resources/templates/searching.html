@@ -26,6 +26,7 @@
             <div class="col d-flex justify-content-start align-items-center">
                 <form th:action="@{/location/save}" method="post">
                     <input type="hidden" name="name" th:value="${location.name}"/>
+                    <input type="hidden" name="state" th:value="${location.state}"/>
                     <input type="hidden" name="lat" th:value="${location.lat}"/>
                     <input type="hidden" name="lon" th:value="${location.lon}"/>
                     <input type="hidden" name="locationName" th:value="${locationName}"/>
