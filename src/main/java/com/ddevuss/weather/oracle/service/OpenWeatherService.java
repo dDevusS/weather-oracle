@@ -99,6 +99,7 @@ public class OpenWeatherService {
                 .locationId(location.getId())
                 .locationName(location.getName())
                 .countryCode(response.getSys().getCountry())
+                .state(location.getState())
                 .iconUrl(createIconUrl(response))
                 .description(response.getWeather()[0].getDescription())
                 .temperature(response.getMain().getTemp())
