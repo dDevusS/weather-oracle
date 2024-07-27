@@ -13,6 +13,12 @@
 <div class="container-fluid">
     <div th:insert="~{fragments.html :: search-panel}">Search panel</div>
 
+    <div class="row" th:if="${noFoundMessage}">
+        <div class="col d-flex justify-content-start align-items-center">
+            <p class="light-text" th:text="${noFoundMessage}">No locations found</p>
+        </div>
+    </div>
+
     <div class="error-text" th:if="${wrongParameterWarning}">
         <div class="row">
             <div class="col d-flex justify-content-start align-items-center">

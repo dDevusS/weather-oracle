@@ -73,6 +73,11 @@ public class MainController {
         locationName = locationName.trim();
         LocationApiResponseDto[] locations = openWeatherService.searchLocationsByName(locationName);
         model.addAttribute("locations", locations);
+
+        if (locations.length == 0) {
+            model.addAttribute("noFoundMessage", "No location found with this name.");
+        }
+
         return "searching";
     }
 
