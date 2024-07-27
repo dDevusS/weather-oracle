@@ -12,6 +12,7 @@ public class LocationReadDtoFromEntityMapper implements EntityToDtoMapper<Locati
         return LocationReadDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .state(entity.getState())
                 .latitude(entity.getLatitude())
                 .longitude(entity.getLongitude())
                 .build();
