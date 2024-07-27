@@ -1,8 +1,6 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/db.changelog-1.0.sql
-  - include:
-      file: db/changelog/db.changelog-1.1.sql
+      file: db/changelog/001_create_tables.sql
 
   - include:
-      file: db/changelog/db.changelog-postgres-Session-Security.sql
+      file: db/changelog/002_create_tables_for_session_postgres.sql
