@@ -89,6 +89,7 @@ public class MainController {
                             .login(userDetails.getUsername())
                             .build())
                     .name(locationResponseDto.getName())
+                    .state(locationResponseDto.getState())
                     .latitude(locationResponseDto.getLat())
                     .longitude(locationResponseDto.getLon())
                     .build());
