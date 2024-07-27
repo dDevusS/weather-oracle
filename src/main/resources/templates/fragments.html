@@ -24,7 +24,11 @@
                             Account
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="loginDropdown">
-                            <li><a href="/logout" class="dropdown-item dropdown-element">Sign-out</a></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="dropdown-item dropdown-element" type="submit">Sign-out</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>
