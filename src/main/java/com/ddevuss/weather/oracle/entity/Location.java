@@ -29,6 +29,8 @@ public class Location implements BaseEntity<Long> {
 
     private String name;
 
+    private String state;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
