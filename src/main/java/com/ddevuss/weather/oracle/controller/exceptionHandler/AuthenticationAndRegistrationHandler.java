@@ -1,11 +1,13 @@
 package com.ddevuss.weather.oracle.controller.exceptionHandler;
 
-import com.ddevuss.weather.oracle.exception.LoginNotUniqueException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,12 +18,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class AuthenticationAndRegistrationHandler {
 
-    @ExceptionHandler(value = {LoginNotUniqueException.class})
-    public String handleLoginNotUniqueException(LoginNotUniqueException e,
-                                                RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage",
-                "User with this login already exists");
-        return "redirect:/registration";
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    public String handleDataIntegrityViolationException(DataIntegrityViolationException e,
+                                                        RedirectAttributes redirectAttributes,
+                                                        Model model) {
+        ConstraintViolationException constraintViolationException = (ConstraintViolationException) e.getCause();
+        String constraintName = constraintViolationException.getConstraintName();
+
+        if ("users_login_key".equals(constraintName)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "User with this login already exists");
+            return "redirect:/registration";
+        }
+        else {
+            log.error(e.getMessage(), e);
+
+            model.addAttribute("errorMessage",
+                    "There is unexpected error. Please try again later.");
+            return "error";
+        }
     }
 
     @ExceptionHandler(value = {BadCredentialsException.class})
