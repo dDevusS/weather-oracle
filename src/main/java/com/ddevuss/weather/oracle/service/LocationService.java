@@ -3,7 +3,6 @@ package com.ddevuss.weather.oracle.service;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
-import com.ddevuss.weather.oracle.exception.NotUniqueLocationException;
 import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import com.ddevuss.weather.oracle.repository.UserRepository;
@@ -34,7 +33,6 @@ public class LocationService {
     public void save(Location location) {
         User user = userRepository.findByLogin(location.getUser().getLogin()).orElseThrow();
         location.setUser(user);
-        ensureUniqueLocationForUser(location);
         locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
     }
 
@@ -44,11 +42,4 @@ public class LocationService {
         locationRepository.deleteById(locationId);
     }
 
-    private void ensureUniqueLocationForUser(Location location) {
-        locationRepository.findByUserIdAndLocationLatitudeAndLocationLongitude(location.getUser().getId(),
-                location.getLatitude(),
-                location.getLongitude()).ifPresent(existingLocation -> {
-            throw new NotUniqueLocationException();
-        });
-    }
 }

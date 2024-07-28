@@ -2,7 +2,6 @@ package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.entity.User;
-import com.ddevuss.weather.oracle.exception.LoginNotUniqueException;
 import com.ddevuss.weather.oracle.mapper.UserCreateDtoToEntityMapper;
 import com.ddevuss.weather.oracle.mapper.UserReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.UserRepository;
@@ -35,11 +34,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void save(UserCreateDto userCreateDto) {
-        if (userRepository.findByLogin(userCreateDto.getLogin()).isPresent()) {
-            throw new LoginNotUniqueException();
-        }
         User user = userCreateDtoToEntityMapper.dtoToEntity(userCreateDto);
-
         userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
     }
 
