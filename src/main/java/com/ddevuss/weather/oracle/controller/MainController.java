@@ -4,11 +4,12 @@ import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
-import com.ddevuss.weather.oracle.exception.NotUniqueLocationException;
 import com.ddevuss.weather.oracle.service.LocationService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -99,7 +100,9 @@ public class MainController {
                     .longitude(locationResponseDto.getLon())
                     .build());
         }
-        catch (NotUniqueLocationException e) {
+        catch (DataIntegrityViolationException e) {
+            checkForDuplicateConstraint(e);
+
             redirectAttributes.addFlashAttribute("duplicatedLocation", locationResponseDto);
             String encodedLocationName = URLEncoder.encode(locationName, StandardCharsets.UTF_8);
             String encodedErrorMessage = URLEncoder.encode("This location already exists", StandardCharsets.UTF_8);
@@ -117,4 +120,13 @@ public class MainController {
         locationService.deleteById(locationId);
         return "redirect:/forecast?page=" + page;
     }
+
+    private void checkForDuplicateConstraint(DataIntegrityViolationException e) {
+        ConstraintViolationException constraintViolationException = (ConstraintViolationException) e.getCause();
+        String constraintName = constraintViolationException.getConstraintName();
+        if (!"idx_base_target".equals(constraintName)) {
+            throw e;
+        }
+    }
+
 }
