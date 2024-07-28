@@ -21,6 +21,12 @@
                 </div>
             </div>
 
+            <div class="row" th:if="${expiredSessionMessage}" style="padding-bottom: 15px">
+                <div class="col justify-content-center align-items-center">
+                    <span class="error-text" th:text="${expiredSessionMessage}">User was created</span>
+                </div>
+            </div>
+
             <form th:action="@{/login}" method="post">
                 <div class="form-group row pb-3">
                     <label class="col-sm-4 col-form-label text-right label-text" for="login">Login:</label>

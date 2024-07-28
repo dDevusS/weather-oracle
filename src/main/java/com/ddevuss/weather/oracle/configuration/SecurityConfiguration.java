@@ -40,9 +40,7 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID")
                 )
                 .sessionManagement(session -> session
-                        .invalidSessionUrl("/forecast")
-                        .maximumSessions(3)
-                        .expiredUrl("/forecast")
+                        .invalidSessionUrl("/login?expiredSession=true")
                 );
 
         return http.build();
