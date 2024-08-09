@@ -2,10 +2,8 @@ package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.entity.Location;
-import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
-import com.ddevuss.weather.oracle.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LocationService {
 
-    private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final LocationReadDtoFromEntityMapper locationReadDtoFromEntityMapper;
 
@@ -31,9 +28,7 @@ public class LocationService {
 
     @Transactional
     public void save(Location location) {
-        User user = userRepository.findByLogin(location.getUser().getLogin()).orElseThrow();
-        location.setUser(user);
-        locationReadDtoFromEntityMapper.entityToDto(locationRepository.save(location));
+        locationRepository.saveLocation(location);
     }
 
     @Transactional
