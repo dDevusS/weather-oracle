@@ -19,9 +19,10 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
     private final LocationReadDtoFromEntityMapper locationReadDtoFromEntityMapper;
+    private static final Integer PAGE_SIZE = 4;
 
     public Slice<LocationReadDto> findAllByUserLogin(String login, Integer pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, 4, Sort.by("id"));
+        PageRequest pageRequest = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("id"));
         return locationRepository.findAllByUserLogin(login, pageRequest)
                 .map(locationReadDtoFromEntityMapper::entityToDto);
     }
