@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     environment:
-      OPENWEATHER_API_KEY: yor_api_key
+      OPENWEATHER_API_KEY: your_api_key
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/weather_oracle_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: pass
