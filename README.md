@@ -6,7 +6,7 @@ It was developed for educational purposes as part of the [Java Backend Learning 
 
 **You can check in this application on:**
 
-[http://45.95.203.87:8081/](http://37.27.92.25:8095)
+[http://37.27.92.25:8095](http://37.27.92.25:8095)
 
 Please note that the application might not work correctly due to potential issues with the connection to the Open Weather API server.
 
