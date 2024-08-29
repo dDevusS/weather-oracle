@@ -4,6 +4,7 @@ import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,12 +29,22 @@ public class LoggingController {
             model.addAttribute("expiredSessionMessage",
                     "Your session has expired. Please, sign in again to continue");
         }
+
+        if (isAlreadyLoggedIn()) {
+            return "redirect:/forecast";
+        }
+
         return "authentication/login";
     }
 
     @GetMapping("/registration")
     public String registration(@ModelAttribute("userLogin") String userLogin, Model model) {
         model.addAttribute("userLogin", userLogin);
+
+        if (isAlreadyLoggedIn()) {
+            return "redirect:/forecast";
+        }
+
         return "authentication/registration";
     }
 
@@ -51,6 +62,10 @@ public class LoggingController {
         log.info("New user with login '{}' was created", user.getLogin());
         redirectAttributes.addFlashAttribute("successMessage", "User successfully was created.");
         return "redirect:/login";
+    }
+
+    private boolean isAlreadyLoggedIn() {
+        return !"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }
