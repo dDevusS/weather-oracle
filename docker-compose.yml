@@ -3,6 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15.7
+    restart: unless-stopped
     environment:
       POSTGRES_DB: weather_oracle_db
       POSTGRES_USER: postgres
@@ -18,6 +19,7 @@ services:
       - "8095:8080"
     depends_on:
       - db
+    restart: unless-stopped
     environment:
       OPENWEATHER_API_KEY: your_api_key
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/weather_oracle_db
