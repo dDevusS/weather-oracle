@@ -10,10 +10,12 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private static final int TIME_CACHE_LIFE = 10;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/")
-                .setCacheControl(CacheControl.maxAge(10, TimeUnit.DAYS).cachePublic());
+                .setCacheControl(CacheControl.maxAge(TIME_CACHE_LIFE, TimeUnit.DAYS).cachePublic());
     }
 }
