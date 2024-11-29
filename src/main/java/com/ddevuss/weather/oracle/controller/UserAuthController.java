@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @AllArgsConstructor
 @Controller
-public class LoggingController {
+public class UserAuthController {
 
     private final UserService userService;
 
