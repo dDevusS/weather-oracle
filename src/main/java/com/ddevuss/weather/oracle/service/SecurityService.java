@@ -2,6 +2,7 @@ package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class SecurityService {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         return locationRepository.findById(locationId)
                 .map(location -> location.getUser().getLogin().equals(login))
-                .orElseThrow();
+                .orElseThrow(() -> new AccessDeniedException("Attempt to delete location by user '" + login + "' without permission"));
     }
 
 }
