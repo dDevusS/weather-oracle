@@ -19,7 +19,7 @@ spring:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
 
-openweather.api.key: your_api_key
+openweather.api.key: $(OPENWEATHER_API_KEY)
 
 server:
   port: 8080
