@@ -1,11 +1,4 @@
-spring:
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri:
-#          jwk-set-uri:
-            
+spring:        
   session:
     jdbc:
       table-name: SPRING_SESSION
