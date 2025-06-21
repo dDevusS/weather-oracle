@@ -1,23 +1,35 @@
-spring:
+spring:        
   session:
     jdbc:
       table-name: SPRING_SESSION
     timeout: 2h
+
   application:
     name: weather-oracle
+
   datasource:
-    username: postgres
-    password: pass
-    url: jdbc:postgresql://localhost:5432/postgres
+    username: $(DB_USERNAME)
+    password: $(DB_PASSWORD)
+    url: $(DB_URL)
     driver-class-name: org.postgresql.Driver
+
   jpa:
     properties.hibernate:
       hbm2ddl.auto: validate
       show_sql: true
       format_sql: true
+
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
+
+keycloak:
+  realm:
+  auth-server-url:
+  resource:
+  credentials:
+    secret:
+  use-resource-role-mappings:
 
 openweather.api.key: $(OPENWEATHER_API_KEY)
 
