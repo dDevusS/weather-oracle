@@ -2,12 +2,25 @@ package com.ddevuss.weather.oracle.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
@@ -18,37 +31,58 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/login",
-                                "/authentication/**",
-                                "/registration",
-                                "/forecast",
-                                "/",
-                                "error",
-                                "/css/**",
-                                "/js/**",
-                                "/img/**",
-                                "fragments").permitAll()
+                                "/api/auth/login",
+                                "/api/auth/registration",
+                                "/api/auth/refresh"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(logging -> logging
-                        .loginPage("/login")
-                        .usernameParameter("login")
-                        .defaultSuccessUrl("/forecast")
+                .oauth2ResourceServer(oauth2 ->
+//                        oauth2.jwt(jwtConfigurer -> jwtConfigurer
+//                                .decoder(jwtDecoder)
+//                                .jwtAuthenticationConverter(jwtAuthenticationConverter)
+//                        )
+                                oauth2.jwt(Customizer.withDefaults())
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/forecast")
-                        .deleteCookies("JSESSIONID")
-                )
-                .sessionManagement(session -> session
-                        .invalidSessionUrl("/login?expiredSession=true")
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(configurer ->
+                        configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
         return http.build();
     }
 
     @Bean
+    public JwtDecoder jwtDecoder(WeatherOracleConfiguration.JwtProperties properties) {
+        SecretKey key = new SecretKeySpec(properties.getSecret().getBytes(), "HmacSHA256");
+        return NimbusJwtDecoder.withSecretKey(key).build();
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            String type = jwt.getClaimAsString("type");
+
+            if (!"access".equals(type)) {
+                throw new JwtException("Invalid token type: " + type);
+            }
+
+            return AuthorityUtils.NO_AUTHORITIES;
+        });
+
+        return converter;
+    }
+
 }
