@@ -23,14 +23,6 @@ spring:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
 
-keycloak:
-  realm:
-  auth-server-url:
-  resource:
-  credentials:
-    secret:
-  use-resource-role-mappings:
-
 openweather.api.key: $(OPENWEATHER_API_KEY)
 
 server:
