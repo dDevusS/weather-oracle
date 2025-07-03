@@ -11,6 +11,7 @@ import com.ddevuss.weather.oracle.repository.JwtRefreshTokenRepository;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,6 +150,12 @@ public class JwtService {
     public void revokeRefreshToken(DecodedJWT decodedRefreshToken) {
         String refreshTokenHash = (generateTokenHash(decodedRefreshToken.getToken()));
         jwtRepository.revokeByTokenHash(refreshTokenHash);
+    }
+
+    @Scheduled(cron = "0 0 0 * * MON")
+    @Transactional
+    public void deleteExpiredTokens() {
+        jwtRepository.deleteAllByExpiresAtBefore(Instant.now());
     }
 
     @Getter
