@@ -9,6 +9,7 @@ public class PasswordsMatchesValidator implements ConstraintValidator<PasswordsM
 
     @Override
     public boolean isValid(UserCreateDto value, ConstraintValidatorContext context) {
+        if (value.getRawPassword() == null) return false;
         return value.getRawPassword().equals(value.getConfirmRawPassword());
     }
 }
