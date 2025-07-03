@@ -1,12 +1,12 @@
 package com.ddevuss.weather.oracle.service;
 
+import com.ddevuss.weather.oracle.configuration.WeatherOracleConfiguration;
 import com.ddevuss.weather.oracle.dto.ForecastDto;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.api.ForecastApiResponseDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -18,10 +18,9 @@ import java.util.List;
 @Service
 public class OpenWeatherService {
 
-    private final RestClient restClient;
+    private final RestClient openWeatherRestClient;
     private final String appId;
     private final static String KEY_FOR_APP_ID = "&appid=";
-    private final static String OPEN_WEATHER_URL = "https://api.openweathermap.org";
 
     private final static String GEO_API_FRAGMENT = "/geo/1.0/direct?";
     private final static String KEY_FOR_CITY_NAME = "q=";
@@ -36,16 +35,16 @@ public class OpenWeatherService {
     private final static String ICON_SUFFIX = ".png";
 
     @Autowired
-    public OpenWeatherService(RestClient restClient,
-                              @Value("${openweather.api.key}") String appId) {
-        this.restClient = restClient;
-        this.appId = appId;
+    public OpenWeatherService(RestClient openWeatherRestClient,
+                              WeatherOracleConfiguration properties) {
+        this.openWeatherRestClient = openWeatherRestClient;
+        this.appId = properties.getKey();
     }
 
     public LocationApiResponseDto[] searchLocationsByName(String locationName) {
         String url = buildUrlForGeoApi(locationName);
 
-        return restClient.get()
+        return openWeatherRestClient.get()
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -58,7 +57,7 @@ public class OpenWeatherService {
         for (LocationReadDto location : locations) {
             String url = buildUrlForWeatherApi(location.getLatitude(), location.getLongitude());
 
-            ForecastApiResponseDto forecastResponse = restClient.get()
+            ForecastApiResponseDto forecastResponse = openWeatherRestClient.get()
                     .uri(url)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
@@ -71,8 +70,7 @@ public class OpenWeatherService {
     }
 
     private String buildUrlForGeoApi(String locationName) {
-        return OPEN_WEATHER_URL +
-               GEO_API_FRAGMENT +
+        return GEO_API_FRAGMENT +
                KEY_FOR_CITY_NAME +
                locationName +
                LIMIT_5_FOR_RESPONSE +
@@ -81,8 +79,7 @@ public class OpenWeatherService {
     }
 
     private String buildUrlForWeatherApi(Double latitude, Double longitude) {
-        return OPEN_WEATHER_URL +
-               WEATHER_API_FRAGMENT +
+        return WEATHER_API_FRAGMENT +
                KEY_FOR_LATITUDE +
                latitude +
                KEY_FOR_LONGITUDE +
