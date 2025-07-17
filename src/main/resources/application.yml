@@ -25,6 +25,14 @@ spring:
 
 openweather.api.key: $(OPENWEATHER_API_KEY)
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    enabled: true
+  packages-to-scan: com.ddevuss.weather.oracle.controller.api
+
 server:
   port: 8080
 

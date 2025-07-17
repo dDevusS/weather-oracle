@@ -3,6 +3,7 @@ package com.ddevuss.weather.oracle.controller.api;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ddevuss.weather.oracle.controller.api.docs.UserAuthController;
 import com.ddevuss.weather.oracle.dto.ApiErrorDto;
 import com.ddevuss.weather.oracle.dto.JwtResponseDto;
 import com.ddevuss.weather.oracle.dto.RefreshTokenDto;
@@ -38,7 +39,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
-public class UserAuthRestController {
+public class UserAuthRestController implements UserAuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
