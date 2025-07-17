@@ -33,8 +33,8 @@ class UserRepositoryIT extends IntegrationTestBase {
     @Test
     void saveUser() {
         var user = userRepository.save(User.builder()
-                .login("Test")
-                .password("test")
+                .login("Test89")
+                .password("test89")
                 .build());
 
         assertThat(user).as("Must return notnull saved user.").isNotNull();

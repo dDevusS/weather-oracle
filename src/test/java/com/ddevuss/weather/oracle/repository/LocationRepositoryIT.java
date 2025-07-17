@@ -42,6 +42,7 @@ class LocationRepositoryIT extends IntegrationTestBase {
     void save() {
         Location newLocation = Location.builder()
                 .name("Location")
+                .state("state")
                 .user(User.builder()
                         .id(1L)
                         .build())
