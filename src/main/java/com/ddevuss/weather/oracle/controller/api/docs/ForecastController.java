@@ -30,11 +30,11 @@ public interface ForecastController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            ref = "#components/responses/BadRequest"
+                            ref = "#/components/responses/BadRequest"
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            ref = "#components/responses/Unauthorized"
+                            ref = "#/components/responses/Unauthorized"
                     )
             }
     )

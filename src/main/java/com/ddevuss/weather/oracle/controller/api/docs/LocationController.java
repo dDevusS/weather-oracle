@@ -30,11 +30,11 @@ public interface LocationController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            ref = "#components/responses/BadRequest"
+                            ref = "#/components/responses/BadRequest"
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            ref = "#components/responses/Unauthorized"
+                            ref = "#/components/responses/Unauthorized"
                     )
             }
     )
@@ -58,11 +58,11 @@ public interface LocationController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            ref = "#components/responses/BadRequest"
+                            ref = "#/components/responses/BadRequest"
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            ref = "#components/responses/Unauthorized"
+                            ref = "#/components/responses/Unauthorized"
                     )
             }
     )
@@ -86,11 +86,11 @@ public interface LocationController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            ref = "#components/responses/BadRequest"
+                            ref = "#/components/responses/BadRequest"
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            ref = "#components/responses/Unauthorized"
+                            ref = "#/components/responses/Unauthorized"
                     ),
                     @ApiResponse(
                             responseCode = "403",
@@ -121,11 +121,11 @@ public interface LocationController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            ref = "#components/responses/BadRequest"
+                            ref = "#/components/responses/BadRequest"
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            ref = "#components/responses/Unauthorized"
+                            ref = "#/components/responses/Unauthorized"
                     )
             }
     )
