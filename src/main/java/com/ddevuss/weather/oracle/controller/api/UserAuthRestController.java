@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
+import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.service.JwtService;
 import com.ddevuss.weather.oracle.service.UserService;
@@ -27,7 +28,7 @@ import java.time.Instant;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
@@ -63,8 +64,8 @@ public class UserAuthRestController {
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody @Validated UserCreateDto user) {
         try {
-            userService.save(user);
-            return ResponseEntity.ok().build();
+            UserReadDto createdUser = userService.save(user);
+            return ResponseEntity.status(CREATED).body(createdUser);
         }
         catch (DataIntegrityViolationException exception) {
             ConstraintViolationException constraintViolationException = (ConstraintViolationException) exception.getCause();
@@ -72,13 +73,16 @@ public class UserAuthRestController {
 
             if ("users_login_key".equals(constraintName)) {
                 return ResponseEntity.status(CONFLICT)
-                        .body(Map.of("error", "User with this login already exists"));
+                        .body(new ApiErrorDto("DUPLICATED_LOGIN_ERROR",
+                                "User with this login already exists",
+                                "VALIDATION_ERROR")
+                        );
             }
             else {
                 log.error(exception.getMessage(), exception);
 
-                return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-                        .body(Map.of("error", "There is unexpected error. Please try again later."));
+                return ResponseEntity.internalServerError()
+                        .body(new ApiErrorDto("INTERNAL_ERROR", "Something went wrong. Please, try again later.", "INTERNAL"));
             }
         }
     }
