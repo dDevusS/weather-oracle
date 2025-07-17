@@ -1,6 +1,7 @@
 package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
+import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.mapper.UserCreateDtoToEntityMapper;
 import com.ddevuss.weather.oracle.mapper.UserReadDtoFromEntityMapper;
@@ -33,9 +34,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void save(UserCreateDto userCreateDto) {
+    public UserReadDto save(UserCreateDto userCreateDto) {
         User user = userCreateDtoToEntityMapper.dtoToEntity(userCreateDto);
-        userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
+        return userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
     }
 
 }

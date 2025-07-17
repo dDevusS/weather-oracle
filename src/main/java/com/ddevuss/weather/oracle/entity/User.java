@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,9 +28,11 @@ public class User implements BaseEntity<Long> {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotBlank
     private String login;
 
     @Column(nullable = false)
+    @NotBlank
     private String password;
 
 }

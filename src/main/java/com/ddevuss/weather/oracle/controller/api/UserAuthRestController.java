@@ -7,8 +7,6 @@ import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.service.JwtService;
 import com.ddevuss.weather.oracle.service.UserService;
-import com.ddevuss.weather.oracle.util.JsonMapper;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -43,9 +41,8 @@ public class UserAuthRestController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response) {
+    public ResponseEntity<?> login(@Validated @RequestBody User user) {
         try {
-            System.out.println("Entered login handler");
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getLogin(), user.getPassword())
             );
@@ -55,11 +52,11 @@ public class UserAuthRestController {
             String refreshToken = jwtService.generateRefreshToken(authentication.getName(), createdAt);
             jwtService.saveRefreshToken(authentication.getName(), createdAt, refreshToken);
 
-            return ResponseEntity.ok(Map.of("access_token", accessToken, "refresh_token", refreshToken));
+            return ResponseEntity.ok(new JwtResponseDto(accessToken, refreshToken));
         }
         catch (AuthenticationException e) {
             return ResponseEntity.status(UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid username or password"));
+                    .body(new ApiErrorDto("", "Invalid username or password", "VALIDATION_ERROR"));
         }
     }
 
