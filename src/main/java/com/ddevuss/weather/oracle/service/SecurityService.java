@@ -1,6 +1,7 @@
 package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.repository.LocationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,10 +14,21 @@ public class SecurityService {
     private final LocationRepository locationRepository;
 
     public boolean hasPermissionToDeleteLocation(Long locationId) {
-        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
         return locationRepository.findById(locationId)
-                .map(location -> location.getUser().getLogin().equals(login))
-                .orElseThrow(() -> new AccessDeniedException("Attempt to delete location by user '" + login + "' without permission"));
+                .map(location -> {
+                    if (!location.getUser().getLogin().equals(currentUsername)) {
+                        throw new AccessDeniedException(
+                                String.format("User '%s' doesn't have permission to delete location %d",
+                                        currentUsername, locationId)
+                        );
+                    }
+                    return true;
+                })
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Location with id %d not found", locationId)
+                ));
     }
 
 }
