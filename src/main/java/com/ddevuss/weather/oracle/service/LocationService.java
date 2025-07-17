@@ -5,6 +5,7 @@ import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -35,7 +36,13 @@ public class LocationService {
     @Transactional
     @PreAuthorize("@securityService.hasPermissionToDeleteLocation(#locationId)")
     public void deleteById(Long locationId) {
-        locationRepository.deleteById(locationId);
+        try {
+            locationRepository.deleteById(locationId);
+        }
+        catch (Exception ex) {
+            throw new DataAccessException("Failed to delete location", ex) {
+            };
+        }
     }
 
 }
