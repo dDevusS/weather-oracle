@@ -3,6 +3,9 @@ package com.ddevuss.weather.oracle.controller.api;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ddevuss.weather.oracle.dto.ApiErrorDto;
+import com.ddevuss.weather.oracle.dto.JwtResponseDto;
+import com.ddevuss.weather.oracle.dto.RefreshTokenDto;
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.User;
@@ -88,34 +91,31 @@ public class UserAuthRestController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@RequestBody String jsonRefreshToken) {
+    public ResponseEntity<?> refresh(@Validated @RequestBody RefreshTokenDto jsonRefreshToken) {
         DecodedJWT token;
-        String refreshToken;
-
-        try {
-            refreshToken = JsonMapper.extractValue(jsonRefreshToken, "refresh_token");
-        }
-        catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Missing refresh token"));
-        }
+        String refreshToken = jsonRefreshToken.refreshToken();
 
         try {
             token = jwtService.verifyAndDecodeToken(refreshToken);
         }
         catch (TokenExpiredException exception) {
             return ResponseEntity.status(UNAUTHORIZED)
-                    .body(Map.of("error", "Token is expired"));
+                    .body(new ApiErrorDto("",
+                            "Expired refresh token",
+                            "VALIDATION_ERROR"));
         }
         catch (JWTVerificationException exception) {
             return ResponseEntity.status(UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid refresh token"));
+                    .body(new ApiErrorDto("",
+                            "Invalid refresh token",
+                            "VALIDATION_ERROR"));
         }
 
         Instant createdAt = Instant.now();
         String accessToken = jwtService.generateAccessToken(token.getSubject(), createdAt);
         String newRefreshToken = jwtService.exchangeRefreshToken(token, createdAt);
 
-        return ResponseEntity.ok(Map.of("access_token", accessToken, "refresh_token", newRefreshToken));
+        return ResponseEntity.ok(new JwtResponseDto(accessToken, newRefreshToken));
     }
 
     @GetMapping("/test")
