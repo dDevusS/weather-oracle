@@ -1,0 +1,13 @@
+:root {
+  --primal-collor: #ffb900;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  background-image: url("/assets/images/background_img.jpg");
+  background-size: cover;
+  height: 100dvh;
+  color:var(--primal-collor);
+}
