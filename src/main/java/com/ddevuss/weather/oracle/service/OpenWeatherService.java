@@ -44,6 +44,8 @@ public class OpenWeatherService {
     public LocationApiResponseDto[] searchLocationsByName(String locationName) {
         String url = buildUrlForGeoApi(locationName);
 
+        //TODO: remove duplicates from result
+
         return openWeatherRestClient.get()
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
