@@ -6,16 +6,19 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ddevuss.weather.oracle.controller.api.docs.UserAuthController;
 import com.ddevuss.weather.oracle.dto.ApiErrorDto;
 import com.ddevuss.weather.oracle.dto.JwtResponseDto;
-import com.ddevuss.weather.oracle.dto.RefreshTokenDto;
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.service.JwtService;
 import com.ddevuss.weather.oracle.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,8 +31,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -55,9 +61,20 @@ public class UserAuthRestController implements UserAuthController {
             Instant createdAt = Instant.now();
             String accessToken = jwtService.generateAccessToken(authentication.getName(), createdAt);
             String refreshToken = jwtService.generateRefreshToken(authentication.getName(), createdAt);
+            //TODO: 1 refresh for 1 location?
             jwtService.saveRefreshToken(authentication.getName(), createdAt, refreshToken);
 
-            return ResponseEntity.ok(new JwtResponseDto(accessToken, refreshToken));
+            ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/api/auth")
+                    .sameSite("Lax")
+                    .maxAge(Duration.ofDays(3))
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new JwtResponseDto(accessToken));
         }
         catch (AuthenticationException e) {
             return ResponseEntity.status(UNAUTHORIZED)
@@ -92,9 +109,25 @@ public class UserAuthRestController implements UserAuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@Validated @RequestBody RefreshTokenDto jsonRefreshToken) {
+    public ResponseEntity<?> refresh(HttpServletRequest request) {
         DecodedJWT token;
-        String refreshToken = jsonRefreshToken.refreshToken();
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            return ResponseEntity.status(UNAUTHORIZED)
+                    .body(new ApiErrorDto("", "Missing refresh token", "UNAUTHORIZED"));
+        }
+
+        Optional<Cookie> refreshCookie = Arrays.stream(cookies)
+                .filter(c -> "refreshToken".equals(c.getName()))
+                .findFirst();
+
+        if (refreshCookie.isEmpty()) {
+            return ResponseEntity.status(UNAUTHORIZED)
+                    .body(new ApiErrorDto("", "Missing refresh token", "UNAUTHORIZED"));
+        }
+
+        String refreshToken = refreshCookie.get().getValue();
 
         try {
             token = jwtService.verifyAndDecodeToken(refreshToken);
@@ -116,7 +149,52 @@ public class UserAuthRestController implements UserAuthController {
         String accessToken = jwtService.generateAccessToken(token.getSubject(), createdAt);
         String newRefreshToken = jwtService.exchangeRefreshToken(token, createdAt);
 
-        return ResponseEntity.ok(new JwtResponseDto(accessToken, newRefreshToken));
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/api/auth")
+                .sameSite("Lax")
+                .maxAge(Duration.ofDays(3))
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new JwtResponseDto(accessToken));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            Arrays.stream(cookies)
+                    .filter(c -> "refreshToken".equals(c.getName()))
+                    .findFirst()
+                    .ifPresent(cookie -> {
+                        try {
+                            DecodedJWT token = jwtService.verifyAndDecodeToken(cookie.getValue());
+                            jwtService.revokeRefreshToken(token);
+                        }
+                        catch (TokenExpiredException e) {
+
+                        }
+                        catch (JWTVerificationException e) {
+                            //TODO: revoke all tokens this user?
+                        }
+                    });
+        }
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", null)
+                .httpOnly(true)
+                .secure(false)
+                .path("/api/auth")
+                .sameSite("Lax")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 
     @GetMapping("/test")

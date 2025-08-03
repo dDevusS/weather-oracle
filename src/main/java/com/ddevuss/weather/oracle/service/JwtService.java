@@ -146,7 +146,7 @@ public class JwtService {
     }
 
     @SneakyThrows
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRED)
     public void revokeRefreshToken(DecodedJWT decodedRefreshToken) {
         String refreshTokenHash = (generateTokenHash(decodedRefreshToken.getToken()));
         jwtRepository.revokeByTokenHash(refreshTokenHash);
