@@ -7,11 +7,15 @@ import com.ddevuss.weather.oracle.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.dto.UserReadDto;
 import com.ddevuss.weather.oracle.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Authentication")
@@ -93,7 +97,30 @@ public interface UserAuthController {
                             ref = "#/components/responses/Unauthorized")
             }
     )
-    ResponseEntity<?> refresh(RefreshTokenDto jsonRefreshToken);
+    //TODO: fix documentation
+    ResponseEntity<?> refresh(HttpServletRequest request);
+
+    @Operation(
+            summary = "Logout user",
+            description = "Invalidates the refresh token by revoking it server-side and removing the HTTP-only cookie",
+            security = @SecurityRequirement(name = "refreshToken"),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Logout successful - refresh token revoked and cookie cleared",
+                            headers = @Header(
+                                    name = HttpHeaders.SET_COOKIE,
+                                    description = "Clears the refreshToken cookie by setting Max-Age=0",
+                                    schema = @Schema(type = "string", example = "refreshToken=; Path=/api/auth; HttpOnly; SameSite=Lax; Max-Age=0")
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized - if no valid refresh token was provided"
+                    )
+            }
+    )
+    ResponseEntity<Void> logout(HttpServletRequest request);
 
     @Operation(hidden = true)
     ResponseEntity<?> test();

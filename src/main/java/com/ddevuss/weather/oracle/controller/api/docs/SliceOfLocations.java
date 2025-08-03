@@ -16,6 +16,10 @@ public class SliceOfLocations {
 
     private int size;
 
-    private boolean hasNext;
+    private boolean first;
+
+    private boolean last;
+
+    private boolean empty;
 
 }
