@@ -49,5 +49,5 @@ public class JwtRefreshToken {
     private Instant createdAt;
 
     @Column(nullable = false)
-    private boolean revoked;
+    private boolean revoked = false;
 }
