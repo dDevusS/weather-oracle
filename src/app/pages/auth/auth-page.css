@@ -1,0 +1,50 @@
+.auth-page-container {
+  display: flex;
+  padding: 50px;
+  justify-content: center;
+}
+
+.form-container__input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 20px;
+}
+
+.form-main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  row-gap: 20px;
+  background-color: var(--dark-background-color);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  border: 1px solid var(--blue-color);
+  border-radius: 5px;
+  padding: 50px;
+  min-height: 250px;
+  width: 500px;
+}
+
+.form-label {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  align-items: center;
+  height: 30px;
+}
+
+.form-row__btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.error-row {
+  text-align: center;
+  height: 15px;
+}
+
+.btn-form {
+  height: 40px;
+  width: 110px;
+}

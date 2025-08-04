@@ -1,0 +1,45 @@
+<main class="auth-page-container">
+  <form
+    class="form-main-container"
+    (ngSubmit)="onSubmit()"
+    [formGroup]="form"
+  >
+    <div class="form-container__input">
+      <label class="form-label">
+        <span class="label-text">Login:</span>
+        <input
+          class="input-field"
+          type="text"
+          formControlName="login"
+        >
+      </label>
+      <label class="form-label">
+        <span class="label-text">Password:</span>
+        <input
+          class="input-field"
+          type="password"
+          formControlName="rawPassword"
+        >
+      </label>
+      <label class="form-label">
+        <span class="label-text">Confirm password:</span>
+        <input
+          class="input-field"
+          type="password"
+          formControlName="confirmRawPassword"
+        >
+      </label>
+    </div>
+
+    @for (error of errorMessages; track $index) {
+      <div class="error-row error-text">
+        {{ error }}
+      </div>
+    }
+
+    <div class="form-row__btn">
+      <button type="button" (click)="goBack()" class="btn btn-form lighting_text">Return</button>
+      <button type="submit" class="btn btn-form lighting_text" >Ok</button>
+    </div>
+  </form>
+</main>
