@@ -1,5 +1,7 @@
 package com.ddevuss.weather.oracle.dto.api;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +15,16 @@ import java.io.Serializable;
 @Builder
 public class LocationApiResponseDto implements Serializable {
 
+    @NotBlank
     String name;
 
+    @NotNull
     Double lat;
 
+    @NotNull
     Double lon;
 
+    @NotBlank
     String country;
 
     String state;

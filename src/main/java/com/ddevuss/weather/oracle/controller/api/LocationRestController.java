@@ -17,6 +17,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,7 +66,7 @@ public class LocationRestController implements LocationController {
     }
 
     @PostMapping("/location/save")
-    public ResponseEntity<?> saveLocation(@RequestBody LocationApiResponseDto locationApiResponseDto, Principal principal) {
+    public ResponseEntity<?> saveLocation(@RequestBody @Validated LocationApiResponseDto locationApiResponseDto, Principal principal) {
         try {
             locationService.save(
                     Location.builder()
