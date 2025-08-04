@@ -1,0 +1,17 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>{{ data.title }}</h2>
+  </div>
+  <div class="dialog-content">
+    <p>{{ data.message }}</p>
+  </div>
+
+  <div class="dialog-actions">
+    <button class="btn lighting_text" (click)="dialogRef.close(false)">
+      {{ data.cancelText || 'Cancel' }}
+    </button>
+    <button class="btn lighting_text" (click)="dialogRef.close(true)">
+      {{ data.confirmText || 'Ok' }}
+    </button>
+  </div>
+</div>
