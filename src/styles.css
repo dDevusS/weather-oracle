@@ -1,13 +1,85 @@
+@import "fonts.css";
+
 :root {
-  --primal-collor: #ffb900;
+  --primal-color: rgb(241, 203, 74);
+  --second-color: rgb(232, 151, 69);
+  --blue-color: rgba(0, 113, 252, 0.3);
+  --dark-blue-color: rgba(8, 42, 161, 0.6);
+  --light-color: rgb(255, 248, 156);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --dark-background-color: rgba(0, 0, 0, 0.76);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: black;
+  background-color: var(--blue-color);
   background-image: url("/assets/images/background_img.jpg");
   background-size: cover;
   height: 100dvh;
-  color:var(--primal-collor);
+  color:var(--primal-color);
 }
+
+.searchbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.input-field {
+  height: 30px;
+  color: var(--primal-color);
+  background-color: var(--dark-background-color);
+  border: 1px solid var(--blue-color);
+}
+
+.input-field:hover, .input-field:focus {
+  background-color: var(--dark-blue-color);
+  color: var(--primal-color);
+}
+
+h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: 800;
+}
+
+.error-text {
+  color: red;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.lighting_text {
+  color: var(--primal-color);
+}
+
+.lighting_text:hover {
+  color: var(--light-color);
+}
+
+.btn_hidden {
+  all: unset;
+}
+
+.btn {
+  background-color: var(--blue-color);
+  border: 1px solid var(--blue-color);
+  font-size: medium;
+}
+
+.btn:hover {
+  background-color: var(--dark-blue-color);
+  border: 1px solid var(--dark-blue-color);
+}
+
+.custom-dialog-container {
+ .mat-dialog-container {
+   padding: 0;
+   overflow: visible;
+   background: transparent;
+   box-shadow: none;
+ }
+ }
