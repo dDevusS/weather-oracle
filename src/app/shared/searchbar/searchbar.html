@@ -1,0 +1,11 @@
+<form class="searchbar-wrapper"
+      (ngSubmit)="onSubmit()"
+      [formGroup]="searchForm"
+>
+  <input class="searchbar-input input-field"
+         type="text"
+         formControlName="locationName"
+         placeholder="search location"
+  >
+  <button class="btn lighting_text" type="submit">Search</button>
+</form>

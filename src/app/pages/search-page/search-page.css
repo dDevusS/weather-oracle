@@ -1,0 +1,13 @@
+:host {
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: max-content;
+}
+
+.error-text {
+  margin-bottom: 25px;
+  background-color: var(--shadow-color);
+}

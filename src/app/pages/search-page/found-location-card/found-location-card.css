@@ -1,0 +1,15 @@
+.location-card-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.location-card {
+  display: grid;
+  grid-template-columns: 100px 50px 300px 200px;
+  width: max-content;
+  height: 50px;
+  border: 1px solid var(--dark-blue-color);
+  background-color: var(--dark-background-color);
+}

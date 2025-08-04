@@ -1,0 +1,14 @@
+@if (errorMessage()) {
+  <div class="error-text">
+    {{ errorMessage() }}
+  </div>
+}
+
+@if (locations()) {
+  @for (location of locations(); track $index) {
+    <app-found-location-card
+      [location]="location"
+      [clearError] = true
+    />
+  }
+}

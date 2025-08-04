@@ -1,0 +1,17 @@
+@if (location) {
+  <div class="location-card-wrapper">
+    <a class="location-card lighting_text"
+       (click)="saveLocation()"
+    >
+      <span class="name">{{ location.name }}</span>
+      <span class="country">{{ location.country }}</span>
+      <span class="state"> {{ location.state }}</span>
+      <span class="coordinates">{{ location.lat | coordinate }} : {{ location.lon | coordinate }}</span>
+    </a>
+    @if (errorMessage) {
+      <div class="error-text">
+        {{ errorMessage }}
+      </div>
+    }
+  </div>
+}
