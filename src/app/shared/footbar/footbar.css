@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  height: 60px;
+  background: linear-gradient(to top, black 20%, var(--blue-color) 100%);
+}
+
+.icon {
+  height: 40px;
+  width: 40px;
+}

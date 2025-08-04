@@ -1,0 +1,61 @@
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  padding: 0 20px;
+  height: 60px;
+  background: linear-gradient(to bottom, black 20%, var(--blue-color) 100%);
+}
+
+.navbar_item {
+  text-align: center;
+}
+
+.svg-nav_item {
+  display: grid;
+  grid-template-columns: auto 30px;
+  max-width: 100%;
+  grid-gap: 5px;
+  overflow: hidden;
+}
+
+.nav_text{
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  padding: 5px;
+  text-align: end;
+}
+
+.svg-nav_item:hover .nav_text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.svg-nav_button {
+  width: 30px;
+  height: 30px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #222;
+  padding: 8px 0;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 100;
+  min-width: 160px;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 8px 16px;
+  color: white;
+  text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+  background: #444;
+}

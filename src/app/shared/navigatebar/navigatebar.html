@@ -1,0 +1,29 @@
+<div class="navbar" xmlns="http://www.w3.org/1999/html">
+  <div class="navbar_item">
+  </div>
+  <div class="navbar_item">
+    <h1 routerLink="/" class="lighting_text">Weather Oracle</h1>
+  </div>
+  @if (isAuthPage) {
+    <div class="navbar_item"></div>
+  } @else if (authService.isAuthenticated) {
+    <a (click)="authService.logout()" class="navbar_item svg-nav_item lighting_text btn_hidden">
+      <div class="nav_text">
+        logout
+      </div>
+      <div class="svg-nav_button">
+        <svg icon="logout"/>
+      </div>
+    </a>
+  }
+  @else {
+    <a routerLink="/login" class="navbar_item svg-nav_item lighting_text btn_hidden">
+      <div class="nav_text">
+        login
+      </div>
+      <div class="svg-nav_button">
+        <svg icon="login"/>
+      </div>
+    </a>
+  }
+</div>
