@@ -31,9 +31,6 @@ public class OpenWeatherService {
     private final static String KEY_FOR_LONGITUDE = "&lon=";
     private final static String UNITS_MEASUREMENT = "&units=metric";
 
-    private final static String ICON_URL_PATH = "/img/weather_ico/";
-    private final static String ICON_SUFFIX = ".png";
-
     @Autowired
     public OpenWeatherService(RestClient openWeatherRestClient,
                               WeatherOracleConfiguration properties) {
@@ -97,16 +94,12 @@ public class OpenWeatherService {
                 .locationName(location.getName())
                 .countryCode(response.getSys().getCountry())
                 .state(location.getState())
-                .iconUrl(createIconUrl(response))
+                .iconUrl(response.getWeather()[0].getIcon())
                 .description(response.getWeather()[0].getDescription())
                 .temperature(response.getMain().getTemp())
                 .pressure(response.getMain().getPressure())
                 .humidity(response.getMain().getHumidity())
                 .build();
-    }
-
-    private String createIconUrl(ForecastApiResponseDto response) {
-        return ICON_URL_PATH + response.getWeather()[0].getIcon() + ICON_SUFFIX;
     }
 
 }
