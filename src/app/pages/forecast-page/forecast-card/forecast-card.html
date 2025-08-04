@@ -1,0 +1,32 @@
+@if (forecast) {
+  <div class="forecast-container">
+    <div class="location-name__row">
+      <div class="location-name__forecast lighting_text">
+        <span>{{ forecast.locationName }}</span>
+        <span>{{ forecast.countryCode }}</span>
+        <span>{{ forecast.state }}</span>
+      </div>
+      <button (click)="deleteLocation()" class="btn_delete lighting_text">x</button>
+    </div>
+    <div class="weather-container">
+      <div class="forecast-icon">
+        <img class="icon" [src]=" forecast.iconUrl | imagePipe "/>
+        <span>{{ forecast.description }}</span>
+      </div>
+      <div class="forecast-description">
+        <div class="description-row">
+          <img class="icon__description" [src]="'temperature' | imagePipe"/>
+          <span>{{ forecast.temperature }}</span>
+        </div>
+        <div class="description-row">
+          <img class="icon__description" [src]="'humidity' | imagePipe"/>
+          <span>{{ forecast.humidity }}</span>
+        </div>
+        <div class="description-row">
+          <img class="icon__description" [src]="'pressure' | imagePipe"/>
+          <span>{{ forecast.pressure }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+}
