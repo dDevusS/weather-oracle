@@ -73,7 +73,7 @@ public class LocationRestController implements LocationController {
                                     .login(principal.getName())
                                     .build())
                             .name(locationApiResponseDto.getName())
-                            .state(locationApiResponseDto.getState())
+                            .state(Optional.ofNullable(locationApiResponseDto.getState()).orElse("Unknown"))
                             .latitude(locationApiResponseDto.getLat())
                             .longitude(locationApiResponseDto.getLon())
                             .build()
