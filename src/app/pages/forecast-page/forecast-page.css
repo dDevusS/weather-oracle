@@ -1,0 +1,55 @@
+:host {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.forecast-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+  max-width: 1050px;
+  width: 100%;
+  min-height: 354px;
+  /*height: max-content;*/
+}
+
+.app-forecast-card {
+  flex: 0 0 calc(50% - 0.5rem);
+  box-sizing: border-box;
+}
+
+.app-forecast-card:last-child:nth-child(odd) {
+  margin-left: 25%;
+}
+
+.triangle {
+  width: 20px;
+}
+
+.triangle-left {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 150px 20px 150px 0;
+  border-color: transparent rgba(251, 197, 11, 0.13) transparent transparent;
+}
+
+.triangle-right {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 150px 0 150px 20px;
+  border-color: transparent transparent transparent rgba(251, 197, 11, 0.13);
+}
+
+.triangle-left:hover {
+  border-color: transparent rgba(248, 253, 101, 0.4) transparent transparent;
+}
+
+.triangle-right:hover {
+  border-color: transparent transparent transparent rgba(248, 253, 101, 0.4);
+}
