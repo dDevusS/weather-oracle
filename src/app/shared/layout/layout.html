@@ -1,0 +1,16 @@
+<header>
+  <app-navigatebar></app-navigatebar>
+</header>
+
+<div class="workspace">
+@if (authService.isAuthenticated) {
+  <div class="searchbar-container">
+    <app-searchbar></app-searchbar>
+  </div>
+}
+
+  <router-outlet></router-outlet>
+</div>
+<footer>
+<app-footbar></app-footbar>
+</footer>

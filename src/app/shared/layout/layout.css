@@ -1,0 +1,10 @@
+:host {
+  display: grid;
+  grid-template-rows: 50px 1fr 60px;
+  height: 100dvh;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.workspace {
+  padding: 70px 30px 0 30px;
+}
