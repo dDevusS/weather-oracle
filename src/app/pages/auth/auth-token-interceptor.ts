@@ -1,9 +1,9 @@
 import {HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {AuthService} from '../../services/auth/auth-service';
-import {BehaviorSubject, catchError, filter, switchMap, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, filter, finalize, switchMap, take, throwError} from 'rxjs';
 
-let isRefreshing$ = new BehaviorSubject<boolean>(false);
+const isRefreshing$ = new BehaviorSubject<boolean>(false);
 
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.includes('/api/auth/')) {
@@ -13,7 +13,7 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const accessToken = authService.accessToken
 
-  if (!accessToken) return next(req)
+  if (!accessToken) return refreshAndProceed(authService, req, next)
 
   if (isRefreshing$.value) {
     return refreshAndProceed(authService, req, next)
@@ -26,32 +26,39 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
           return refreshAndProceed(authService, req, next)
         }
 
-        return throwError(error)
+        return throwError(() => error)
       })
     )
 };
 
 const refreshAndProceed = (authService: AuthService, req: HttpRequest<any>, next: HttpHandlerFn) => {
   if (!isRefreshing$.value) {
-    isRefreshing$.next(true);
+    isRefreshing$.next(true)
 
-    return authService.refreshToken()
-      .pipe(
-        switchMap(res => {
-
-          return next(addToken(req, res.access_token))
-            .pipe(
-              tap(() => isRefreshing$.next(false))
-            )
-        })
-      )
+    return authService.refreshToken().pipe(
+      switchMap(() => {
+        return next(addToken(req, authService.accessToken!))
+      }),
+      catchError(error => {
+        if (error.status === 401) {
+          authService.logout()
+        }
+        return throwError(() => error)
+      }),
+      finalize(() => {
+        isRefreshing$.next(false)
+      })
+    )
   }
 
-  if (req.url.includes('refresh')) return next(addToken(req, authService.accessToken!))
+  if (req.url.includes('refresh')) {
+    return next(addToken(req, authService.accessToken!))
+  }
 
   return isRefreshing$.pipe(
     filter(isRefreshing => !isRefreshing),
-    switchMap(res => {
+    take(1),
+    switchMap(() => {
       return next(addToken(req, authService.accessToken!))
     })
   )
