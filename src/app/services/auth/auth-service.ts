@@ -5,7 +5,6 @@ import {Router} from '@angular/router';
 import {tap} from 'rxjs';
 import {TokenResponse} from './token-response';
 import {environment} from '../../../environments/environment';
-import {DialogService} from '../../shared/dialog/dialog-service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +13,6 @@ export class AuthService {
   http = inject(HttpClient)
   cookieService = inject(CookieService)
   router = inject(Router)
-  dialog = inject(DialogService)
   baseApiUrl = environment.apiUrl
 
   get isAuthenticated(): boolean {
@@ -49,13 +47,7 @@ export class AuthService {
   }
 
   logout() {
-    this.dialog.openConfirmDialog({
-      title: 'Logout',
-      message: 'Are you sure you want to logout?',
-    })
-      .subscribe((result) => {
-        if (result) {
-          this.cookieService.deleteAll()
+    this.cookieService.deleteAll()
 
           this.http.post(this.baseApiUrl + '/auth/logout', {}, {
             withCredentials: true

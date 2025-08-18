@@ -7,7 +7,7 @@
   @if (isAuthPage) {
     <div class="navbar_item"></div>
   } @else if (authService.isAuthenticated) {
-    <a (click)="authService.logout()" class="navbar_item svg-nav_item lighting_text btn_hidden">
+    <a (click)="logout()" class="navbar_item svg-nav_item lighting_text btn_hidden">
       <div class="nav_text">
         logout
       </div>
