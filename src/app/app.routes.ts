@@ -5,6 +5,7 @@ import {RegistrationPage} from './pages/auth/registration-page/registration-page
 import {SearchPage} from './pages/search-page/search-page';
 import {accessGuard} from './pages/auth/access.guard';
 import {ForecastPage} from './pages/forecast-page/forecast-page';
+import {loggedOutOnlyGuard} from './pages/auth/logged-out-only.guard';
 
 export const routes: Routes = [
   {
@@ -17,11 +18,13 @@ export const routes: Routes = [
       },
       {
         path: 'login',
-        component: LoginPage
+        component: LoginPage,
+        canActivate: [loggedOutOnlyGuard]
       },
       {
         path: 'registration',
-        component: RegistrationPage
+        component: RegistrationPage,
+        canActivate: [loggedOutOnlyGuard]
       },
       {
         path: 'search',
