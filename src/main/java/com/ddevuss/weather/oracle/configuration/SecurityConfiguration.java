@@ -1,5 +1,7 @@
 package com.ddevuss.weather.oracle.configuration;
 
+import com.ddevuss.weather.oracle.dto.ApiErrorDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,12 +19,17 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +37,7 @@ import java.util.List;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationEntryPoint restEntryPoint) throws Exception {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/api/auth/login",
@@ -48,6 +55,7 @@ public class SecurityConfiguration {
 //                                .jwtAuthenticationConverter(jwtAuthenticationConverter)
 //                        )
                                 oauth2.jwt(Customizer.withDefaults())
+                                        .authenticationEntryPoint(restEntryPoint)
                 )
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
@@ -67,8 +75,24 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(WeatherOracleConfiguration.JwtProperties properties) {
-        SecretKey key = new SecretKeySpec(properties.getSecret().getBytes(), "HmacSHA256");
+    public AuthenticationEntryPoint restEntryPoint(ObjectMapper mapper) {
+        return (request, response, exception) -> {
+            response.setStatus(UNAUTHORIZED.value());
+            response.setContentType(APPLICATION_JSON_VALUE);
+            String message = Optional.ofNullable(exception.getMessage())
+                    .orElse("Authentication required");
+            ApiErrorDto body = new ApiErrorDto(
+                    "",
+                    message,
+                    "UNAUTHORIZED"
+            );
+            mapper.writeValue(response.getOutputStream(), body);
+        };
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(WeatherOracleConfiguration properties) {
+        SecretKey key = new SecretKeySpec(properties.getJwt().secret().getBytes(), "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
 

@@ -21,6 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
@@ -31,17 +32,14 @@ import java.util.Map;
 public class JwtService {
 
     private final JwtRefreshTokenRepository jwtRepository;
-    private final String secretKey;
-    private final String secretKeyForHashing;
-    private static final Long ACCESS_EXPIRATION = 15 * 60L;
-    private static final Long REFRESH_EXPIRATION = 3 * 24 * 60 * 60L;
+    private final String secret;
+    private static final Duration ACCESS_EXPIRATION = Duration.ofMinutes(5);
+    private static final Duration REFRESH_EXPIRATION = Duration.ofDays(3);
 
     @Autowired
     public JwtService(WeatherOracleConfiguration configuration,
-                      WeatherOracleConfiguration.JwtProperties jwtProperties,
                       JwtRefreshTokenRepository jwtRefreshTokenRepository) {
-        this.secretKey = jwtProperties.getSecret();
-        this.secretKeyForHashing = configuration.getRefreshToken().getSecretForHashing();
+        this.secret = configuration.getJwt().secret();
         this.jwtRepository = jwtRefreshTokenRepository;
     }
 
@@ -60,7 +58,7 @@ public class JwtService {
         JwtRefreshToken token = JwtRefreshToken.builder()
                 .user(User.builder().login(decodedRefreshToChange.getSubject()).build())
                 .createdAt(createdAt)
-                .expiresAt(createdAt.plusSeconds(REFRESH_EXPIRATION))
+                .expiresAt(createdAt.plus(REFRESH_EXPIRATION))
                 .tokenHash(tokenHash)
                 .build();
 
@@ -76,7 +74,7 @@ public class JwtService {
         JwtRefreshToken token = JwtRefreshToken.builder()
                 .user(User.builder().login(username).build())
                 .createdAt(createdAt)
-                .expiresAt(createdAt.plusSeconds(REFRESH_EXPIRATION))
+                .expiresAt(createdAt.plus(REFRESH_EXPIRATION))
                 .tokenHash(generateTokenHash(codedToken))
                 .build();
 
@@ -102,7 +100,7 @@ public class JwtService {
     @SneakyThrows
     @Transactional(noRollbackFor = JWTVerificationException.class)
     public DecodedJWT verifyAndDecodeToken(String token) throws JWTVerificationException {
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
 
         if (!isRefreshTokenType(decodedJWT)) throw new JWTVerificationException("Invalid refresh token");
 
@@ -124,16 +122,16 @@ public class JwtService {
 
     private String generateTokenHash(String token) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec keySpec = new SecretKeySpec(secretKeyForHashing.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
         mac.init(keySpec);
 
         byte[] hash = mac.doFinal(token.getBytes(StandardCharsets.UTF_8));
         return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
     }
 
-    private String generateJwtToken(String username, Instant createdAt, Long expirationTime, TypeOfToken tokenType) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        Instant expiredAt = createdAt.plusSeconds(expirationTime);
+    private String generateJwtToken(String username, Instant createdAt, Duration expirationTime, TypeOfToken tokenType) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        Instant expiredAt = createdAt.plus(expirationTime);
         Map<String, Object> payload = new HashMap<>();
         payload.put("type", tokenType.getType());
 
@@ -152,7 +150,7 @@ public class JwtService {
         jwtRepository.revokeByTokenHash(refreshTokenHash);
     }
 
-    @Scheduled(cron = "0 0 0 * * MON")
+    @Scheduled(cron = "0 0 0/12 * * *")
     @Transactional
     public void deleteExpiredTokens() {
         jwtRepository.deleteAllByExpiresAtBefore(Instant.now());
