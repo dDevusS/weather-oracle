@@ -7,3 +7,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/003_create_table_for_jwt.sql
+
+  - include:
+      file: db/changelog/004_drop_tables_for_session.sql
