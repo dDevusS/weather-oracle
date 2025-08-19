@@ -5,28 +5,42 @@ services:
     image: postgres:15.7
     restart: unless-stopped
     environment:
-      POSTGRES_DB: weather_oracle_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: ${POSTGRES_DB:-weather_oracle_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
-  app:
-    build: .
+  weather-oracle:
+    build:
+      context: .
+      target: runtime
     ports:
       - "8095:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: unless-stopped
     environment:
-      OPENWEATHER_API_KEY: your_api_key
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/weather_oracle_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: pass
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://db:5432/weather_oracle_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+
+      OPEN_WEATHER_API_KEY: ${OPEN_WEATHER_API_KEY:?set in .env}
+      OPEN_WEATHER_API_URL: ${OPEN_WEATHER_API_URL:-https://api.openweathermap.org}
+      OPEN_WEATHER_API_JWT_SECRET: ${REFRESH_TOKEN_SECRET:?set in .env}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
 volumes:
   postgres_data:

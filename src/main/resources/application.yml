@@ -1,29 +1,31 @@
-spring:        
-  session:
-    jdbc:
-      table-name: SPRING_SESSION
-    timeout: 2h
-
+spring:
   application:
     name: weather-oracle
-
   datasource:
-    username: $(DB_USERNAME)
-    password: $(DB_PASSWORD)
-    url: $(DB_URL)
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-
   jpa:
     properties.hibernate:
       hbm2ddl.auto: validate
-      show_sql: true
+      show_sql: false
       format_sql: true
-
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
+  jackson:
+    deserialization:
+      fail-on-ignored-properties: true
+      fail-on-unknown-properties: true
+      fail-on-null-creator-properties: true
+      fail-on-missing-creator-properties: true
 
-openweather.api.key: $(OPENWEATHER_API_KEY)
+open.weather.api:
+  key: ${OPEN_WEATHER_API_KEY}
+  url: ${OPEN_WEATHER_API_URL:https://api.openweathermap.org}
+  jwt:
+    secret: ${REFRESH_TOKEN_SECRET}
 
 springdoc:
   api-docs:
@@ -37,9 +39,6 @@ server:
   port: 8080
 
 logging:
-  file:
-    name: log-note.log
-    path: /
   level:
     org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: OFF
     com.ddevuss.weather.oracle: INFO
