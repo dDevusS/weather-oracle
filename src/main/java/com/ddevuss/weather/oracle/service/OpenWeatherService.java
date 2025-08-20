@@ -5,6 +5,8 @@ import com.ddevuss.weather.oracle.dto.ForecastDto;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
 import com.ddevuss.weather.oracle.dto.api.ForecastApiResponseDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
+import com.ddevuss.weather.oracle.utils.MathUtil;
+import com.ddevuss.weather.oracle.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -38,16 +43,20 @@ public class OpenWeatherService {
         this.appId = properties.getKey();
     }
 
-    public LocationApiResponseDto[] searchLocationsByName(String locationName) {
+    public List<LocationApiResponseDto> searchLocationsByName(String locationName) {
         String url = buildUrlForGeoApi(locationName);
 
-        //TODO: remove duplicates from result
-
-        return openWeatherRestClient.get()
+        var locations = openWeatherRestClient.get()
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(LocationApiResponseDto[].class);
+
+        return Arrays.stream(locations)
+                .filter(Objects::nonNull)
+                .filter(StreamUtils.distinctBy(l ->
+                        Map.entry(MathUtil.truncateCoordinate(l.getLat(), 2), MathUtil.truncateCoordinate(l.getLon(), 2))))
+                .toList();
     }
 
     public List<ForecastDto> getWeatherForecast(List<LocationReadDto> locations) {

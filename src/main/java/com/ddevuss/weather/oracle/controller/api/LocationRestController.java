@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -48,11 +49,11 @@ public class LocationRestController implements LocationController {
                 .map(String::trim)
                 .filter(location -> location.length() > 2)
                 .map(location -> {
-                    LocationApiResponseDto[] locations;
+                    List<LocationApiResponseDto> locations;
                     try {
                         locations = openWeatherService.searchLocationsByName(location);
 
-                        return locations.length != 0
+                        return !locations.isEmpty()
                                 ? ResponseEntity.ok(locations)
                                 : ResponseEntity.notFound().build();
                     }
