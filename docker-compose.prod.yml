@@ -17,9 +17,7 @@ services:
       retries: 20
 
   weather-oracle:
-    build:
-      context: .
-      target: runtime
+    image: ${image}
     ports:
       - "8095:8080"
     depends_on:
