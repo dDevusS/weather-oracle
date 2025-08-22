@@ -102,12 +102,7 @@ public class JwtService {
     public DecodedJWT verifyAndDecodeToken(String token) throws JWTVerificationException {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
 
-        if (!isRefreshTokenType(decodedJWT)) throw new JWTVerificationException("Invalid refresh token");
-
-        if (!isRefreshTokenExistsAndNotRevoked(decodedJWT)) {
-            //TODO: move to another service?
-            jwtRepository.revokeByUserLogin(decodedJWT.getSubject());
-//            revokeAllUserTokens(decodedJWT.getSubject());
+        if (!isRefreshTokenType(decodedJWT) || !isRefreshTokenExistsAndNotRevoked(decodedJWT)) {
             throw new JWTVerificationException("Invalid refresh token");
         }
 

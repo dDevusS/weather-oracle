@@ -176,10 +176,10 @@ public class UserAuthRestController implements UserAuthController {
                             jwtService.revokeRefreshToken(token);
                         }
                         catch (TokenExpiredException e) {
-
+                            log.warn("Attempt to use expired refresh token to logout");
                         }
                         catch (JWTVerificationException e) {
-                            //TODO: revoke all tokens this user?
+                            log.warn("Attempt to use invalid refresh token to logout");
                         }
                     });
         }
