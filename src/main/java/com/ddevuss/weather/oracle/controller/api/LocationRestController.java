@@ -58,7 +58,6 @@ public class LocationRestController implements LocationController {
                                 : ResponseEntity.notFound().build();
                     }
                     catch (RestClientResponseException ex) {
-                        //TODO: log this exception
                         return ResponseEntity.internalServerError().body(new ApiErrorDto("INTERNAL_ERROR", "Something went wrong", "INTERNAL"));
                     }
                 })

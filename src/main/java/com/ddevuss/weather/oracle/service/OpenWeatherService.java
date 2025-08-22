@@ -25,6 +25,7 @@ public class OpenWeatherService {
 
     private final RestClient openWeatherRestClient;
     private final String appId;
+    private final static int TRUNCATE_VALUE = 2;
     private final static String KEY_FOR_APP_ID = "&appid=";
 
     private final static String GEO_API_FRAGMENT = "/geo/1.0/direct?";
@@ -44,7 +45,7 @@ public class OpenWeatherService {
     }
 
     public List<LocationApiResponseDto> searchLocationsByName(String locationName) {
-        String url = buildUrlForGeoApi(locationName);
+        String url = buildUrlForGeoApi(locationName, appId);
 
         var locations = openWeatherRestClient.get()
                 .uri(url)
@@ -55,7 +56,7 @@ public class OpenWeatherService {
         return Arrays.stream(locations)
                 .filter(Objects::nonNull)
                 .filter(StreamUtils.distinctBy(l ->
-                        Map.entry(MathUtil.truncateCoordinate(l.getLat(), 2), MathUtil.truncateCoordinate(l.getLon(), 2))))
+                        Map.entry(MathUtil.truncateCoordinate(l.getLat(), TRUNCATE_VALUE), MathUtil.truncateCoordinate(l.getLon(), TRUNCATE_VALUE))))
                 .toList();
     }
 
@@ -63,7 +64,7 @@ public class OpenWeatherService {
         List<ForecastDto> forecasts = new ArrayList<>();
 
         for (LocationReadDto location : locations) {
-            String url = buildUrlForWeatherApi(location.getLatitude(), location.getLongitude());
+            String url = buildUrlForWeatherApi(location.getLatitude(), location.getLongitude(), appId);
 
             ForecastApiResponseDto forecastResponse = openWeatherRestClient.get()
                     .uri(url)
@@ -77,7 +78,7 @@ public class OpenWeatherService {
         return forecasts;
     }
 
-    private String buildUrlForGeoApi(String locationName) {
+    public static String buildUrlForGeoApi(String locationName, String appId) {
         return GEO_API_FRAGMENT +
                KEY_FOR_CITY_NAME +
                locationName +
@@ -86,7 +87,7 @@ public class OpenWeatherService {
                appId;
     }
 
-    private String buildUrlForWeatherApi(Double latitude, Double longitude) {
+    public static String buildUrlForWeatherApi(Double latitude, Double longitude, String appId) {
         return WEATHER_API_FRAGMENT +
                KEY_FOR_LATITUDE +
                latitude +

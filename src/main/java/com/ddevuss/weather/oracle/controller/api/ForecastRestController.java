@@ -35,7 +35,6 @@ public class ForecastRestController implements ForecastController {
                         return ResponseEntity.ok(forecasts);
                     }
                     catch (RestClientResponseException ex) {
-                        //TODO: log this exception
                         return ResponseEntity.internalServerError().body(new ApiErrorDto("INTERNAL_ERROR", "Something went wrong", "INTERNAL"));
                     }
                 })

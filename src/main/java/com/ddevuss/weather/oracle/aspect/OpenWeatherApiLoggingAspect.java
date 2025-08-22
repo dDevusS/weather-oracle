@@ -1,15 +1,18 @@
 package com.ddevuss.weather.oracle.aspect;
 
+import com.ddevuss.weather.oracle.configuration.WeatherOracleConfiguration;
 import com.ddevuss.weather.oracle.dto.LocationReadDto;
+import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.util.List;
@@ -25,13 +28,15 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @Slf4j
 public class OpenWeatherApiLoggingAspect {
 
-    private static final String TEMPLATE_URL_GEO_API = "http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}";
-    private static final String TEMPLATE_URL_WEATHER_API = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}";
+    private final Map<String, String> methodToTemplateUrl;
 
-    private static final Map<String, String> METHOD_TO_TEMPLATE_URL = Map.of(
-            "searchLocationsByName", TEMPLATE_URL_GEO_API,
-            "getWeatherForecast", TEMPLATE_URL_WEATHER_API
-    );
+    public OpenWeatherApiLoggingAspect(WeatherOracleConfiguration configuration) {
+        String openWeatherApiUri = configuration.getUrl();
+        methodToTemplateUrl = Map.of(
+                "searchLocationsByName", openWeatherApiUri + OpenWeatherService.buildUrlForGeoApi("{locationName}", "{appId}"),
+                "getWeatherForecast", openWeatherApiUri + OpenWeatherService.buildUrlForWeatherApi(0.01, 0.01, "{appId}")
+        );
+    }
 
     @Pointcut("within(com.ddevuss.weather.oracle.service.OpenWeatherService)")
     public void isOpenWeatherService() {
@@ -50,30 +55,36 @@ public class OpenWeatherApiLoggingAspect {
     }
 
     @AfterThrowing(value = "isOpenWeatherService()", throwing = "exception")
-    public void logOpenWeatherApiService(JoinPoint joinPoint, RestClientResponseException exception) {
+    public void logOpenWeatherApiService(JoinPoint joinPoint, Throwable exception) {
         logTemplateUrl(joinPoint.getSignature().getName());
         logException(exception);
     }
 
-    private void logException(RestClientResponseException exception) {
+    private void logException(Throwable exception) {
         String message = "{}: {}";
-        String description = getExceptionDescription(exception);
 
-        if (TOO_MANY_REQUESTS == exception.getStatusCode()) {
-            log.warn(message, exception.getClass().getSimpleName(), description);
+        if (exception instanceof RestClientException responseException) {
+            String description = getExceptionDescription(responseException);
+
+            if (description.startsWith(Integer.toString(TOO_MANY_REQUESTS.value()))) {
+                log.warn(message, responseException.getClass().getSimpleName(), description);
+            }
+            else {
+                log.error(message, exception.getClass().getSimpleName(), description);
+            }
         }
         else {
-            log.error(message, exception.getClass().getSimpleName(), description);
+            log.error("Unexpected exception: {}", exception.toString(), exception);
         }
     }
 
-    @After("isOpenWeatherService()")
-    public void logOpenWeatherApiService(JoinPoint joinPoint) {
+    @AfterReturning(value = "isOpenWeatherService()", returning = "result")
+    public void logOpenWeatherApiService(JoinPoint joinPoint, Object result) {
         log.info("Request to Open Weather API for {} method has been processed successfully", joinPoint.getSignature().getName());
     }
 
     private void logTemplateUrl(String methodName) {
-        String templateUrl = METHOD_TO_TEMPLATE_URL.get(methodName);
+        String templateUrl = methodToTemplateUrl.get(methodName);
 
         if (templateUrl != null) {
             log.error("Template URL for method {}: {}", methodName, templateUrl);
@@ -83,25 +94,30 @@ public class OpenWeatherApiLoggingAspect {
         }
     }
 
-    private String getExceptionDescription(RestClientResponseException exception) {
-        HttpStatusCode statusCode = exception.getStatusCode();
-        if (BAD_REQUEST == statusCode) {
-            return statusCode.value() + " - Bad request exception to API server";
-        }
-        else if (NOT_FOUND == statusCode) {
-            return statusCode.value() + " - Not found exception from API server";
-        }
-        else if (UNAUTHORIZED == statusCode) {
-            return statusCode.value() + " - Unauthorized exception from API server";
-        }
-        else if (TOO_MANY_REQUESTS == statusCode) {
-            return statusCode.value() + " - 429 Too many requests exception to API server";
-        }
-        else if (statusCode.is5xxServerError()) {
-            return statusCode.value() + " - 5xx Server error exception from API server";
+    private String getExceptionDescription(RestClientException exception) {
+        if (exception instanceof RestClientResponseException responseException) {
+            HttpStatusCode statusCode = responseException.getStatusCode();
+            if (BAD_REQUEST == statusCode) {
+                return statusCode.value() + " - Bad request exception to API server";
+            }
+            else if (NOT_FOUND == statusCode) {
+                return statusCode.value() + " - Not found exception from API server";
+            }
+            else if (UNAUTHORIZED == statusCode) {
+                return statusCode.value() + " - Unauthorized exception from API server";
+            }
+            else if (TOO_MANY_REQUESTS == statusCode) {
+                return statusCode.value() + " - 429 Too many requests exception to API server";
+            }
+            else if (statusCode.is5xxServerError()) {
+                return statusCode.value() + " - 5xx Server error exception from API server";
+            }
+            else {
+                return statusCode.value() + " - Unknown exception from API server";
+            }
         }
         else {
-            return statusCode.value() + " - Unknown exception from API server";
+            return "Unknown exception: " + exception.getMessage();
         }
     }
 

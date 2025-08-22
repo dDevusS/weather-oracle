@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class IdentificationAspect {
+public class AuthentificationAspect {
 
     @Pointcut("within(com.ddevuss.weather.oracle.service.UserService)")
     public void isUserService() {
