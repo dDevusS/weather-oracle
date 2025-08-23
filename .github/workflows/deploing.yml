@@ -46,6 +46,7 @@ jobs:
     needs: build-and-push
     if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
     steps:
+      - uses: actions/checkout@v4
       - name: Prepare image tag
         id: img
         run: echo "IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_OUTPUT
