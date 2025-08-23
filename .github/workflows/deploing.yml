@@ -71,15 +71,7 @@ jobs:
             set -e
             cd ${{ secrets.SERVER_PATH }}
             export IMAGE="${{ steps.img.outputs.IMAGE }}"
-
-            # логин к GHCR (создай PAT с read:packages)
-            export GHCR_USER='${{ secrets.GHCR_USER }}'
-            export GHCR_TOKEN='${{ secrets.GHCR_TOKEN }}'
-            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-
-            # .env хранится на сервере и НЕ перезатирается
-            # должен содержать OPEN_WEATHER_API_KEY/URL/REFRESH_TOKEN_SECRET и т.п.
-
+            
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
             docker image prune -f || true
