@@ -17,7 +17,7 @@ services:
       retries: 20
 
   weather-oracle:
-    image: ${image}
+    image: ${IMAGE}
     ports:
       - "8095:8080"
     depends_on:
@@ -31,7 +31,7 @@ services:
 
       OPEN_WEATHER_API_KEY: ${OPEN_WEATHER_API_KEY:?set in .env}
       OPEN_WEATHER_API_URL: ${OPEN_WEATHER_API_URL:-https://api.openweathermap.org}
-      OPEN_WEATHER_API_JWT_SECRET: ${REFRESH_TOKEN_SECRET:?set in .env}
+      OPEN_WEATHER_API_JWT_SECRET: ${OPEN_WEATHER_API_JWT_SECRET:?set in .env}
     logging:
       driver: json-file
       options:
