@@ -25,9 +25,9 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      SPRING_DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://db:5432/weather_oracle_db}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://db:5432/weather_oracle_db}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-pass}
 
       OPEN_WEATHER_API_KEY: ${OPEN_WEATHER_API_KEY:?set in .env}
       OPEN_WEATHER_API_URL: ${OPEN_WEATHER_API_URL:-https://api.openweathermap.org}
