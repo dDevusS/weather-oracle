@@ -12,16 +12,16 @@ import {environment} from '../../../environments/environment';
 export class LocationService {
   http = inject(HttpClient)
   router = inject(Router)
-  baseUrl = environment.apiUrl
+  private readonly baseApiUrl = environment.apiUrl
 
   searchLocation(params: { locationName: any }) {
     return this.http
-      .get<LocationSearch[]>(this.baseUrl + '/locations/search', {params})
+      .get<LocationSearch[]>(this.baseApiUrl + '/locations/search', {params})
   }
 
   saveLocation(location: LocationSearch) {
     return this.http
-      .post(this.baseUrl + '/location/save', location, {
+      .post(this.baseApiUrl + '/location/save', location, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         })
@@ -30,11 +30,11 @@ export class LocationService {
 
   getLocations(params: { pageNumber: any } = {pageNumber: 0}) {
     return this.http
-      .get<Pageable<UserLocation>>(this.baseUrl + '/locations', {params})
+      .get<Pageable<UserLocation>>(this.baseApiUrl + '/locations', {params})
   }
 
   deleteLocation(id: number) {
     return this.http
-      .delete(this.baseUrl + '/location/' + id)
+      .delete(this.baseApiUrl + '/location/' + id)
   }
 }

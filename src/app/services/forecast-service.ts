@@ -5,17 +5,18 @@ import {UserLocation} from '../data/interfaces/user-location';
 import {Forecast} from '../data/interfaces/forecast';
 import {environment} from '../../environments/environment';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class ForecastService {
   http = inject(HttpClient)
   router = inject(Router)
-  baseUrl = environment.apiUrl;
+  private readonly baseApiUrl = environment.apiUrl
 
   getForecasts(locations: UserLocation[]) {
     return this.http
-      .post<Forecast[]>(this.baseUrl + '/forecast', locations, {
+      .post<Forecast[]>(this.baseApiUrl + '/forecast', locations, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         })
