@@ -6,6 +6,7 @@ import {FoundLocationCard} from './found-location-card/found-location-card';
 import {LocationSearch} from '../../services/location/location-search';
 import {LoadingState} from '../../shared/loading-state';
 import {finalize} from 'rxjs';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-search-page',
@@ -19,6 +20,7 @@ export class SearchPage {
   locationSearchState = inject(LocationSearchState)
   locationService = inject(LocationService)
   router = inject(Router)
+  location = inject(Location)
 
   locations = this.locationSearchState.locations
   errorMessage = this.locationSearchState.error
@@ -44,6 +46,10 @@ export class SearchPage {
 
   clearAllDuplicates() {
     this.duplicates.set(new Set());
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   onSaveRequested(location: LocationSearch) {
