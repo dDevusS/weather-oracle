@@ -12,6 +12,8 @@ import {
 import {AuthService} from '../../../services/auth/auth-service';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
+import {LoadingState} from '../../../shared/loading-state';
+import {finalize} from 'rxjs';
 
 @Component({
   selector: 'app-registration-page',
@@ -33,6 +35,7 @@ export class RegistrationPage {
   minLengthForPassword = 6
   nonLettersRequirement = 1
 
+  isLoading = inject(LoadingState).isLoading
   errorMessages: string[] = [];
   form: FormGroup;
 
@@ -127,7 +130,14 @@ export class RegistrationPage {
     ]
 
     if (this.form.valid) {
+      this.isLoading.set(true)
+
       this.authService.register(this.form.value)
+        .pipe(
+          finalize(() => {
+            this.isLoading.set(false)
+          })
+        )
         .subscribe({
           next: () => {
             this.router.navigateByUrl('login').then(

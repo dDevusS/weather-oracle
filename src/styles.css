@@ -6,8 +6,9 @@
   --blue-color: rgba(0, 113, 252, 0.3);
   --dark-blue-color: rgba(8, 42, 161, 0.6);
   --light-color: rgb(255, 248, 156);
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.30);
   --dark-background-color: rgba(0, 0, 0, 0.76);
+  --dark-overlay-collor: rgba(0, 0, 0, 0.5);
 }
 
 body {
@@ -17,7 +18,7 @@ body {
   background-image: url("/assets/images/background_img.jpg");
   background-size: cover;
   height: 100dvh;
-  color:var(--primal-color);
+  color: var(--primal-color);
 }
 
 .searchbar-container {
@@ -76,10 +77,41 @@ h1 {
 }
 
 .custom-dialog-container {
- .mat-dialog-container {
-   padding: 0;
-   overflow: visible;
-   background: transparent;
-   box-shadow: none;
- }
- }
+  .mat-dialog-container {
+    padding: 0;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--dark-overlay-collor);
+  z-index: 9999;
+}
+
+.loading-text {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+    color: var(--primal-color);
+  }
+  50% {
+    opacity: 0.4;
+    color: var(--light-color);
+  }
+  100% {
+    opacity: 1;
+    color: var(--primal-color);
+  }
+}

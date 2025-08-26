@@ -1,12 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-dialog',
-  imports: [
-    MatIcon
-  ],
   templateUrl: './dialog.html',
   styleUrl: './dialog.css'
 })

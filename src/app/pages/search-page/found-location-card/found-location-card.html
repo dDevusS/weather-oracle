@@ -8,9 +8,9 @@
       <span class="state"> {{ location.state }}</span>
       <span class="coordinates">{{ location.lat | coordinate }} : {{ location.lon | coordinate }}</span>
     </a>
-    @if (errorMessage) {
+    @if (getErrorMessage()) {
       <div class="error-text">
-        {{ errorMessage }}
+        {{ getErrorMessage() }}
       </div>
     }
   </div>

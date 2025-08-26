@@ -2,13 +2,12 @@
   <div class="error-text">
     {{ errorMessage() }}
   </div>
-}
-
-@if (locations()) {
-  @for (location of locations(); track $index) {
+} @else if (locations()) {
+  @for (location of locations(); track keyOf(location)) {
     <app-found-location-card
       [location]="location"
-      [clearError] = true
+      [isDuplicated]="isDuplicated(location)"
+      (saveRequested)="onSaveRequested($event)"
     />
   }
 }

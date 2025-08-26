@@ -7,5 +7,5 @@
          formControlName="locationName"
          placeholder="search location"
   >
-  <button class="btn lighting_text" type="submit">Search</button>
+  <button class="btn lighting_text" type="submit" [disabled]="isLoading()">Search</button>
 </form>

@@ -2,9 +2,10 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {Router} from '@angular/router';
-import {tap} from 'rxjs';
+import {finalize, tap} from 'rxjs';
 import {TokenResponse} from './token-response';
 import {environment} from '../../../environments/environment';
+import {LoadingState} from '../../shared/loading-state';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class AuthService {
   private cookieService = inject(CookieService)
   private router = inject(Router)
   private readonly baseApiUrl = environment.apiUrl
+  isLoading = inject(LoadingState).isLoading
 
   get isAuthenticated(): boolean {
     return !!this.accessToken;
@@ -51,12 +53,18 @@ export class AuthService {
 
   logout() {
     this.cookieService.deleteAll()
+    this.isLoading.set(true)
 
     this.http.post(this.baseApiUrl + '/auth/logout',
       {},
       {
         withCredentials: true
       })
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false)
+        })
+      )
       .subscribe({
         complete: () => {
           this.router.navigate(['login'])

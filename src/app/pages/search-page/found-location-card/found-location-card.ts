@@ -14,31 +14,22 @@ const ERROR_DUPLICATE_LOCATION = "This location already exists"
   templateUrl: './found-location-card.html',
   styleUrl: './found-location-card.css'
 })
-export class FoundLocationCard implements OnChanges {
+export class FoundLocationCard {
   @Input() location!: LocationSearch
-  @Input() clearError!: boolean
+  @Input() isDuplicated = false
+  @Output() saveRequested = new EventEmitter<LocationSearch>()
 
-  locationService = inject(LocationService)
   router = inject(Router);
-  errorMessage: string | null = null
-
-  ngOnChanges() {
-    if (this.clearError) {
-      this.errorMessage = null
-    }
-  }
 
   saveLocation() {
-    this.locationService.saveLocation(this.location)
-      .subscribe({
-        next: () => {
-          this.router.navigate(['']);
-        },
-        error: error => {
-          if (error.status === 409) {
-            this.errorMessage = ERROR_DUPLICATE_LOCATION
-          }
-        }
-      })
+    this.saveRequested.emit(this.location)
+  }
+
+  getErrorMessage() {
+    if (this.isDuplicated) {
+      return ERROR_DUPLICATE_LOCATION;
+    }
+
+    return null
   }
 }

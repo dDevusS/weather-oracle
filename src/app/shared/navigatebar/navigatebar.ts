@@ -3,6 +3,8 @@ import {Svg} from '../svg/svg';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../services/auth/auth-service';
 import {DialogService} from '../dialog/dialog-service';
+import {LoadingState} from '../loading-state';
+import {finalize} from 'rxjs';
 
 @Component({
   selector: 'app-navigatebar',
@@ -27,8 +29,8 @@ export class Navigatebar {
       title: 'Logout',
       message: 'Are you sure you want to logout?',
     })
-      .subscribe((result) => {
-        if (result) {
+      .subscribe((ok) => {
+        if (ok) {
           this.authService.logout()
         }
       })

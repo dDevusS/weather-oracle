@@ -7,7 +7,7 @@
   @for (forecast of forecasts; track forecast.locationId) {
     <app-forecast-card
       [forecast]="forecast"
-      (deleted)="handleDelete($event)"
+      (deleteRequested)="onDeleteRequested($event)"
     />
   }
 </div>

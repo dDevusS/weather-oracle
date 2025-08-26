@@ -3,10 +3,11 @@ import {LocationService} from '../../services/location/location-service';
 import {UserLocation} from '../../data/interfaces/user-location';
 import {Forecast} from '../../data/interfaces/forecast';
 import {ForecastService} from '../../services/forecast-service';
-import {catchError, finalize, of, switchMap, tap} from 'rxjs';
+import {catchError, EMPTY, finalize, from, of, switchMap, tap} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ForecastCard} from './forecast-card/forecast-card';
+import {LoadingState} from '../../shared/loading-state';
 
 @Component({
   selector: 'app-forecast-page',
@@ -28,7 +29,7 @@ export class ForecastPage implements OnInit {
   currentPage: number = 0
   forecasts: Forecast[] = [];
 
-  isLoading = signal(false)
+  isLoading = inject(LoadingState).isLoading
   error = signal<string | null>(null)
 
   ngOnInit() {
@@ -40,21 +41,41 @@ export class ForecastPage implements OnInit {
     });
   }
 
-  handleDelete(locationId: number) {
-    this.isLoading.set(true);
+  onDeleteRequested(locationId: number) {
+    this.isLoading.set(true)
 
-    if (this.forecasts.length === 1 && this.currentPage > 0) {
-      const newPage = this.currentPage - 1;
-      this.router.navigate([], {
-        queryParams: { pageNumber: newPage },
-        queryParamsHandling: 'merge'
-      }).then(() => {
-        this.loadData({ pageNumber: newPage });
-      });
-    } else {
-      this.loadData({ pageNumber: this.currentPage });
-    }
+    this.locationService.deleteLocation(locationId).pipe(
+      switchMap(() => {
+        if (this.forecasts.length === 1 && this.currentPage > 0) {
+          return from(this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {pageNumber: this.currentPage - 1},
+            queryParamsHandling: 'merge'
+          }))
+            .pipe(switchMap(() => EMPTY));
+        }
+
+        return this.reloadCurrentPage();
+      }),
+      catchError(err => {
+        this.error.set('Failed to delete. Please try again.');
+        return this.reloadCurrentPage(); // попробуем всё равно обновить список
+      }),
+      finalize(() => this.isLoading.set(false)),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe()
   }
+
+  private reloadCurrentPage() {
+    return this.loadLocations({ pageNumber: this.currentPage }).pipe(
+      switchMap(locations => {
+        this.first = locations.first;
+        this.last  = locations.last;
+        return this.loadForecasts(locations.content);
+      })
+    );
+  }
+
 
   nextPage() {
     this.updatePage(this.currentPage + 1)
@@ -67,7 +88,7 @@ export class ForecastPage implements OnInit {
   private updatePage(newPage: number) {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { pageNumber: newPage > 0 ? newPage : 0 }
+      queryParams: {pageNumber: newPage > 0 ? newPage : 0}
     });
   }
 

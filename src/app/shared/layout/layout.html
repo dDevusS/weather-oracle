@@ -3,14 +3,24 @@
 </header>
 
 <div class="workspace">
-@if (authService.isAuthenticated) {
-  <div class="searchbar-container">
-    <app-searchbar></app-searchbar>
-  </div>
-}
+  @if (authService.isAuthenticated) {
+    <div class="searchbar-container">
+      <app-searchbar></app-searchbar>
+    </div>
+  }
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <div class="loading-text">
+        Loading...
+      </div>
+    </div>
+  }
 
-  <router-outlet></router-outlet>
+  <div [class.hidden]="isLoading()">
+    <router-outlet></router-outlet>
+  </div>
+
 </div>
 <footer>
-<app-footbar></app-footbar>
+  <app-footbar></app-footbar>
 </footer>
