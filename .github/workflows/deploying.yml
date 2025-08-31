@@ -27,7 +27,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/backend-${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=sha
@@ -74,7 +74,7 @@ jobs:
             docker network inspect weather-oracle-net >/dev/null 2>&1 || \
               docker network create weather-oracle-net
             
-            export IMAGE=ghcr.io/ddevuss/backend-${{ env.IMAGE_NAME }}:latest
+            export IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d
