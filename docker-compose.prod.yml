@@ -16,10 +16,13 @@ services:
       timeout: 3s
       retries: 20
 
-  weather-oracle:
+  backend-weather-oracle:
     image: ${IMAGE}
-    ports:
-      - "8095:8080"
+    container_name: backend
+    networks:
+      - "weather-oracle-net"
+    #    ports:
+    #      - "8095:8080"
     depends_on:
       db:
         condition: service_healthy
@@ -41,3 +44,7 @@ services:
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  weather-oracle-net:
+    external: true
