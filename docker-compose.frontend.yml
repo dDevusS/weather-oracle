@@ -1,0 +1,13 @@
+services:
+  frontend-weather-oracle:
+    container_name: frontend
+    build: ${IMAGE}
+    networks:
+      - "weather-oracle-net"
+    ports:
+      - "8095:4020"
+    restart: unless-stopped
+
+networks:
+  weather-oracle-net:
+    external: true

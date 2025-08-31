@@ -1,0 +1,12 @@
+services:
+  frontend-weather-oracle:
+    build: .
+    networks:
+      - "weather-oracle-net"
+    ports:
+      - "8080:4020"
+    restart: unless-stopped
+
+networks:
+  weather-oracle-net:
+    external: true
