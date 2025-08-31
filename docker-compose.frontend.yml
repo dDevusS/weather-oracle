@@ -1,7 +1,7 @@
 services:
   frontend-weather-oracle:
     container_name: frontend
-    build: ${IMAGE}
+    image: ${IMAGE}
     networks:
       - "weather-oracle-net"
     ports:
