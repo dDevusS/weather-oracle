@@ -31,7 +31,7 @@ public class OpenWeatherApiLoggingAspect {
     private final Map<String, String> methodToTemplateUrl;
 
     public OpenWeatherApiLoggingAspect(WeatherOracleConfiguration configuration) {
-        String openWeatherApiUri = configuration.getUrl();
+        String openWeatherApiUri = configuration.getOpenWeatherApi().url();
         methodToTemplateUrl = Map.of(
                 "searchLocationsByName", openWeatherApiUri + OpenWeatherService.buildUrlForGeoApi("{locationName}", "{appId}"),
                 "getWeatherForecast", openWeatherApiUri + OpenWeatherService.buildUrlForWeatherApi(0.01, 0.01, "{appId}")
