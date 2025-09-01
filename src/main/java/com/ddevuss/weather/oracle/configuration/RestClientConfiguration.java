@@ -9,6 +9,6 @@ public class RestClientConfiguration {
 
     @Bean
     public RestClient openWeatherRestClient(WeatherOracleConfiguration properties) {
-        return RestClient.builder().baseUrl(properties.getUrl()).build();
+        return RestClient.builder().baseUrl(properties.getOpenWeatherApi().url()).build();
     }
 }

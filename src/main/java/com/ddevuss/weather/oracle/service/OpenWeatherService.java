@@ -41,7 +41,7 @@ public class OpenWeatherService {
     public OpenWeatherService(RestClient openWeatherRestClient,
                               WeatherOracleConfiguration properties) {
         this.openWeatherRestClient = openWeatherRestClient;
-        this.appId = properties.getKey();
+        this.appId = properties.getOpenWeatherApi().key();
     }
 
     public List<LocationApiResponseDto> searchLocationsByName(String locationName) {

@@ -21,11 +21,15 @@ spring:
       fail-on-null-creator-properties: true
       fail-on-missing-creator-properties: true
 
-open.weather.api:
-  key: ${OPEN_WEATHER_API_KEY}
-  url: ${OPEN_WEATHER_API_URL:https://api.openweathermap.org}
+application:
+  open-weather-api:
+    key: ${OPEN_WEATHER_API_KEY}
+    url: ${OPEN_WEATHER_API_URL:https://api.openweathermap.org}
   jwt:
     secret: ${REFRESH_TOKEN_SECRET}
+  cors:
+    allowed-origin-patterns: ${ORIGIN_PATTERNS:http://localhost:*}
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4020}
 
 springdoc:
   api-docs:
