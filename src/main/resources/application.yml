@@ -2,9 +2,9 @@ spring:
   application:
     name: weather-oracle
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/postgres
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
     properties.hibernate:
@@ -23,13 +23,13 @@ spring:
 
 application:
   open-weather-api:
-    key: ${OPEN_WEATHER_API_KEY}
-    url: ${OPEN_WEATHER_API_URL:https://api.openweathermap.org}
+    key:
+    url: https://api.openweathermap.org
   jwt:
-    secret: ${REFRESH_TOKEN_SECRET}
+    secret:
   cors:
-    allowed-origin-patterns: ${ORIGIN_PATTERNS:http://localhost:*}
-    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4020}
+    allowed-origin-patterns: http://localhost:*
+    allowed-origins: http://localhost:4020
 
 springdoc:
   api-docs:
