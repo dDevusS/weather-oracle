@@ -65,4 +65,6 @@ To run this project locally, follow these steps:
   Application will be access on http://localhost:{app-port}/ where app-port is 8095 in default.
 
 
-  
+**API documentation:**
+
+[https://ddevuss.github.io/weather-oracle/](https://ddevuss.github.io/weather-oracle/)
