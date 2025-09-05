@@ -57,6 +57,7 @@ public class OpenWeatherService {
                 .filter(Objects::nonNull)
                 .filter(StreamUtils.distinctBy(l ->
                         Map.entry(MathUtil.truncateCoordinate(l.getLat(), TRUNCATE_VALUE), MathUtil.truncateCoordinate(l.getLon(), TRUNCATE_VALUE))))
+                .filter(StreamUtils.distinctBy(l -> List.of(l.getName(), l.getState(), l.getCountry())))
                 .toList();
     }
 
