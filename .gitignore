@@ -1,0 +1,9 @@
+.idea
+.gradle
+build
+*.log
+log-note.*
+.DS_Store
+.env.local
+/src/main/resources/application-local.yml
+/docker-compose.prod.yml
