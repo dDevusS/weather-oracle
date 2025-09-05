@@ -4,7 +4,7 @@ This web application allows you to view the current weather forecast. Simply sig
 
 It was developed for educational purposes as part of the [Java Backend Learning Course](https://zhukovsd.github.io/java-backend-learning-course/) by Sergey Zhukov.
 
-**You can check in this application on:**
+**Try the application at:**
 
 [https://weather-oracle.ddevuss.com](https://weather-oracle.ddevuss.com)
 
@@ -18,11 +18,11 @@ The project aims to provide a practical learning experience in Java backend deve
 
 1. **Technologies Used:**
     - Java: Collections, Object-Oriented Programming (OOP)
-    - Design Pattern: MVC(S)
+    - Design Pattern: MVC
     - Build Tools: Gradle
     - Spring Boot framework
-    - Databases: PostgeSQL, liquibase
-    - Testing: Unit testing with JUnit 5, testcontainer
+    - Databases: PostgreSQL, Liquibase
+    - Testing: Unit testing with JUnit 5, Testcontainer
     - Deployment: Docker and Docker-compose
     - CI/CD via GitHub Actions
 
@@ -47,24 +47,31 @@ To run this project locally, follow these steps:
 
 2. **Setup docker-compose.yml**
     - get your own key from [Open Weather](https://openweathermap.org/)
-    - create and set up .env file (use an exaple .env.example) into the same directory what is contane docker-compose.yml
-    - crete network via docker (you can find a special command below)
+    - create and set up .env file (use an exaple .env.example) into the same directory that contanes docker-compose.yml
+    - create network via docker (you can find a special command below)
     - if necessary you can change external port for a container (change ports parameter into docker-compose.yml)
 
-    Use a follow command in console to create docker network
+    Use the following command in console to create docker network
    ```bash
    docker network create weather-oracle-net
    ```
    
-4. **Build images and run containers:**
+3. **Build images and run containers:**
    
-   Use follow command in console being into directory with docker-compose.yml:
+   Use the following command in console being into directory with docker-compose.yml:
    ```bash
-   docker-compose --env-file .env up -d
+   docker compose --env-file .env up -d
    ```
-  Application will be access on http://localhost:{app-port}/ where app-port is 8095 in default.
+  The application will be available at http://localhost:{app-port}/ where app-port is 8095 in default.
+
+4. **Using the frontend application**
+   
+   The frontend is in a separate branch/repo:
+   
+   [https://github.com/dDevusS/weather-oracle/tree/frontend](https://github.com/dDevusS/weather-oracle/tree/frontend)
 
 
-**API documentation:**
+## API documentation:
 
-[https://ddevuss.github.io/weather-oracle/](https://ddevuss.github.io/weather-oracle/)
+**[https://ddevuss.github.io/weather-oracle/](https://ddevuss.github.io/weather-oracle/)**
+<br><br><br><br><br><br>
