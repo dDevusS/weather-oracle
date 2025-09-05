@@ -1,59 +1,55 @@
-# WeatherOracleFrontend
+# Weather Oracle - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.1.
+This web application allows you to view the current weather forecast. Simply sign up and search for any city or location by name. Your list of saved locations will be displayed each time you sign in to the application.
+The frontend proxies API calls to the backend under the `/api` path.
 
-## Development server
+**Try the application at:**
 
-To start a local development server, run:
+[https://weather-oracle.ddevuss.com](https://weather-oracle.ddevuss.com)
 
-```bash
-ng serve
-```
+Please note that the application might not work correctly due to potential issues with the connection to the Open Weather API server.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+<img width="1920" height="995" alt="Screenshot 2025-09-05 at 14 16 30" src="https://github.com/user-attachments/assets/c4f32c15-9e3c-472f-a0ed-69c7db366f18" />
 
-## Code scaffolding
+## Project Overview:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The project aims to provide a practical learning experience in frontend development, focusing on:
 
-```bash
-ng generate component component-name
-```
+1. **Technologies Used:**
+    - Angular framework
+    - SPA
+    - Nginx
+    - TypeScript
+    - CSS
+    - Deployment: Docker and Docker-compose
+    - CI/CD via GitHub Actions
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. **Motivation:**
+    - Creating a SPA application
+    - Gaining practical experience with Angular framework
+    - Understanding how to get, refresh and remove JWT tokens storing in cookies include a http only cookie
+    - Using GitHub Actions
 
-```bash
-ng generate --help
-```
+## Installation and Setup Instructions:
 
-## Building
+**Requirements:**
 
-To build the project run:
+Before proceeding with the installation, ensure the following prerequisites are met:
 
-```bash
-ng build
-```
+- Docker: Docker and Docker Compose must be installed to run the application in containers.
+- The backend application must be available on the local machine
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Complete the backend setup from the main branch first, then follow the steps below.
 
-## Running unit tests
+To run this project locally, follow these steps:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. **Download the code from this repository.**
+   
+2. **Build images and run containers:**
+   
+   Use the following command in console being into directory with docker-compose.yml:
+   ```bash
+   docker compose up -d
+   ```
+  The application will be available at http://localhost:{app-port}/ where app-port default is 8080
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
