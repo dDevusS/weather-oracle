@@ -1,0 +1,109 @@
+name: Deploying-frontend-no-docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch or tag to build/deploy'
+        required: true
+        default: 'frontend'
+
+env:
+  APP_NAME: frontend-weather-oracle
+  BUILD_DIR: dist/weather-oracle-frontend/browser
+  RELEASES_DIR: /var/www/weather-oracle/releases
+  CURRENT_LINK: /var/www/weather-oracle/current
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions: { contents: read }
+    outputs:
+      ref_used: ${{ inputs.ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (prod)
+        run: |
+          npm run build -- --configuration production
+          test -d "${{ env.BUILD_DIR }}" || (echo "Build dir not found" && exit 1)
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fe-build
+          path: ${{ env.BUILD_DIR }}
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: fe-build
+          path: ./build
+
+      - name: Pack release
+        run: |
+          mkdir -p out
+          tar -C ./build -czf "out/${GITHUB_SHA}.tar.gz" .
+
+      - name: Upload release to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "out/${{ github.sha }}.tar.gz"
+          target: "/tmp"
+
+      - name: Activate release (atomic symlink switch)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            RELEASES_DIR="${{ env.RELEASES_DIR }}"
+            CURRENT_LINK="${{ env.CURRENT_LINK }}"
+            REL_ID="${GITHUB_SHA}"
+
+            sudo mkdir -p "$RELEASES_DIR"
+            sudo mkdir -p "$(dirname "$CURRENT_LINK")"
+            sudo chown -R $USER:$USER "$RELEASES_DIR" "$(dirname "$CURRENT_LINK")"
+
+            # распаковываем в новую папку релиза
+            mkdir -p "$RELEASES_DIR/$REL_ID"
+            tar -C "$RELEASES_DIR/$REL_ID" -xzf "/tmp/${REL_ID}.tar.gz"
+            rm -f "/tmp/${REL_ID}.tar.gz"
+
+            # атомарно переключаем symlink
+            ln -sfn "$RELEASES_DIR/$REL_ID" "$CURRENT_LINK"
+
+            # опционально подчистить старые релизы, оставим последние 3
+            cd "$RELEASES_DIR"
+            ls -1dt */ | tail -n +4 | xargs -r rm -rf
+
+            # права на чтение для nginx (если nginx от www-data)
+            sudo chgrp -R www-data "$RELEASES_DIR"
+            sudo find "$RELEASES_DIR" -type d -exec chmod 0755 {} \;
+            sudo find "$RELEASES_DIR" -type f -exec chmod 0644 {} \;
+
+            # nginx не нужно перезапускать, он читает статик с диска через symlink
