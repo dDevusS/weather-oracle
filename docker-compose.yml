@@ -2,11 +2,14 @@ services:
   frontend-weather-oracle:
     build: .
     networks:
+      - "pub-net"
       - "weather-oracle-net"
     ports:
-      - "8080:4020"
+      - "127.0.0.1:8080:4020"
     restart: unless-stopped
 
 networks:
+  pub-net:
+    driver: bridge
   weather-oracle-net:
     external: true
