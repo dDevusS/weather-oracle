@@ -84,7 +84,7 @@ jobs:
             RELEASES_DIR="/var/www/weather-oracle/releases"
             CURRENT_LINK="/var/www/weather-oracle/current"
             REL_ID="${{ github.sha }}"                 # <-- брать SHA из контекста
-            ARCHIVE="/tmp/${REL_ID}.tar.gz"
+            ARCHIVE="/tmp/out/${REL_ID}.tar.gz"
 
             sudo install -d -m 0755 "$RELEASES_DIR" "$(dirname "$CURRENT_LINK")"
             sudo mkdir -p "$RELEASES_DIR/$REL_ID"
