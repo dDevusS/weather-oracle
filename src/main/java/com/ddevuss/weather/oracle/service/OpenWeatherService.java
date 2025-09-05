@@ -65,13 +65,20 @@ public class OpenWeatherService {
         for (LocationReadDto location : locations) {
             String url = buildUrlForWeatherApi(location.getLatitude(), location.getLongitude(), appId);
 
-            ForecastApiResponseDto forecastResponse = openWeatherRestClient.get()
+            var entity = openWeatherRestClient.get()
                     .uri(url)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
-                    .body(ForecastApiResponseDto.class);
+                    .onStatus(s -> s.value() == 404, (req, res) -> {
+                        log.info("OpenWeather: 404 for location id={} lat={}, lon={}",
+                                location.getId(), location.getLatitude(), location.getLongitude());
+                    })
+                    .toEntity(ForecastApiResponseDto.class);
 
-            forecasts.add(convertFromResponseDto(forecastResponse, location));
+            if (!entity.getStatusCode().is2xxSuccessful() || entity.getBody() == null) {
+                continue;
+            }
+            forecasts.add(convertFromResponseDto(entity.getBody(), location));
         }
 
         return forecasts;
