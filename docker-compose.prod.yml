@@ -19,8 +19,10 @@ services:
   backend-weather-oracle:
     image: ${IMAGE}
     container_name: backend
+    ports:
+      - "127.0.0.1:8095:8080"
     networks:
-      - "weather-oracle-net"
+#      - "weather-oracle-net"
       - "backend-net"
     depends_on:
       db:
