@@ -33,7 +33,7 @@ public class OpenWeatherService {
     private final static String KEY_FOR_CITY_NAME = "q=";
     private final static String KEY_FOR_LIMITATION_RESPONSE = "&limit=";
 
-    private final static int MAX_LIMITATION_RESPONSE = 10;
+    private final static int MAX_LIMITATION_RESPONSE = 5;
 
     private final static String WEATHER_API_FRAGMENT = "/data/2.5/weather?";
     private final static String KEY_FOR_LATITUDE = "lat=";
