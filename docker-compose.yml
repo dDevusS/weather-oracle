@@ -1,9 +1,9 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15.7
     restart: unless-stopped
+    networks:
+      - "backend-net"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-weather_oracle_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -16,10 +16,14 @@ services:
       timeout: 3s
       retries: 20
 
-  weather-oracle:
+  backend-weather-oracle:
+    container_name: backend
     build:
       context: .
       target: runtime
+    networks:
+      - "backend-net"
+      - "pub-net"
     ports:
       - "8095:8080"
     depends_on:
@@ -43,3 +47,10 @@ services:
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  backend-net:
+    driver: bridge
+    internal: true
+  pub-net:
+    driver: bridge
