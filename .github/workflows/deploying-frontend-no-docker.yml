@@ -60,7 +60,7 @@ jobs:
       - name: Pack release
         run: |
           mkdir -p out
-          tar -C ./build -czf "out/${GITHUB_SHA}.tar.gz" .
+          tar -C ./build -czf "out/${{ github.sha }}.tar.gz" .
 
       - name: Upload release to server
         uses: appleboy/scp-action@v0.1.7
@@ -79,31 +79,23 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script_stop: true
           script: |
-            set -euo pipefail
+            set -Eeuo pipefail
 
-            RELEASES_DIR="${{ env.RELEASES_DIR }}"
-            CURRENT_LINK="${{ env.CURRENT_LINK }}"
-            REL_ID="${GITHUB_SHA}"
+            RELEASES_DIR="/var/www/weather-oracle/releases"
+            CURRENT_LINK="/var/www/weather-oracle/current"
+            REL_ID="${{ github.sha }}"                 # <-- брать SHA из контекста
+            ARCHIVE="/tmp/${REL_ID}.tar.gz"
 
-            sudo mkdir -p "$RELEASES_DIR"
-            sudo mkdir -p "$(dirname "$CURRENT_LINK")"
-            sudo chown -R $USER:$USER "$RELEASES_DIR" "$(dirname "$CURRENT_LINK")"
+            sudo install -d -m 0755 "$RELEASES_DIR" "$(dirname "$CURRENT_LINK")"
+            sudo mkdir -p "$RELEASES_DIR/$REL_ID"
+            sudo tar -C "$RELEASES_DIR/$REL_ID" -xzf "$ARCHIVE"
+            sudo rm -f "$ARCHIVE"
 
-            # распаковываем в новую папку релиза
-            mkdir -p "$RELEASES_DIR/$REL_ID"
-            tar -C "$RELEASES_DIR/$REL_ID" -xzf "/tmp/${REL_ID}.tar.gz"
-            rm -f "/tmp/${REL_ID}.tar.gz"
+            sudo ln -sfn "$RELEASES_DIR/$REL_ID" "$CURRENT_LINK"
 
-            # атомарно переключаем symlink
-            ln -sfn "$RELEASES_DIR/$REL_ID" "$CURRENT_LINK"
-
-            # опционально подчистить старые релизы, оставим последние 3
             cd "$RELEASES_DIR"
-            ls -1dt */ | tail -n +4 | xargs -r rm -rf
+            ls -1dt */ | tail -n +4 | xargs -r sudo rm -rf
 
-            # права на чтение для nginx (если nginx от www-data)
             sudo chgrp -R www-data "$RELEASES_DIR"
             sudo find "$RELEASES_DIR" -type d -exec chmod 0755 {} \;
             sudo find "$RELEASES_DIR" -type f -exec chmod 0644 {} \;
-
-            # nginx не нужно перезапускать, он читает статик с диска через symlink
