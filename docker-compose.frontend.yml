@@ -5,7 +5,7 @@ services:
     networks:
       - "weather-oracle-net"
     ports:
-      - "8095:4020"
+      - "127.0.0.1:8095:4020"
     restart: unless-stopped
 
 networks:
