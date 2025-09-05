@@ -41,13 +41,14 @@ public class LocationRestController implements LocationController {
 
     private final LocationService locationService;
     private final OpenWeatherService openWeatherService;
+    private static final Integer MIN_SIZE_NAME_FOR_SEARCH = 3;
 
     @GetMapping("/locations/search")
     public ResponseEntity<?> searchLocationsByName(@RequestParam String locationName) {
         return Optional.ofNullable(locationName)
                 .filter(Predicate.not(String::isBlank))
                 .map(String::trim)
-                .filter(location -> location.length() > 2)
+                .filter(location -> location.length() >= MIN_SIZE_NAME_FOR_SEARCH)
                 .map(location -> {
                     List<LocationApiResponseDto> locations;
                     try {

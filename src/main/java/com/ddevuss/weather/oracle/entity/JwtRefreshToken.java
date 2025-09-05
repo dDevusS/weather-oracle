@@ -29,7 +29,7 @@ import java.time.Instant;
         @Index(name = "idx_refresh_token_hash", columnList = "token_hash"),
         @Index(name = "idx_refresh_token_expires_at", columnList = "expires_at"),
         @Index(name = "idx_refresh_token_revoked", columnList = "revoked")})
-public class JwtRefreshToken {
+public class JwtRefreshToken implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

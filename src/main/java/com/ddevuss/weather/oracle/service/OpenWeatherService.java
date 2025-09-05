@@ -56,18 +56,7 @@ public class OpenWeatherService {
                 .retrieve()
                 .body(LocationApiResponseDto[].class);
 
-        return Arrays.stream(locations)
-                .filter(Objects::nonNull)
-                .filter(StreamUtils.distinctBy(l ->
-                        Map.entry(MathUtil.truncateCoordinate(l.getLat(), TRUNCATE_VALUE), MathUtil.truncateCoordinate(l.getLon(), TRUNCATE_VALUE))))
-                .filter(StreamUtils.distinctBy(l ->
-                        List.of(
-                                Optional.ofNullable(l.getName()).orElse(""),
-                                Optional.ofNullable(l.getState()).orElse(""),
-                                Optional.ofNullable(l.getCountry()).orElse("")
-                        )
-                ))
-                .toList();
+        return removeDuplicates(locations);
     }
 
     public List<ForecastDto> getWeatherForecast(List<LocationReadDto> locations) {
@@ -109,7 +98,25 @@ public class OpenWeatherService {
                UNITS_MEASUREMENT;
     }
 
-    private ForecastDto convertFromResponseDto(ForecastApiResponseDto response, LocationReadDto location) {
+    private static List<LocationApiResponseDto> removeDuplicates(LocationApiResponseDto[] locations) {
+        return Arrays.stream(locations)
+                .filter(Objects::nonNull)
+                .filter(StreamUtils.distinctBy(l ->
+                        Map.entry(MathUtil.truncateCoordinate(l.getLat(), TRUNCATE_VALUE),
+                                MathUtil.truncateCoordinate(l.getLon(), TRUNCATE_VALUE)
+                        )
+                ))
+                .filter(StreamUtils.distinctBy(l ->
+                        List.of(
+                                Optional.ofNullable(l.getName()).orElse(""),
+                                Optional.ofNullable(l.getState()).orElse(""),
+                                Optional.ofNullable(l.getCountry()).orElse("")
+                        )
+                ))
+                .toList();
+    }
+
+    private static ForecastDto convertFromResponseDto(ForecastApiResponseDto response, LocationReadDto location) {
         return ForecastDto.builder()
                 .locationId(location.getId())
                 .locationName(location.getName())

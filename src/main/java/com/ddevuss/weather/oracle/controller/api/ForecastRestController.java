@@ -28,8 +28,8 @@ public class ForecastRestController implements ForecastController {
         return Optional.ofNullable(locations)
                 .map(list -> {
                     if (list.isEmpty()) return ResponseEntity.ok(List.of());
-                    List<ForecastDto> forecasts;
 
+                    List<ForecastDto> forecasts;
                     try {
                         forecasts = openWeatherService.getWeatherForecast(list);
                         return ResponseEntity.ok(forecasts);

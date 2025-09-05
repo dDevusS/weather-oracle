@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.function.Function;
+
 @AllArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -35,8 +37,10 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserReadDto save(UserCreateDto userCreateDto) {
-        User user = userCreateDtoToEntityMapper.dtoToEntity(userCreateDto);
-        return userReadDtoFromEntityMapper.entityToDto(userRepository.saveAndFlush(user));
+        return ((Function<UserCreateDto, User>) userCreateDtoToEntityMapper::dtoToEntity)
+                .andThen(userRepository::saveAndFlush)
+                .andThen(userReadDtoFromEntityMapper::entityToDto)
+                .apply(userCreateDto);
     }
 
 }
