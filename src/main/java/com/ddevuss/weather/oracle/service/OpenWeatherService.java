@@ -31,7 +31,9 @@ public class OpenWeatherService {
 
     private final static String GEO_API_FRAGMENT = "/geo/1.0/direct?";
     private final static String KEY_FOR_CITY_NAME = "q=";
-    private final static String LIMIT_5_FOR_RESPONSE = "&limit=5";
+    private final static String KEY_FOR_LIMITATION_RESPONSE = "&limit=";
+
+    private final static int MAX_LIMITATION_RESPONSE = 10;
 
     private final static String WEATHER_API_FRAGMENT = "/data/2.5/weather?";
     private final static String KEY_FOR_LATITUDE = "lat=";
@@ -90,7 +92,8 @@ public class OpenWeatherService {
         return GEO_API_FRAGMENT +
                KEY_FOR_CITY_NAME +
                locationName +
-               LIMIT_5_FOR_RESPONSE +
+               KEY_FOR_LIMITATION_RESPONSE +
+               MAX_LIMITATION_RESPONSE +
                KEY_FOR_APP_ID +
                appId;
     }
