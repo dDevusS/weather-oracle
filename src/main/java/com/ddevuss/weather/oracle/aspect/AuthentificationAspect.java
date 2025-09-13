@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.aspect;
 
-import com.ddevuss.weather.oracle.dto.UserCreateDto;
+import com.ddevuss.weather.oracle.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -24,9 +24,9 @@ public class AuthentificationAspect {
 
     @After("isUserService() " +
            "&& execution(public * save(*)) " +
-           "&& args(userCreateDto)")
-    public void logSavingNewUser(UserCreateDto userCreateDto) {
-        log.info("New user with login {} has been saved", userCreateDto.getLogin());
+           "&& args(userDto)")
+    public void logSavingNewUser(UserDto userDto) {
+        log.info("New user with login {} has been saved", userDto.getLogin());
     }
 
     @After("isUserService() " +
