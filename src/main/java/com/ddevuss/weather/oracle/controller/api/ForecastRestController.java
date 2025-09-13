@@ -1,9 +1,8 @@
 package com.ddevuss.weather.oracle.controller.api;
 
 import com.ddevuss.weather.oracle.controller.api.docs.ForecastController;
-import com.ddevuss.weather.oracle.dto.ApiErrorDto;
 import com.ddevuss.weather.oracle.dto.ForecastDto;
-import com.ddevuss.weather.oracle.dto.LocationReadDto;
+import com.ddevuss.weather.oracle.dto.LocationDto;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ public class ForecastRestController implements ForecastController {
     private final OpenWeatherService openWeatherService;
 
     @PostMapping
-    public ResponseEntity<?> getWeatherForecast(@RequestBody List<LocationReadDto> locations) {
         return Optional.ofNullable(locations)
                 .map(list -> {
                     if (list.isEmpty()) return ResponseEntity.ok(List.of());
@@ -39,5 +37,6 @@ public class ForecastRestController implements ForecastController {
                     }
                 })
                 .orElse(ResponseEntity.badRequest().build());
+    public ResponseEntity<List<ForecastDto>> getWeatherForecast(@RequestBody List<@Valid @NotNull LocationDto> locations) {
     }
 }

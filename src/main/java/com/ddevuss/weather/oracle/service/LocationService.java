@@ -1,11 +1,12 @@
 package com.ddevuss.weather.oracle.service;
 
-import com.ddevuss.weather.oracle.dto.LocationReadDto;
+import com.ddevuss.weather.oracle.dto.LocationDto;
 import com.ddevuss.weather.oracle.entity.Location;
-import com.ddevuss.weather.oracle.mapper.LocationReadDtoFromEntityMapper;
+import com.ddevuss.weather.oracle.entity.User;
+import com.ddevuss.weather.oracle.mapper.LocationMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -19,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class LocationService {
 
     private final LocationRepository locationRepository;
-    private final LocationReadDtoFromEntityMapper locationReadDtoFromEntityMapper;
+    private final LocationMapper locationMapper;
     private static final Integer PAGE_SIZE = 4;
 
-    public Slice<LocationReadDto> findAllByUserLogin(String login, Integer pageNumber) {
+    public Slice<LocationDto> findAllByUserLogin(String login, Integer pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("id"));
         return locationRepository.findAllByUserLogin(login, pageRequest)
-                .map(locationReadDtoFromEntityMapper::entityToDto);
+                .map(locationMapper::entityToDto);
     }
 
     @Transactional

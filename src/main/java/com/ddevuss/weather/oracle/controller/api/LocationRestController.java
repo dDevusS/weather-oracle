@@ -1,11 +1,7 @@
 package com.ddevuss.weather.oracle.controller.api;
 
 import com.ddevuss.weather.oracle.controller.api.docs.LocationController;
-import com.ddevuss.weather.oracle.dto.ApiErrorDto;
-import com.ddevuss.weather.oracle.dto.LocationReadDto;
-import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
-import com.ddevuss.weather.oracle.entity.Location;
-import com.ddevuss.weather.oracle.entity.User;
+import com.ddevuss.weather.oracle.dto.LocationDto;
 import com.ddevuss.weather.oracle.service.LocationService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,7 +40,6 @@ public class LocationRestController implements LocationController {
     private static final Integer MIN_SIZE_NAME_FOR_SEARCH = 3;
 
     @GetMapping("/locations/search")
-    public ResponseEntity<?> searchLocationsByName(@RequestParam String locationName) {
         return Optional.ofNullable(locationName)
                 .filter(Predicate.not(String::isBlank))
                 .map(String::trim)
@@ -64,10 +59,10 @@ public class LocationRestController implements LocationController {
                 })
                 .orElseGet(() -> ResponseEntity.badRequest()
                         .body(new ApiErrorDto("", "Location name should not be blank and must contain at least three characters.", "VALIDATION_ERROR")));
+    public ResponseEntity<List<LocationDto>> searchLocationsByName(
     }
 
     @PostMapping("/location/save")
-    public ResponseEntity<?> saveLocation(@RequestBody @Validated LocationApiResponseDto locationApiResponseDto, Principal principal) {
         try {
             locationService.save(
                     Location.builder()
@@ -85,6 +80,7 @@ public class LocationRestController implements LocationController {
         }
         catch (DataIntegrityViolationException e) {
             checkForDuplicateConstraint(e);
+    public ResponseEntity<Void> saveLocation(@RequestBody @Valid LocationDto locationDto, Principal principal) {
 
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ApiErrorDto("", "The location '" + locationApiResponseDto.getName() + "' already exists", "DUPLICATED_ERROR"));
@@ -111,9 +107,9 @@ public class LocationRestController implements LocationController {
     }
 
     @GetMapping("locations")
-    public ResponseEntity<?> getLocations(@RequestParam Integer pageNumber, Principal principal) {
         Slice<LocationReadDto> locations = locationService.findAllByUserLogin(principal.getName(), Objects.requireNonNullElse(pageNumber, 0));
 
+    public ResponseEntity<Slice<LocationDto>> getLocations(@PositiveOrZero @RequestParam(required = false) Integer pageNumber, Principal principal) {
         return ResponseEntity.ok(locations);
     }
 

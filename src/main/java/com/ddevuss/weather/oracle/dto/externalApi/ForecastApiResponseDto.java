@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.dto.api;
+package com.ddevuss.weather.oracle.dto.externalApi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

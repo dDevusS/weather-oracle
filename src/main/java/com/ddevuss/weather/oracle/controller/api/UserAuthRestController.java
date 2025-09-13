@@ -4,10 +4,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ddevuss.weather.oracle.controller.api.docs.UserAuthController;
-import com.ddevuss.weather.oracle.dto.ApiErrorDto;
-import com.ddevuss.weather.oracle.dto.JwtResponseDto;
-import com.ddevuss.weather.oracle.dto.UserCreateDto;
-import com.ddevuss.weather.oracle.dto.UserReadDto;
+import com.ddevuss.weather.oracle.dto.AccessTokenDto;
+import com.ddevuss.weather.oracle.dto.UserDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.service.JwtService;
 import com.ddevuss.weather.oracle.service.UserService;
@@ -83,7 +81,6 @@ public class UserAuthRestController implements UserAuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody @Validated UserCreateDto user) {
         try {
             UserReadDto createdUser = userService.save(user);
             return ResponseEntity.status(CREATED).body(createdUser);
@@ -106,6 +103,7 @@ public class UserAuthRestController implements UserAuthController {
                         .body(new ApiErrorDto("INTERNAL_ERROR", "Something went wrong. Please, try again later.", "INTERNAL"));
             }
         }
+    public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto user) {
     }
 
     @PostMapping("/refresh")

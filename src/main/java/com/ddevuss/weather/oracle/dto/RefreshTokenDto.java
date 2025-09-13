@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Builder
 public record RefreshTokenDto(
-        @JsonProperty("refresh_token")
+        @JsonProperty("refreshToken")
         @NotBlank
         String refreshToken
 ) implements Serializable {}

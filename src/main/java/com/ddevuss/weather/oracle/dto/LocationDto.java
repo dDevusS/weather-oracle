@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.dto.api;
+package com.ddevuss.weather.oracle.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,10 +13,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LocationApiResponseDto implements Serializable {
+public class LocationDto implements Serializable {
+
+    Long id;
 
     @NotBlank
     String name;
+
+    String country;
+
+    String state;
 
     @NotNull
     Double lat;
@@ -24,8 +30,4 @@ public class LocationApiResponseDto implements Serializable {
     @NotNull
     Double lon;
 
-    @NotBlank
-    String country;
-
-    String state;
 }

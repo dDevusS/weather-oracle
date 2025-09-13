@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.aspect;
 
 import com.ddevuss.weather.oracle.configuration.WeatherOracleConfiguration;
-import com.ddevuss.weather.oracle.dto.LocationReadDto;
+import com.ddevuss.weather.oracle.dto.LocationDto;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

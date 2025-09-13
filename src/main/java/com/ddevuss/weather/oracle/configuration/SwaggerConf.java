@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.configuration;
 
-import com.ddevuss.weather.oracle.dto.UserReadDto;
+import com.ddevuss.weather.oracle.dto.UserDto;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -26,7 +26,7 @@ public class SwaggerConf {
 
         Class<?>[] classes = {
                 ApiResponse.class,
-                UserReadDto.class
+                UserDto.class
         };
 
         for (Class<?> clazz : classes) {

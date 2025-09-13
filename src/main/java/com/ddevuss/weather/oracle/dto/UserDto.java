@@ -7,10 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
 
+import java.io.Serializable;
+
 @Value
 @Builder
 @PasswordsMatches
-public class UserCreateDto {
+public class UserDto implements Serializable {
+
+    Long id;
 
     @NotBlank(message = "Login must not be blank.")
     @Size(min = 3, max = 20, message = "Login size must be from 3 to 20 letters.")
@@ -25,4 +29,5 @@ public class UserCreateDto {
     String rawPassword;
 
     String confirmRawPassword;
+
 }

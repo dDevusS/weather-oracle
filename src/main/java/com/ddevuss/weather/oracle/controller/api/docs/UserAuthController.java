@@ -1,9 +1,7 @@
 package com.ddevuss.weather.oracle.controller.api.docs;
 
-import com.ddevuss.weather.oracle.dto.JwtResponseDto;
-import com.ddevuss.weather.oracle.dto.RefreshTokenDto;
-import com.ddevuss.weather.oracle.dto.UserCreateDto;
-import com.ddevuss.weather.oracle.dto.UserReadDto;
+import com.ddevuss.weather.oracle.dto.AccessTokenDto;
+import com.ddevuss.weather.oracle.dto.UserDto;
 import com.ddevuss.weather.oracle.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -13,9 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Map;
 
 @Tag(name = "Authentication")
 public interface UserAuthController {
@@ -30,7 +30,7 @@ public interface UserAuthController {
                             content =
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = JwtResponseDto.class)
+                                    schema = @Schema(implementation = AccessTokenDto.class)
                             )),
                     @ApiResponse(
                             responseCode = "400",
@@ -40,7 +40,7 @@ public interface UserAuthController {
                             ref = "#/components/responses/Unauthorized")
             }
     )
-    ResponseEntity<?> login(User user);
+    ResponseEntity<AccessTokenDto> login(User user);
 
     @Operation(
             summary = "Registration for users",
@@ -52,7 +52,7 @@ public interface UserAuthController {
                             content =
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UserReadDto.class)
+                                    schema = @Schema(implementation = UserDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -60,7 +60,7 @@ public interface UserAuthController {
                             description = "Bad request",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ApiErrorDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = ProblemDetail.class))
                             )
                     ),
                     @ApiResponse(
@@ -74,7 +74,7 @@ public interface UserAuthController {
                     )
             }
     )
-    ResponseEntity<?> registration(UserCreateDto user);
+    ResponseEntity<UserDto> registration(UserDto user);
 
     @Operation(
             summary = "Refresh token",
@@ -85,7 +85,7 @@ public interface UserAuthController {
                             description = "Success refresh tokens",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = JwtResponseDto.class)
+                                    schema = @Schema(implementation = AccessTokenDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -96,8 +96,8 @@ public interface UserAuthController {
                             ref = "#/components/responses/Unauthorized")
             }
     )
-    //TODO: fix documentation
-    ResponseEntity<?> refresh(HttpServletRequest request);
+        //TODO: fix documentation
+    ResponseEntity<AccessTokenDto> refresh(String refreshToken);
 
     @Operation(
             summary = "Logout user",
@@ -119,8 +119,8 @@ public interface UserAuthController {
                     )
             }
     )
-    ResponseEntity<Void> logout(HttpServletRequest request);
+    ResponseEntity<Void> logout(String refreshToken);
 
     @Operation(hidden = true)
-    ResponseEntity<?> test();
+    ResponseEntity<Map<String, String>> test();
 }

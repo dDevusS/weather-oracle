@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.controller.api.docs;
 
-import com.ddevuss.weather.oracle.dto.LocationReadDto;
+import com.ddevuss.weather.oracle.dto.LocationDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class SliceOfLocations {
 
-    private List<LocationReadDto> content;
+    private List<LocationDto> content;
 
     private int number;
 

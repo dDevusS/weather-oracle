@@ -2,9 +2,8 @@ package com.ddevuss.weather.oracle.service;
 
 import com.ddevuss.weather.oracle.configuration.WeatherOracleConfiguration;
 import com.ddevuss.weather.oracle.dto.ForecastDto;
-import com.ddevuss.weather.oracle.dto.LocationReadDto;
-import com.ddevuss.weather.oracle.dto.api.ForecastApiResponseDto;
-import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
+import com.ddevuss.weather.oracle.dto.LocationDto;
+import com.ddevuss.weather.oracle.dto.externalApi.ForecastApiResponseDto;
 import com.ddevuss.weather.oracle.utils.MathUtil;
 import com.ddevuss.weather.oracle.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -47,38 +46,38 @@ public class OpenWeatherService {
         this.appId = properties.getOpenWeatherApi().key();
     }
 
-    public List<LocationApiResponseDto> searchLocationsByName(String locationName) {
+    public List<LocationDto> searchLocationsByName(String locationName) {
         String url = buildUrlForGeoApi(locationName, appId);
 
         var locations = openWeatherRestClient.get()
                 .uri(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(LocationApiResponseDto[].class);
+                .body(LocationDto[].class);
 
         return removeDuplicates(locations);
     }
 
-    public List<ForecastDto> getWeatherForecast(List<LocationReadDto> locations) {
+    public List<ForecastDto> getWeatherForecast(List<LocationDto> locations) {
         List<ForecastDto> forecasts = new ArrayList<>();
 
-        for (LocationReadDto location : locations) {
-            String url = buildUrlForWeatherApi(location.getLatitude(), location.getLongitude(), appId);
+        for (LocationDto location : locations) {
+            String url = buildUrlForWeatherApi(location.getLat(), location.getLon(), appId);
 
-            var entity = openWeatherRestClient.get()
+            var responseEntity = openWeatherRestClient.get()
                     .uri(url)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .onStatus(s -> s.value() == 404, (req, res) -> {
                         log.info("OpenWeather: 404 for location id={} lat={}, lon={}",
-                                location.getId(), location.getLatitude(), location.getLongitude());
+                                location.getId(), location.getLat(), location.getLon());
                     })
                     .toEntity(ForecastApiResponseDto.class);
 
-            if (!entity.getStatusCode().is2xxSuccessful() || entity.getBody() == null) {
+            if (!responseEntity.getStatusCode().is2xxSuccessful() || responseEntity.getBody() == null) {
                 continue;
             }
-            forecasts.add(convertFromResponseDto(entity.getBody(), location));
+            forecasts.add(convertFromResponseDto(responseEntity.getBody(), location));
         }
 
         return forecasts;
@@ -105,7 +104,7 @@ public class OpenWeatherService {
                UNITS_MEASUREMENT;
     }
 
-    private static List<LocationApiResponseDto> removeDuplicates(LocationApiResponseDto[] locations) {
+    private static List<LocationDto> removeDuplicates(LocationDto[] locations) {
         return Arrays.stream(locations)
                 .filter(Objects::nonNull)
                 .filter(StreamUtils.distinctBy(l ->
@@ -123,7 +122,7 @@ public class OpenWeatherService {
                 .toList();
     }
 
-    private static ForecastDto convertFromResponseDto(ForecastApiResponseDto response, LocationReadDto location) {
+    private static ForecastDto convertFromResponseDto(ForecastApiResponseDto response, LocationDto location) {
         return ForecastDto.builder()
                 .locationId(location.getId())
                 .locationName(location.getName())
