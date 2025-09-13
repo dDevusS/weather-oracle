@@ -8,7 +8,6 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LoadingState} from '../loading-state';
 
 const ERROR_EMPTY_QUERY = "Location name should not be blank and must contain at least three characters.";
-const ERROR_NOT_FOUND = "Locations were not found.";
 const ERROR_UNKNOWN = "An unknown error occurred. Please try again later.";
 
 @Component({
@@ -64,8 +63,7 @@ export class Searchbar implements OnInit {
           return of(null)
         }),
         catchError(error => {
-          const errorMessage = error.status === 404 ? ERROR_NOT_FOUND : ERROR_UNKNOWN
-          this.locationSearchState.setError(errorMessage)
+          this.locationSearchState.setError(ERROR_UNKNOWN)
           this.locationSearchState.setLocations([])
           return of(null)
         }),

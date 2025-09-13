@@ -41,6 +41,7 @@ export class RegistrationPage {
 
   constructor(private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
+        id: new FormControl(0),
         login: new FormControl(null,
           [
             Validators.required,

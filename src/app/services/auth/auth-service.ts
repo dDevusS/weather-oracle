@@ -81,8 +81,8 @@ export class AuthService {
   }
 
   private saveAccessToken(tokenResponse: TokenResponse) {
-    if (tokenResponse?.access_token) {
-      this.cookieService.set('accessToken', tokenResponse.access_token)
+    if (tokenResponse?.accessToken) {
+      this.cookieService.set('accessToken', tokenResponse.accessToken)
     }
   }
 }

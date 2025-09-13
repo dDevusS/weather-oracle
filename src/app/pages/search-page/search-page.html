@@ -9,6 +9,10 @@
       [isDuplicated]="isDuplicated(location)"
       (saveRequested)="onSaveRequested($event)"
     />
+  } @empty {
+    <div class="error-text">
+      Locations were not found.
+    </div>
   }
   <div>
     <button type="button" (click)="goBack()" class="btn lighting_text">Return</button>
