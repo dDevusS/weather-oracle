@@ -4,16 +4,16 @@ import com.ddevuss.weather.oracle.controller.api.docs.ForecastController;
 import com.ddevuss.weather.oracle.dto.ForecastDto;
 import com.ddevuss.weather.oracle.dto.LocationDto;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClientResponseException;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -23,20 +23,8 @@ public class ForecastRestController implements ForecastController {
     private final OpenWeatherService openWeatherService;
 
     @PostMapping
-        return Optional.ofNullable(locations)
-                .map(list -> {
-                    if (list.isEmpty()) return ResponseEntity.ok(List.of());
-
-                    List<ForecastDto> forecasts;
-                    try {
-                        forecasts = openWeatherService.getWeatherForecast(list);
-                        return ResponseEntity.ok(forecasts);
-                    }
-                    catch (RestClientResponseException ex) {
-                        return ResponseEntity.internalServerError().body(new ApiErrorDto("INTERNAL_ERROR", "Something went wrong", "INTERNAL"));
-                    }
-                })
-                .orElse(ResponseEntity.badRequest().build());
     public ResponseEntity<List<ForecastDto>> getWeatherForecast(@RequestBody List<@Valid @NotNull LocationDto> locations) {
+        if (locations.isEmpty()) return ResponseEntity.ok(List.of());
+        return ResponseEntity.ok(openWeatherService.getWeatherForecast(locations));
     }
 }
