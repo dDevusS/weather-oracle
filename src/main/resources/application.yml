@@ -24,9 +24,9 @@ spring:
 application:
   open-weather-api:
     key:
-    url: https://api.openweathermap.org
   jwt:
     secret:
+    secure: true
   cors:
     allowed-origin-patterns: http://localhost:*
     allowed-origins: http://localhost:4020
@@ -47,4 +47,5 @@ logging:
     org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: OFF
     com.ddevuss.weather.oracle: INFO
     com.ddevuss.weather.oracle.aspect: WARN
+    com.ddevuss.weather.oracle.controller.exceptionHandler: WARN
     root: INFO

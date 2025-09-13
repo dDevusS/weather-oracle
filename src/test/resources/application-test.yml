@@ -10,16 +10,7 @@ spring:
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          secret: 8e6147f8a6bd45a4b317f9db88b51f36aabbccdd00112233445566778899
 
-open.weather.api:
-  key: e2ddfdfb3e5aa91ef56467e12096117d
-  url: https://api.openweathermap.org
-  refresh-token:
-    secret-for-hashing: 8e6147f8a6bd45a4b317f9db88b51f36ahjgytjfgdbf00112233445566778899
-
-openweather.api.key: test_key
+application:
+  open-weather-api:
+    key: e2ddfdfb3e5aa91ef56467e12096117d
