@@ -36,11 +36,9 @@ public class SwaggerConf {
 
         components.addResponses("BadRequest", new ApiResponse()
                         .description("Bad request")
-                        .content(new Content()
-                                .addMediaType("application/json", new MediaType().schema(new Schema<>().$ref("#/components/schemas/ApiErrorDto")))))
+                )
                 .addResponses("Unauthorized", new ApiResponse()
                         .description("Unauthorized")
-                        .content(new Content().addMediaType("application/json", new MediaType().schema(new Schema<>().$ref("#/components/schemas/ApiErrorDto"))))
                 )
                 .addSecuritySchemes("bearer",
                         new SecurityScheme()
