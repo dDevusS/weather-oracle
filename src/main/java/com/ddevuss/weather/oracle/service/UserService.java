@@ -4,7 +4,9 @@ import com.ddevuss.weather.oracle.dto.UserDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.mapper.UserMapper;
 import com.ddevuss.weather.oracle.repository.UserRepository;
+import com.ddevuss.weather.oracle.utils.DuplicateConstraintChecker;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +20,7 @@ import java.util.function.Function;
 @Service
 public class UserService implements UserDetailsService {
 
+    private static final String USER_LOGIN_KEY_CONSTRAINT = "users_login_key";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
