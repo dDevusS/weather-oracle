@@ -1,6 +1,5 @@
 package com.ddevuss.weather.oracle.controller.api.docs;
 
-import com.ddevuss.weather.oracle.dto.ApiErrorDto;
 import com.ddevuss.weather.oracle.dto.api.LocationApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -53,7 +52,7 @@ public interface LocationController {
                             responseCode = "409",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ApiErrorDto.class)
+                                    schema = @Schema(implementation = ProblemDetail.class)
                             )
                     ),
                     @ApiResponse(
@@ -81,7 +80,7 @@ public interface LocationController {
                             responseCode = "409",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ApiErrorDto.class)
+                                    schema = @Schema(implementation = ProblemDetail.class)
                             )
                     ),
                     @ApiResponse(
@@ -96,7 +95,7 @@ public interface LocationController {
                             responseCode = "403",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ApiErrorDto.class)
+                                    schema = @Schema(implementation = ProblemDetail.class)
                             )
                     ),
                     @ApiResponse(

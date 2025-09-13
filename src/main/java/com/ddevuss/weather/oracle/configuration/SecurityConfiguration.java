@@ -1,9 +1,10 @@
 package com.ddevuss.weather.oracle.configuration;
 
-import com.ddevuss.weather.oracle.dto.ApiErrorDto;
+import com.ddevuss.weather.oracle.utils.ProblemDetailBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,8 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.List;
-import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -39,7 +41,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationEntryPoint restEntryPoint) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   AuthenticationEntryPoint restEntryPoint,
+                                                   AccessDeniedHandler accessDeniedHandler) throws Exception {
         http.authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/api/auth/login",
@@ -54,6 +58,7 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(restEntryPoint)
+                                .accessDeniedHandler(accessDeniedHandler)
                 )
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -84,14 +89,26 @@ public class SecurityConfiguration {
         return (request, response, exception) -> {
             response.setStatus(UNAUTHORIZED.value());
             response.setContentType(APPLICATION_JSON_VALUE);
-            String message = Optional.ofNullable(exception.getMessage())
-                    .orElse("Authentication required");
-            ApiErrorDto body = new ApiErrorDto(
-                    "",
-                    message,
-                    "UNAUTHORIZED"
-            );
-            mapper.writeValue(response.getOutputStream(), body);
+            ProblemDetail pd = ProblemDetailBuilder.forStatus(UNAUTHORIZED)
+                    .title("Credentials failed")
+                    .uri(request)
+                    .build();
+
+            mapper.writeValue(response.getOutputStream(), pd);
+        };
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+        return (request, response, exception) -> {
+            response.setStatus(FORBIDDEN.value());
+            response.setContentType(APPLICATION_JSON_VALUE);
+            ProblemDetail pd = ProblemDetailBuilder.forStatus(FORBIDDEN)
+                    .title("Access denied")
+                    .uri(request)
+                    .build();
+
+            mapper.writeValue(response.getOutputStream(), pd);
         };
     }
 

@@ -1,6 +1,5 @@
 package com.ddevuss.weather.oracle.controller.api.docs;
 
-import com.ddevuss.weather.oracle.dto.ApiErrorDto;
 import com.ddevuss.weather.oracle.dto.JwtResponseDto;
 import com.ddevuss.weather.oracle.dto.RefreshTokenDto;
 import com.ddevuss.weather.oracle.dto.UserCreateDto;
@@ -70,7 +69,7 @@ public interface UserAuthController {
                             content =
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = ApiErrorDto.class)
+                                    schema = @Schema(implementation = ProblemDetail.class)
                             )
                     )
             }
