@@ -74,7 +74,15 @@ public class SwaggerConf {
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
+                                .description("Cookie with access token")
 
+                )
+                .addSecuritySchemes("refreshToken",
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .scheme("refreshToken")
+                                .bearerFormat("JWT")
+                                .description("Http only cookie with refresh token")
                 );
 
         return new OpenAPI()

@@ -74,6 +74,7 @@ public interface UserAuthController {
     @Operation(
             summary = "Refresh token",
             description = "Refresh an access token and a refresh token with a validated refresh token",
+            security = @SecurityRequirement(name = "refreshToken"),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -97,7 +98,6 @@ public interface UserAuthController {
     @Operation(
             summary = "Logout user",
             description = "Invalidates the refresh token by revoking it server-side and removing the HTTP-only cookie",
-            security = @SecurityRequirement(name = "refreshToken"),
             responses = {
                     @ApiResponse(
                             responseCode = "204",
