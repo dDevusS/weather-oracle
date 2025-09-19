@@ -9,7 +9,6 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.net.URI;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -92,7 +90,10 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
             WebRequest request) {
 
         var req = ((ServletWebRequest) request).getRequest();
-        var pd = problem(BAD_REQUEST, "Parameter has invalid value", null, req);
+        var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
+                .title("Parameter has invalid value")
+                .uri(req)
+                .build();
 
         return ResponseEntity.badRequest().body(pd);
     }
@@ -161,14 +162,6 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
                 .title("Something went wrong")
                 .uri(req)
                 .build();
-    }
-
-    private ProblemDetail problem(HttpStatus status, String title, String detail, HttpServletRequest req) {
-        var pd = ProblemDetail.forStatus(status);
-        if (title != null) pd.setTitle(title);
-        if (detail != null) pd.setDetail(detail);
-        if (req != null) pd.setInstance(URI.create(req.getRequestURI()));
-        return pd;
     }
 
 }
