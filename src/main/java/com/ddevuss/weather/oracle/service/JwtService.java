@@ -145,12 +145,6 @@ public class JwtService {
         jwtRepository.revokeByTokenHash(refreshTokenHash);
     }
 
-    @Scheduled(cron = "0 0 0/12 * * *")
-    @Transactional
-    public void deleteExpiredTokens() {
-        jwtRepository.deleteAllByExpiresAtBefore(Instant.now());
-    }
-
     @Getter
     private enum TypeOfToken {
         ACCESS_TOKEN("access"),
