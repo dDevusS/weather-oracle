@@ -1,18 +1,24 @@
-<div class="triangle">
-  @if (!first) {
-    <a (click)="previousPage()" class="triangle-left"></a>
-  }
-</div>
-<div class="forecast-container">
-  @for (forecast of forecasts; track forecast.locationId) {
-    <app-forecast-card
-      [forecast]="forecast"
-      (deleteRequested)="onDeleteRequested($event)"
-    />
-  }
-</div>
-<div class="triangle">
-  @if (!last) {
-    <a (click)="nextPage()" class="triangle-right"></a>
-  }
-</div>
+@if (error()) {
+  <div class="error-text">
+    {{ error() }}
+  </div>
+} @else {
+  <div class="triangle">
+    @if (!first) {
+      <a (click)="previousPage()" class="triangle-left"></a>
+    }
+  </div>
+  <div class="forecast-container">
+    @for (forecast of forecasts; track forecast.locationId) {
+      <app-forecast-card
+        [forecast]="forecast"
+        (deleteRequested)="onDeleteRequested($event)"
+      />
+    }
+  </div>
+  <div class="triangle">
+    @if (!last) {
+      <a (click)="nextPage()" class="triangle-right"></a>
+    }
+  </div>
+}

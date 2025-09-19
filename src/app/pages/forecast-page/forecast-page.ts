@@ -59,7 +59,7 @@ export class ForecastPage implements OnInit {
       }),
       catchError(err => {
         this.error.set('Failed to delete. Please try again.');
-        return this.reloadCurrentPage(); // попробуем всё равно обновить список
+        return this.reloadCurrentPage();
       }),
       finalize(() => this.isLoading.set(false)),
       takeUntilDestroyed(this.destroyRef)
@@ -67,10 +67,10 @@ export class ForecastPage implements OnInit {
   }
 
   private reloadCurrentPage() {
-    return this.loadLocations({ pageNumber: this.currentPage }).pipe(
+    return this.loadLocations({pageNumber: this.currentPage}).pipe(
       switchMap(locations => {
         this.first = locations.first;
-        this.last  = locations.last;
+        this.last = locations.last;
         return this.loadForecasts(locations.content);
       })
     );
@@ -99,13 +99,21 @@ export class ForecastPage implements OnInit {
     this.loadLocations(params)
       .pipe(
         switchMap(locations => {
+          if (locations.content.length === 0 && this.currentPage != 0) {
+            this.updatePage(0)
+          }
           this.first = locations.first
           this.last = locations.last
 
           return this.loadForecasts(locations.content)
         }),
         catchError(error => {
-            return of(null)
+            if (error.status === 400) {
+              this.updatePage(0)
+              return EMPTY
+            }
+            this.error.set('Something went wrong. Please try again later.')
+            return EMPTY
           }
         ),
         finalize(() => {
@@ -119,7 +127,7 @@ export class ForecastPage implements OnInit {
   private loadForecasts(locations: UserLocation[]) {
     if (!locations.length) {
       this.forecasts = [];
-      return of(null);
+      return EMPTY;
     }
 
     return this.forecastService.getForecasts(locations)
