@@ -19,7 +19,6 @@ public class ProblemDetailBuilder {
         return problemDetailBuilder;
     }
 
-
     public ProblemDetailBuilder title(String title) {
         this.title = title;
         return this;
@@ -45,6 +44,7 @@ public class ProblemDetailBuilder {
 
     private static ProblemDetail problem(HttpStatus status, String title, String detail, URI uri) {
         var pd = ProblemDetail.forStatus(status);
+        pd.setType(URI.create("https://ddevuss.github.io/weather-oracle/"));
         if (title != null) pd.setTitle(title);
         if (detail != null) pd.setDetail(detail);
         if (uri != null) pd.setInstance(uri);

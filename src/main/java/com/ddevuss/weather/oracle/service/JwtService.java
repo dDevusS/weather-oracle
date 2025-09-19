@@ -10,8 +10,8 @@ import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.repository.JwtRefreshTokenRepository;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,74 +27,65 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
-//@Transactional(readOnly = true)
 public class JwtService {
+
+    private static final String PAYLOAD_TYPE_KEY = "type";
+    private static final String ALGORITHM = "HmacSHA256";
 
     private final JwtRefreshTokenRepository jwtRepository;
     private final String secret;
-    private static final Duration ACCESS_EXPIRATION = Duration.ofMinutes(5);
-    private static final Duration REFRESH_EXPIRATION = Duration.ofDays(3);
+    private final Duration accessExpiration;
+    private final Duration refreshExpiration;
 
     @Autowired
     public JwtService(WeatherOracleConfiguration configuration,
                       JwtRefreshTokenRepository jwtRefreshTokenRepository) {
         this.secret = configuration.getJwt().secret();
+        this.accessExpiration = configuration.getJwt().timeOfLife().accessToken();
+        this.refreshExpiration = configuration.getJwt().timeOfLife().refreshToken();
         this.jwtRepository = jwtRefreshTokenRepository;
     }
 
     public String generateAccessToken(String username, Instant createdAt) {
-        return generateJwtToken(username, createdAt, ACCESS_EXPIRATION, TypeOfToken.ACCESS_TOKEN);
+        return generateJwtToken(username, createdAt, accessExpiration, TypeOfToken.ACCESS_TOKEN);
     }
 
-    @Transactional
     @SneakyThrows
+    @Transactional
     public String exchangeRefreshToken(DecodedJWT decodedRefreshToChange, Instant createdAt) {
         revokeRefreshToken(decodedRefreshToChange);
 
-        String newRefreshToken = generateRefreshToken(decodedRefreshToChange.getSubject(), createdAt);
-        String tokenHash = generateTokenHash(newRefreshToken);
+        return generateAndSaveRefreshToken(decodedRefreshToChange.getSubject(), createdAt);
+    }
+
+    @SneakyThrows
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String generateAndSaveRefreshToken(String username, Instant createdAt) {
+        String newRefreshToken = generateJwtToken(username, createdAt, refreshExpiration, TypeOfToken.REFRESH_TOKEN);
 
         JwtRefreshToken token = JwtRefreshToken.builder()
-                .user(User.builder().login(decodedRefreshToChange.getSubject()).build())
+                .user(User.builder().login(username).build())
                 .createdAt(createdAt)
-                .expiresAt(createdAt.plus(REFRESH_EXPIRATION))
-                .tokenHash(tokenHash)
+                .expiresAt(createdAt.plus(refreshExpiration))
+                .tokenHash(generateTokenHash(newRefreshToken))
                 .build();
 
         jwtRepository.saveToken(token);
 
         return newRefreshToken;
-
     }
 
     @SneakyThrows
-    @Transactional
-    public void saveRefreshToken(String username, Instant createdAt, String codedToken) {
-        JwtRefreshToken token = JwtRefreshToken.builder()
-                .user(User.builder().login(username).build())
-                .createdAt(createdAt)
-                .expiresAt(createdAt.plus(REFRESH_EXPIRATION))
-                .tokenHash(generateTokenHash(codedToken))
-                .build();
-
-        jwtRepository.saveToken(token);
-    }
-
-    public String generateRefreshToken(String username, Instant createdAt) {
-        return generateJwtToken(username, createdAt, REFRESH_EXPIRATION, TypeOfToken.REFRESH_TOKEN);
-    }
-
-    @SneakyThrows
-    public boolean isRefreshTokenExistsAndNotRevoked(DecodedJWT refreshToken) {
-        String tokenHash = generateTokenHash(refreshToken.getToken());
-        return jwtRepository.findByTokenHash(tokenHash)
-                .map(token -> !token.isRevoked())
-                .orElse(false);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void revokeRefreshToken(DecodedJWT decodedRefreshToken) {
+        String refreshTokenHash = (generateTokenHash(decodedRefreshToken.getToken()));
+        jwtRepository.revokeByTokenHash(refreshTokenHash);
     }
 
     public boolean isRefreshTokenType(DecodedJWT refreshToken) {
-        return "refresh".equals(refreshToken.getClaim("type").asString());
+        return TypeOfToken.REFRESH_TOKEN.getType().equals(refreshToken.getClaim(PAYLOAD_TYPE_KEY).asString());
     }
 
     @SneakyThrows
@@ -109,15 +100,17 @@ public class JwtService {
         return decodedJWT;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void revokeAllUserTokens(String username) {
-        //Self-invocation move to another service?
-        jwtRepository.revokeByUserLogin(username);
+    @SneakyThrows
+    private boolean isRefreshTokenExistsAndNotRevoked(DecodedJWT refreshToken) {
+        String tokenHash = generateTokenHash(refreshToken.getToken());
+        return jwtRepository.findByTokenHash(tokenHash)
+                .map(token -> !token.isRevoked())
+                .orElse(false);
     }
 
     private String generateTokenHash(String token) throws NoSuchAlgorithmException, InvalidKeyException {
-        Mac mac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        Mac mac = Mac.getInstance(ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM);
         mac.init(keySpec);
 
         byte[] hash = mac.doFinal(token.getBytes(StandardCharsets.UTF_8));
@@ -128,7 +121,7 @@ public class JwtService {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         Instant expiredAt = createdAt.plus(expirationTime);
         Map<String, Object> payload = new HashMap<>();
-        payload.put("type", tokenType.getType());
+        payload.put(PAYLOAD_TYPE_KEY, tokenType.getType());
 
         return JWT.create()
                 .withSubject(username)
@@ -136,13 +129,6 @@ public class JwtService {
                 .withIssuedAt(createdAt)
                 .withExpiresAt(expiredAt)
                 .sign(algorithm);
-    }
-
-    @SneakyThrows
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void revokeRefreshToken(DecodedJWT decodedRefreshToken) {
-        String refreshTokenHash = (generateTokenHash(decodedRefreshToken.getToken()));
-        jwtRepository.revokeByTokenHash(refreshTokenHash);
     }
 
     @Getter
