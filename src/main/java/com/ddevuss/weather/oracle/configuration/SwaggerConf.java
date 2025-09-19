@@ -1,5 +1,9 @@
 package com.ddevuss.weather.oracle.configuration;
 
+import com.ddevuss.weather.oracle.dto.AccessTokenDto;
+import com.ddevuss.weather.oracle.dto.ForecastDto;
+import com.ddevuss.weather.oracle.dto.LocationDto;
+import com.ddevuss.weather.oracle.dto.RefreshTokenDto;
 import com.ddevuss.weather.oracle.dto.UserDto;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
@@ -13,6 +17,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ProblemDetail;
 
 import java.util.List;
 import java.util.Map;
@@ -25,8 +30,12 @@ public class SwaggerConf {
         Components components = new Components();
 
         Class<?>[] classes = {
-                ApiResponse.class,
-                UserDto.class
+                UserDto.class,
+                ProblemDetail.class,
+                LocationDto.class,
+                AccessTokenDto.class,
+                ForecastDto.class,
+                RefreshTokenDto.class
         };
 
         for (Class<?> clazz : classes) {
@@ -36,9 +45,29 @@ public class SwaggerConf {
 
         components.addResponses("BadRequest", new ApiResponse()
                         .description("Bad request")
+                        .content(
+                                new Content()
+                                        .addMediaType(
+                                                "application/json",
+                                                new MediaType().schema(
+                                                        new Schema<>()
+                                                                .$ref("#/components/schemas/ProblemDetail")
+                                                )
+                                        )
+                        )
                 )
                 .addResponses("Unauthorized", new ApiResponse()
                         .description("Unauthorized")
+                        .content(
+                                new Content()
+                                        .addMediaType(
+                                                "application/json",
+                                                new MediaType().schema(
+                                                        new Schema<>()
+                                                                .$ref("#/components/schemas/ProblemDetail")
+                                                )
+                                        )
+                        )
                 )
                 .addSecuritySchemes("bearer",
                         new SecurityScheme()

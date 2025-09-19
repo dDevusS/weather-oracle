@@ -19,6 +19,7 @@ import java.util.List;
 public interface ForecastController {
 
     @Operation(
+            tags = {"/api/forecast"},
             summary = "Get list of forecasts",
             description = "Get forecasts from external API server",
             security = @SecurityRequirement(name = "bearer"),
