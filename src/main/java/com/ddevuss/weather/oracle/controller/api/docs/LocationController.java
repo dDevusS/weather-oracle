@@ -63,6 +63,7 @@ public interface LocationController {
                     ),
                     @ApiResponse(
                             responseCode = "409",
+                            description = "Location with this name already exists",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ProblemDetail.class)
@@ -88,13 +89,6 @@ public interface LocationController {
                     @ApiResponse(
                             responseCode = "204",
                             content = @Content()
-                    ),
-                    @ApiResponse(
-                            responseCode = "409",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ProblemDetail.class)
-                            )
                     ),
                     @ApiResponse(
                             responseCode = "400",

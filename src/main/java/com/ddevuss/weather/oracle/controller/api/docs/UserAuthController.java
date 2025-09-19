@@ -57,12 +57,7 @@ public interface UserAuthController {
                     ),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "Bad request",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ProblemDetail.class))
-                            )
-                    ),
+                            ref = "#/components/responses/BadRequest"),
                     @ApiResponse(
                             responseCode = "409",
                             description = "User with this login already exists",
@@ -112,10 +107,6 @@ public interface UserAuthController {
                                     description = "Clears the refreshToken cookie by setting Max-Age=0",
                                     schema = @Schema(type = "string", example = "refreshToken=; Path=/api/auth; HttpOnly; SameSite=Lax; Max-Age=0")
                             )
-                    ),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized - if no valid refresh token was provided"
                     )
             }
     )
