@@ -21,16 +21,6 @@ spring:
       fail-on-null-creator-properties: true
       fail-on-missing-creator-properties: true
 
-application:
-  open-weather-api:
-    key:
-  jwt:
-    secret:
-    secure: true
-  cors:
-    allowed-origin-patterns: http://localhost:*
-    allowed-origins: http://localhost:4020
-
 springdoc:
   api-docs:
     path: /api-docs

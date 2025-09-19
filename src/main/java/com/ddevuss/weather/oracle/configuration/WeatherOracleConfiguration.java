@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.boot.convert.DurationUnit;
 import org.springframework.stereotype.Component;
 
@@ -13,80 +14,102 @@ import java.util.List;
 
 @Component
 @Slf4j
-@ConfigurationProperties(prefix = "application")
+@ConfigurationProperties(prefix = "application", ignoreInvalidFields = true)
 @Data
 public class WeatherOracleConfiguration {
 
-    private static final int BITES_FOR_JWT_SECRET = 32;
-    private static final Duration DEFAULT_ACCESS_TTL = Duration.ofMinutes(5);
-    private static final Duration DEFAULT_REFRESH_TTL = Duration.ofDays(3);
+    private static final int BYTES_FOR_JWT_SECRET = 32;
+    private static final long DEFAULT_ACCESS_EXPIRATION = 5;
+    private static final long DEFAULT_REFRESH_EXPIRATION = 3;
+    private static final List<String> DEFAULT_ORIGIN_PATTERNS = List.of("http://localhost:*");
+    private static final List<String> DEFAULT_ALLOWED_ORIGINS = List.of("http://localhost:4020");
+    private static final String DEFAULT_OPEN_WEATHER_API_URL = "https://api.openweathermap.org";
 
-    private OpenWeatherApi openWeatherApi = new OpenWeatherApi("", "https://api.openweathermap.org");
+    private OpenWeatherApi openWeatherApi;
 
-    private Cors cors = new Cors(List.of("http://localhost:*"), List.of("http://localhost:4020"));
+    private Cors cors;
 
-    private Jwt jwt = new Jwt("", false, new TimeOfLife(DEFAULT_ACCESS_TTL, DEFAULT_REFRESH_TTL));
+    private Jwt jwt;
 
     @PostConstruct
     void finalizeConfiguration() {
-        this.jwt = normalizeJwt(this.jwt);
-
-        if (openWeatherApi.key().isBlank()) {
-            log.error("Open Weather API key is required. Please set it in application.properties file.");
-            System.exit(1);
-        }
-    }
-
-    public void setJwt(Jwt in) {
-        TimeOfLife tol = in.timeOfLife() != null ? in.timeOfLife()
-                : this.jwt.timeOfLife();
-
         log.info("----------------------------------------------");
         log.info("Using JWT for authentication and authorization");
-        log.info("Duration of access tokens: {} minutes", tol.accessToken().toMinutes());
-        log.info("Duration of refresh tokens: {} days", tol.refreshToken().toDays());
-        if (in.secure()) {
+
+        if (jwt == null) jwt = new Jwt(null, null, null);
+        if (openWeatherApi == null) openWeatherApi = new OpenWeatherApi(null, null);
+        if (cors == null) cors = new Cors(null, null);
+
+        if (!jwt.secure) {
+            log.warn("Using insecure http cookie for refresh token");
+        }
+        else {
             log.info("Using secure http cookie for refresh token");
         }
 
-        this.jwt = normalizeJwt(new Jwt(in.secret(), in.secure(), tol));
+        log.info("Duration of access tokens: {} minutes", jwt.timeOfLife.accessToken.toMinutes());
+        log.info("Duration of refresh tokens: {} days", jwt.timeOfLife.refreshToken.toDays());
+        log.info("----------------------------------------------");
     }
 
-    private Jwt normalizeJwt(Jwt jwt) {
-        String secret = jwt.secret();
-        if (secret == null || secret.isBlank() || secret.length() < BITES_FOR_JWT_SECRET) {
-            log.warn("JWT secret is not set or invalid, generating new one");
-            secret = generateJwtSecret();
+    public record OpenWeatherApi(@DefaultValue("") String key,
+                                 @DefaultValue(DEFAULT_OPEN_WEATHER_API_URL) String url) {
+
+        public OpenWeatherApi {
+            if (url == null || url.isBlank()) {
+                url = DEFAULT_OPEN_WEATHER_API_URL;
+            }
+            if (key == null || key.isBlank()) {
+                log.error("Open Weather API key is required. Please set it in application.properties file.");
+                System.exit(1);
+            }
+        }
+    }
+
+    public record Cors(List<String> allowedOriginPatterns,
+                       List<String> allowedOrigins) {
+
+        public Cors {
+            if (allowedOriginPatterns == null || allowedOriginPatterns.isEmpty()) {
+                allowedOriginPatterns = DEFAULT_ORIGIN_PATTERNS;
+            }
+            if (allowedOrigins == null || allowedOrigins.isEmpty()) {
+                allowedOrigins = DEFAULT_ALLOWED_ORIGINS;
+            }
+        }
+    }
+
+    public record Jwt(String secret, Boolean secure, TimeOfLife timeOfLife) {
+
+        public Jwt {
+            if (secret == null || secret.isBlank() || secret.length() < BYTES_FOR_JWT_SECRET) {
+                log.warn("JWT secret is not set or invalid, generating new one");
+                secret = generateJwtSecret();
+            }
+            if (secure == null) {
+                secure = true;
+            }
+            if (timeOfLife == null) {
+                timeOfLife = new TimeOfLife(null, null);
+            }
         }
 
-        TimeOfLife tol = jwt.timeOfLife() != null ? jwt.timeOfLife()
-                : new TimeOfLife(DEFAULT_ACCESS_TTL, DEFAULT_REFRESH_TTL);
-
-        return new Jwt(secret, jwt.secure(), tol);
-    }
-
-    private String generateJwtSecret() {
-        byte[] buf = new byte[BITES_FOR_JWT_SECRET];
-        new java.security.SecureRandom().nextBytes(buf);
-        return java.util.Base64.getUrlEncoder()
-                .withoutPadding()
-                .encodeToString(buf);
-    }
-
-    public record OpenWeatherApi(String key, String url) {
-
-    }
-
-    public record Cors(List<String> allowedOriginPatterns, List<String> allowedOrigins) {
-
-    }
-
-    public record Jwt(String secret, boolean secure, TimeOfLife timeOfLife) {
-
+        private String generateJwtSecret() {
+            byte[] buf = new byte[BYTES_FOR_JWT_SECRET];
+            new java.security.SecureRandom().nextBytes(buf);
+            return java.util.Base64.getUrlEncoder()
+                    .withoutPadding()
+                    .encodeToString(buf);
+        }
     }
 
     public record TimeOfLife(@DurationUnit(ChronoUnit.MINUTES) Duration accessToken,
                              @DurationUnit(ChronoUnit.DAYS) Duration refreshToken) {
 
+        public TimeOfLife {
+            if (accessToken == null) accessToken = Duration.ofMinutes(DEFAULT_ACCESS_EXPIRATION);
+            if (refreshToken == null) refreshToken = Duration.ofDays(DEFAULT_REFRESH_EXPIRATION);
+        }
     }
+
 }
