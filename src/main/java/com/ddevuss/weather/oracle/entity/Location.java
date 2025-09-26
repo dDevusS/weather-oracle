@@ -1,11 +1,9 @@
 package com.ddevuss.weather.oracle.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,25 +21,22 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name = "locations", indexes = @Index(name = "idx_base_target", columnList = "user_id, latitude, longitude"))
-public class Location implements BaseEntity<Long> {
+public class Location extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "state", nullable = false)
     private String state;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "latitude", nullable = false)
     private Double latitude;
 
-    @Column(nullable = false)
+    @Column(name = "longitude", nullable = false)
     private Double longitude;
 }

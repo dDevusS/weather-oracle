@@ -2,9 +2,6 @@ package com.ddevuss.weather.oracle.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -21,17 +18,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name = "users", indexes = @Index(name = "ind_user_login", columnList = "login"))
-public class User implements BaseEntity<Long> {
+public class User extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
+    @Column(name = "login", unique = true, nullable = false)
     @NotBlank
     private String login;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     @NotBlank
     private String password;
 

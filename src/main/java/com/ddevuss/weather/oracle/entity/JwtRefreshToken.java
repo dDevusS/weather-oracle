@@ -29,25 +29,21 @@ import java.time.Instant;
         @Index(name = "idx_refresh_token_hash", columnList = "token_hash"),
         @Index(name = "idx_refresh_token_expires_at", columnList = "expires_at"),
         @Index(name = "idx_refresh_token_revoked", columnList = "revoked")})
-public class JwtRefreshToken implements BaseEntity<Long> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class JwtRefreshToken extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 64)
+    @Column(name = "token_hash", nullable = false, length = 64)
     private String tokenHash;
 
-    @Column(nullable = false)
+    @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "revoked", nullable = false)
     private boolean revoked = false;
 }
