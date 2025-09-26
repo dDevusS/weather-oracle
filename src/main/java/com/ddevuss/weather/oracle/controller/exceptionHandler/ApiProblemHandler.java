@@ -6,7 +6,9 @@ import com.ddevuss.weather.oracle.utils.ProblemDetailBuilder;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -23,6 +25,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -31,8 +34,11 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+@AllArgsConstructor
 @ControllerAdvice
 public class ApiProblemHandler extends ResponseEntityExceptionHandler {
+
+    private final MessageSource messageSource;
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -43,8 +49,9 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
         var req = ((ServletWebRequest) webRequest).getRequest();
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title("Validation failed")
+                .title(getTitle("error.validation", req.getLocale()))
                 .uri(req)
+                .detail(ex.getMessage())
                 .build();
 
         var errors = ex.getBindingResult().getAllErrors().stream()
@@ -75,8 +82,9 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
         var req = ((ServletWebRequest) request).getRequest();
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title("Malformed JSON or missing fields")
+                .title(getTitle("error.not.readable", req.getLocale()))
                 .uri(req)
+                .detail(ex.getMessage())
                 .build();
 
         return ResponseEntity.badRequest().body(pd);
@@ -91,8 +99,9 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
         var req = ((ServletWebRequest) request).getRequest();
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title("Parameter has invalid value")
+                .title(getTitle("error.mismatch", req.getLocale()))
                 .uri(req)
+                .detail(ex.getMessage())
                 .build();
 
         return ResponseEntity.badRequest().body(pd);
@@ -101,15 +110,16 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ProblemDetail handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(NOT_FOUND)
-                .title("Entity not found")
+                .title(getTitle("error.not.found", req.getLocale()))
                 .uri(req)
+                .detail(ex.getMessage())
                 .build();
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(CONFLICT)
-                .title("Data integrity violation")
+                .title(getTitle("error.violation", req.getLocale()))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -118,7 +128,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(JWTVerificationException.class)
     public ProblemDetail handleJWTVerificationException(JWTVerificationException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(UNAUTHORIZED)
-                .title("Unauthorized")
+                .title(getTitle("error.unauthorized", req.getLocale()))
                 .detail(ex.getMessage())
                 .uri(req)
                 .build();
@@ -127,7 +137,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TokenExpiredException.class)
     public ProblemDetail handleTokenExpiredException(TokenExpiredException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(UNAUTHORIZED)
-                .title("Unauthorized")
+                .title(getTitle("error.unauthorized", req.getLocale()))
                 .detail(ex.getMessage())
                 .uri(req)
                 .build();
@@ -137,8 +147,9 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleConstraintViolation(ConstraintViolationException ex,
                                                    HttpServletRequest req) {
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title("Validation failed")
+                .title(getTitle("error.validation", req.getLocale()))
                 .uri(req)
+                .detail(ex.getMessage())
                 .build();
 
         pd.setProperty("errors", ex.getConstraintViolations().stream()
@@ -151,17 +162,23 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RestClientResponseException.class)
     public ProblemDetail handleRestClientResponseException(RestClientResponseException responseException, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(INTERNAL_SERVER_ERROR)
-                .title("Something went wrong")
+                .title(getTitle("error.internal.server", req.getLocale()))
                 .uri(req)
+                .detail(responseException.getMessage())
                 .build();
     }
 
     @ExceptionHandler(RestClientException.class)
     public ProblemDetail handleRestClientException(RestClientException clientException, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(INTERNAL_SERVER_ERROR)
-                .title("Something went wrong")
+                .title(getTitle("error.internal.server", req.getLocale()))
                 .uri(req)
+                .detail(clientException.getMessage())
                 .build();
+    }
+
+    private String getTitle(String code, Locale locale) {
+        return messageSource.getMessage(code, null, locale);
     }
 
 }
