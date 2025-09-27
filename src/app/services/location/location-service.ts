@@ -21,7 +21,7 @@ export class LocationService {
 
   saveLocation(location: LocationSearch) {
     return this.http
-      .post(this.baseApiUrl + '/location/save', location, {
+      .post(this.baseApiUrl + '/locations', location, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         })
@@ -35,6 +35,6 @@ export class LocationService {
 
   deleteLocation(id: number) {
     return this.http
-      .delete(this.baseApiUrl + '/location/' + id)
+      .delete(this.baseApiUrl + '/locations/' + id)
   }
 }
