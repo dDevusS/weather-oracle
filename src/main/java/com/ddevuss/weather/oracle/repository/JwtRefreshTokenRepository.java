@@ -28,12 +28,4 @@ public interface JwtRefreshTokenRepository extends JpaRepository<JwtRefreshToken
            "AND t.revoked = false")
     int revokeByUserLogin(String login);
 
-    @Modifying
-    @Query(nativeQuery = true,
-            value = "INSERT INTO jwt_refresh_tokens (user_id, token_hash, expires_at, created_at) " +
-                    "VALUES ((SELECT id FROM users WHERE login = :#{#token.user.login}), " +
-                    ":#{#token.tokenHash}, " +
-                    ":#{#token.expiresAt}, " +
-                    ":#{#token.createdAt})")
-    void saveToken(JwtRefreshToken token);
 }

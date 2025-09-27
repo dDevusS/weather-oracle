@@ -5,7 +5,8 @@ import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.mapper.LocationMapper;
 import com.ddevuss.weather.oracle.repository.LocationRepository;
-import com.ddevuss.weather.oracle.utils.DuplicateConstraintChecker;
+import com.ddevuss.weather.oracle.repository.UserRepository;
+import com.ddevuss.weather.oracle.utils.UniqueConstraintTranslator;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +16,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.ddevuss.weather.oracle.entity.ConstraintKey.LOCATION_COORDINATE_UNIQUE;
+
 @AllArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class LocationService {
 
-    private static final String LOCATION_KEY_CONSTRAINT = "idx_base_target";
     private final LocationRepository locationRepository;
+    private final UserRepository userRepository;
     private final LocationMapper locationMapper;
     private static final Integer PAGE_SIZE = 4;
 
@@ -32,22 +35,18 @@ public class LocationService {
     }
 
     @Transactional
-    public void save(LocationDto locationDto, String userLogin) {
+    public Location save(LocationDto locationDto, String userLogin) {
         try {
             Location location = locationMapper.dtoToEntity(locationDto);
-            location.setUser(User.builder()
-                    .login(userLogin)
-                    .build());
-
-            locationRepository.saveLocation(location);
+            User user = userRepository.findByLogin(userLogin).orElseThrow();
+            location.setUser(user);
+            return locationRepository.save(location);
         }
         catch (DataIntegrityViolationException e) {
-            if (DuplicateConstraintChecker.isThisConstraint(e, LOCATION_KEY_CONSTRAINT)) {
-                throw new DataIntegrityViolationException("The location '" + locationDto.getName() + "' already exists", e);
-            }
-            else {
-                throw e;
-            }
+            UniqueConstraintTranslator.checkConstraint(e, LOCATION_COORDINATE_UNIQUE)
+                    .withMessage("The location '" + locationDto.getName() + "' already exists")
+                    .throwIfMatches();
+            throw e;
         }
     }
 

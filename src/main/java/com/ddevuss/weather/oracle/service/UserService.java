@@ -4,7 +4,7 @@ import com.ddevuss.weather.oracle.dto.UserDto;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.mapper.UserMapper;
 import com.ddevuss.weather.oracle.repository.UserRepository;
-import com.ddevuss.weather.oracle.utils.DuplicateConstraintChecker;
+import com.ddevuss.weather.oracle.utils.UniqueConstraintTranslator;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,14 +13,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.function.Function;
+import static com.ddevuss.weather.oracle.entity.ConstraintKey.USER_LOGIN_UNQ;
 
 @AllArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class UserService implements UserDetailsService {
 
-    private static final String USER_LOGIN_KEY_CONSTRAINT = "users_login_key";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -38,18 +37,15 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDto save(UserDto userDto) {
         try {
-            return ((Function<UserDto, User>) userMapper::dtoToEntity)
-                    .andThen(userRepository::saveAndFlush)
-                    .andThen(userMapper::entityToDto)
-                    .apply(userDto);
+            User user = userMapper.dtoToEntity(userDto);
+            User savedUser = userRepository.saveAndFlush(user);
+            return userMapper.entityToDto(savedUser);
         }
         catch (DataIntegrityViolationException e) {
-            if (DuplicateConstraintChecker.isThisConstraint(e, USER_LOGIN_KEY_CONSTRAINT)) {
-                throw new DataIntegrityViolationException("The user with login:  " + userDto.getLogin() + " already exists", e);
-            }
-            else {
-                throw e;
-            }
+            UniqueConstraintTranslator.checkConstraint(e, USER_LOGIN_UNQ)
+                    .withMessage("The user with login '" + userDto.getLogin() + "' already exists")
+                    .throwIfMatches();
+            throw e;
         }
     }
 
