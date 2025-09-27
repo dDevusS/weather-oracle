@@ -23,7 +23,7 @@ public class ForecastRestController implements ForecastController {
     private final OpenWeatherService openWeatherService;
 
     @PostMapping
-    public ResponseEntity<List<ForecastDto>> getWeatherForecast(@RequestBody List<@Valid @NotNull LocationDto> locations) {
+    public ResponseEntity<List<ForecastDto>> get(@RequestBody List<@Valid @NotNull LocationDto> locations) {
         if (locations.isEmpty()) return ResponseEntity.ok(List.of());
         return ResponseEntity.ok(openWeatherService.getWeatherForecast(locations));
     }

@@ -41,5 +41,5 @@ public interface ForecastController {
                     )
             }
     )
-    ResponseEntity<List<ForecastDto>> getWeatherForecast(List<@Valid @NotNull LocationDto> locations);
+    ResponseEntity<List<ForecastDto>> get(List<@Valid @NotNull LocationDto> locations);
 }

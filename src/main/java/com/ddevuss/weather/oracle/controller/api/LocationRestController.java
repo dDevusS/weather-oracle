@@ -2,6 +2,7 @@ package com.ddevuss.weather.oracle.controller.api;
 
 import com.ddevuss.weather.oracle.controller.api.docs.LocationController;
 import com.ddevuss.weather.oracle.dto.LocationDto;
+import com.ddevuss.weather.oracle.entity.Location;
 import com.ddevuss.weather.oracle.service.LocationService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import jakarta.validation.Valid;
@@ -25,44 +26,42 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @AllArgsConstructor
 @Validated
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/locations")
 public class LocationRestController implements LocationController {
 
     private final LocationService locationService;
     private final OpenWeatherService openWeatherService;
     private static final int MIN_SIZE_NAME_FOR_SEARCH = 3;
 
-    @Validated
-    @GetMapping("/locations/search")
-    public ResponseEntity<List<LocationDto>> searchLocationsByName(
+    @GetMapping("/search")
+    public ResponseEntity<List<LocationDto>> searchByName(
             @RequestParam
-            @NotBlank(message = "Location name should be not blank")
-            @Size(min = MIN_SIZE_NAME_FOR_SEARCH, message = "Location name should contain at least {min} characters")
+            @NotBlank(message = "{location.name.not.blank}")
+            @Size(min = MIN_SIZE_NAME_FOR_SEARCH, message = "{location.name.size.constraint}")
             String locationName) {
-        locationName = locationName.trim();
-        List<LocationDto> locations = openWeatherService.searchLocationsByName(locationName);
+        List<LocationDto> locations = openWeatherService.searchLocationByName(locationName);
         return ResponseEntity.ok(locations);
     }
 
-    @PostMapping("/location/save")
-    public ResponseEntity<Void> saveLocation(@RequestBody @Valid LocationDto locationDto, Principal principal) {
-        locationService.save(locationDto, principal.getName());
-        return ResponseEntity.noContent().build();
+    @PostMapping
+    public ResponseEntity<Location> save(@RequestBody @Valid LocationDto locationDto, Principal principal) {
+        Location savedLocation = locationService.save(locationDto, principal.getName());
+        return ResponseEntity.status(CREATED).body(savedLocation);
     }
 
-    @Validated
-    @DeleteMapping("/location/{id}")
-    public ResponseEntity<Void> deleteLocation(@NotNull @PositiveOrZero @PathVariable("id") Long locationId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@NotNull @PositiveOrZero @PathVariable("id") Long locationId) {
         locationService.deleteById(locationId);
         return ResponseEntity.noContent().build();
     }
 
-    @Validated
-    @GetMapping("locations")
-    public ResponseEntity<Slice<LocationDto>> getLocations(@PositiveOrZero @RequestParam(required = false) Integer pageNumber, Principal principal) {
+    @GetMapping
+    public ResponseEntity<Slice<LocationDto>> get(@PositiveOrZero @RequestParam(required = false) Integer pageNumber, Principal principal) {
         Slice<LocationDto> locations = locationService.findAllByUserLogin(principal.getName(), pageNumber);
         return ResponseEntity.ok(locations);
     }

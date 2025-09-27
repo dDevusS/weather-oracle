@@ -1,6 +1,7 @@
 package com.ddevuss.weather.oracle.controller.api.docs;
 
 import com.ddevuss.weather.oracle.dto.LocationDto;
+import com.ddevuss.weather.oracle.entity.Location;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,7 +47,7 @@ public interface LocationController {
                     )
             }
     )
-    ResponseEntity<List<LocationDto>> searchLocationsByName(
+    ResponseEntity<List<LocationDto>> searchByName(
             @RequestParam
             @NotBlank(message = "Location name should be not blank")
             @Size(min = 3, message = "Location name should contain at least {min} characters")
@@ -79,7 +80,7 @@ public interface LocationController {
                     )
             }
     )
-    ResponseEntity<Void> saveLocation(@Valid LocationDto locationDto, Principal principal);
+    ResponseEntity<Location> save(@Valid LocationDto locationDto, Principal principal);
 
     @Operation(
             summary = "Delete location",
@@ -111,7 +112,7 @@ public interface LocationController {
                     )
             }
     )
-    ResponseEntity<Void> deleteLocation(@NotNull @PositiveOrZero Long locationId);
+    ResponseEntity<Void> delete(@NotNull @PositiveOrZero Long locationId);
 
     @Operation(
             summary = "Get user's locations",
@@ -135,5 +136,5 @@ public interface LocationController {
                     )
             }
     )
-    ResponseEntity<Slice<LocationDto>> getLocations(@PositiveOrZero Integer pageNumber, Principal principal);
+    ResponseEntity<Slice<LocationDto>> get(@PositiveOrZero Integer pageNumber, Principal principal);
 }
