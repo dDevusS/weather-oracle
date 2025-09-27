@@ -1,5 +1,7 @@
 package com.ddevuss.weather.oracle.configuration;
 
+import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
+import com.ddevuss.weather.oracle.security.jwt.TokenType;
 import com.ddevuss.weather.oracle.utils.ProblemDetailBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.List;
 
+import static com.ddevuss.weather.oracle.security.Constants.ALGORITHM;
+import static com.ddevuss.weather.oracle.security.jwt.JwtClaims.TYPE;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -114,7 +118,7 @@ public class SecurityConfiguration {
 
     @Bean
     public JwtDecoder jwtDecoder(WeatherOracleConfiguration properties) {
-        SecretKey key = new SecretKeySpec(properties.getJwt().secret().getBytes(), "HmacSHA256");
+        SecretKey key = new SecretKeySpec(properties.secret().getBytes(), ALGORITHM);
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
 
@@ -133,9 +137,9 @@ public class SecurityConfiguration {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
 
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            String type = jwt.getClaimAsString("type");
+            String type = jwt.getClaimAsString(TYPE);
 
-            if (!"access".equals(type)) {
+            if (!TokenType.ACCESS_TOKEN.getCode().equals(type)) {
                 throw new JwtException("Invalid token type: " + type);
             }
 

@@ -9,9 +9,9 @@ import com.ddevuss.weather.oracle.entity.JwtRefreshToken;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.repository.JwtRefreshTokenRepository;
 import lombok.Getter;
+import com.ddevuss.weather.oracle.security.jwt.TokenType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +27,11 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.ddevuss.weather.oracle.security.jwt.JwtClaims.TYPE;
+
 @Slf4j
 @Service
 public class JwtService {
-
-    private static final String PAYLOAD_TYPE_KEY = "type";
-    private static final String ALGORITHM = "HmacSHA256";
 
     private final JwtRefreshTokenRepository jwtRepository;
     private final String secret;
@@ -63,7 +62,8 @@ public class JwtService {
     @SneakyThrows
     @Transactional(propagation = Propagation.REQUIRED)
     public String generateAndSaveRefreshToken(String username, Instant createdAt) {
-        String newRefreshToken = generateJwtToken(username, createdAt, refreshExpiration, TypeOfToken.REFRESH_TOKEN);
+        String newRefreshToken = generateJwtToken(username, createdAt, jwtConfig.timeOfLife().refreshToken(), TokenType.REFRESH_TOKEN);
+        User user = userRepository.findByLogin(username).orElseThrow();
 
         JwtRefreshToken token = JwtRefreshToken.builder()
                 .user(User.builder().login(username).build())
@@ -85,7 +85,7 @@ public class JwtService {
     }
 
     public boolean isRefreshTokenType(DecodedJWT refreshToken) {
-        return TypeOfToken.REFRESH_TOKEN.getType().equals(refreshToken.getClaim(PAYLOAD_TYPE_KEY).asString());
+        return TokenType.REFRESH_TOKEN.getCode().equals(refreshToken.getClaim(TYPE).asString());
     }
 
     @SneakyThrows
@@ -117,11 +117,11 @@ public class JwtService {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
     }
 
-    private String generateJwtToken(String username, Instant createdAt, Duration expirationTime, TypeOfToken tokenType) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
+    private String generateJwtToken(String username, Instant createdAt, Duration expirationTime, TokenType tokenType) {
+        Algorithm algorithm = Algorithm.HMAC256(jwtConfig.secret());
         Instant expiredAt = createdAt.plus(expirationTime);
         Map<String, Object> payload = new HashMap<>();
-        payload.put(PAYLOAD_TYPE_KEY, tokenType.getType());
+        payload.put(TYPE, tokenType.getCode());
 
         return JWT.create()
                 .withSubject(username)
@@ -129,17 +129,5 @@ public class JwtService {
                 .withIssuedAt(createdAt)
                 .withExpiresAt(expiredAt)
                 .sign(algorithm);
-    }
-
-    @Getter
-    private enum TypeOfToken {
-        ACCESS_TOKEN("access"),
-        REFRESH_TOKEN("refresh");
-
-        private final String type;
-
-        TypeOfToken(String type) {
-            this.type = type;
-        }
     }
 }
