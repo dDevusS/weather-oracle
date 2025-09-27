@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.aspect;
 
-import com.ddevuss.weather.oracle.configuration.WeatherOracleConfiguration;
+import com.ddevuss.weather.oracle.configuration.application.OpenWeatherApiProperties;
 import com.ddevuss.weather.oracle.dto.LocationDto;
-import com.ddevuss.weather.oracle.service.OpenWeatherService;
+import com.ddevuss.weather.oracle.utils.OpenWeatherUrlBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -31,11 +31,11 @@ public class OpenWeatherApiLoggingAspect {
     private final Map<String, String> methodToTemplateUrl;
     private static final String MESSAGE_PATTERN = "{}: {}";
 
-    public OpenWeatherApiLoggingAspect(WeatherOracleConfiguration configuration) {
-        String openWeatherApiUri = configuration.getOpenWeatherApi().url();
+    public OpenWeatherApiLoggingAspect(OpenWeatherApiProperties configuration) {
+        String openWeatherApiUrl = configuration.url();
         methodToTemplateUrl = Map.of(
-                "searchLocationsByName", openWeatherApiUri + OpenWeatherService.buildUrlForGeoApi("{locationName}", "{appId}"),
-                "getWeatherForecast", openWeatherApiUri + OpenWeatherService.buildUrlForWeatherApi(0.01, 0.01, "{appId}")
+                "searchLocationsByName", openWeatherApiUrl + OpenWeatherUrlBuilder.buildUrlForGeoApi("{locationName}", "{appId}"),
+                "getWeatherForecast", openWeatherApiUrl + OpenWeatherUrlBuilder.buildUrlForWeatherApi(0.01, 0.01, "{appId}")
         );
     }
 

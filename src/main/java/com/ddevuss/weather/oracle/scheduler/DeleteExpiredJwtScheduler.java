@@ -1,5 +1,6 @@
 package com.ddevuss.weather.oracle.scheduler;
 
+import com.ddevuss.weather.oracle.repository.JwtRefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,9 +12,9 @@ import java.time.Instant;
 @Component
 public class DeleteExpiredJwtScheduler {
 
-    private final com.ddevuss.weather.oracle.repository.JwtRefreshTokenRepository jwtRepository;
+    private final JwtRefreshTokenRepository jwtRepository;
 
-    @Scheduled(cron = "0 0 0/12 * * *")
+    @Scheduled(cron = "${application.jwt.cleanup.schedule:0 0 0/12 * * *}", zone = "${application.jwt.cleanup.zone:UTC}")
     @Transactional
     public void deleteExpiredTokens() {
         jwtRepository.deleteAllByExpiresAtBefore(Instant.now());

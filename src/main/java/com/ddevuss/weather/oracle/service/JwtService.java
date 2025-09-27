@@ -4,12 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.ddevuss.weather.oracle.configuration.WeatherOracleConfiguration;
+import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
 import com.ddevuss.weather.oracle.entity.JwtRefreshToken;
 import com.ddevuss.weather.oracle.entity.User;
 import com.ddevuss.weather.oracle.repository.JwtRefreshTokenRepository;
-import lombok.Getter;
+import com.ddevuss.weather.oracle.repository.UserRepository;
 import com.ddevuss.weather.oracle.security.jwt.TokenType;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,28 +28,20 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.ddevuss.weather.oracle.security.Constants.ALGORITHM;
 import static com.ddevuss.weather.oracle.security.jwt.JwtClaims.TYPE;
 
 @Slf4j
+@AllArgsConstructor
 @Service
 public class JwtService {
 
     private final JwtRefreshTokenRepository jwtRepository;
-    private final String secret;
-    private final Duration accessExpiration;
-    private final Duration refreshExpiration;
-
-    @Autowired
-    public JwtService(WeatherOracleConfiguration configuration,
-                      JwtRefreshTokenRepository jwtRefreshTokenRepository) {
-        this.secret = configuration.getJwt().secret();
-        this.accessExpiration = configuration.getJwt().timeOfLife().accessToken();
-        this.refreshExpiration = configuration.getJwt().timeOfLife().refreshToken();
-        this.jwtRepository = jwtRefreshTokenRepository;
-    }
+    private final JwtConfig jwtConfig;
+    private final UserRepository userRepository;
 
     public String generateAccessToken(String username, Instant createdAt) {
-        return generateJwtToken(username, createdAt, accessExpiration, TypeOfToken.ACCESS_TOKEN);
+        return generateJwtToken(username, createdAt, jwtConfig.timeOfLife().accessToken(), TokenType.ACCESS_TOKEN);
     }
 
     @SneakyThrows
@@ -66,13 +59,13 @@ public class JwtService {
         User user = userRepository.findByLogin(username).orElseThrow();
 
         JwtRefreshToken token = JwtRefreshToken.builder()
-                .user(User.builder().login(username).build())
+                .user(user)
                 .createdAt(createdAt)
-                .expiresAt(createdAt.plus(refreshExpiration))
+                .expiresAt(createdAt.plus(jwtConfig.timeOfLife().refreshToken()))
                 .tokenHash(generateTokenHash(newRefreshToken))
                 .build();
 
-        jwtRepository.saveToken(token);
+        jwtRepository.save(token);
 
         return newRefreshToken;
     }
@@ -91,7 +84,7 @@ public class JwtService {
     @SneakyThrows
     @Transactional(noRollbackFor = JWTVerificationException.class)
     public DecodedJWT verifyAndDecodeToken(String token) throws JWTVerificationException {
-        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(jwtConfig.secret())).build().verify(token);
 
         if (!isRefreshTokenType(decodedJWT) || !isRefreshTokenExistsAndNotRevoked(decodedJWT)) {
             throw new JWTVerificationException("Invalid refresh token");
@@ -110,7 +103,7 @@ public class JwtService {
 
     private String generateTokenHash(String token) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac mac = Mac.getInstance(ALGORITHM);
-        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(jwtConfig.secret().getBytes(StandardCharsets.UTF_8), ALGORITHM);
         mac.init(keySpec);
 
         byte[] hash = mac.doFinal(token.getBytes(StandardCharsets.UTF_8));

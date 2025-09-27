@@ -1,5 +1,6 @@
 package com.ddevuss.weather.oracle.configuration;
 
+import com.ddevuss.weather.oracle.configuration.application.CorsProperties;
 import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
 import com.ddevuss.weather.oracle.security.jwt.TokenType;
 import com.ddevuss.weather.oracle.utils.ProblemDetailBuilder;
@@ -74,10 +75,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(WeatherOracleConfiguration properties) {
+    public CorsConfigurationSource corsConfigurationSource(CorsProperties properties) {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(properties.getCors().allowedOrigins());
-        config.setAllowedOriginPatterns(properties.getCors().allowedOriginPatterns());
+        config.setAllowedOrigins(properties.allowedOrigins());
+        config.setAllowedOriginPatterns(properties.allowedOriginPatterns());
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -117,7 +118,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(WeatherOracleConfiguration properties) {
+    public JwtDecoder jwtDecoder(JwtConfig properties) {
         SecretKey key = new SecretKeySpec(properties.secret().getBytes(), ALGORITHM);
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
