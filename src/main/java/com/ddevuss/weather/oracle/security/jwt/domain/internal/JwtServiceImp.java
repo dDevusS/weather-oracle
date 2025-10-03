@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.security.jwt;
+package com.ddevuss.weather.oracle.security.jwt.domain.internal;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -7,6 +7,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
 import com.ddevuss.weather.oracle.auth.domain.User;
 import com.ddevuss.weather.oracle.auth.domain.UserRepository;
+import com.ddevuss.weather.oracle.security.jwt.TokenType;
+import com.ddevuss.weather.oracle.security.jwt.domain.JwtRefreshToken;
+import com.ddevuss.weather.oracle.security.jwt.domain.JwtRefreshTokenRepository;
+import com.ddevuss.weather.oracle.security.jwt.domain.JwtService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +35,7 @@ import static com.ddevuss.weather.oracle.security.jwt.JwtClaims.TYPE;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class JwtService {
+class JwtServiceImp implements JwtService {
 
     private final JwtRefreshTokenRepository jwtRepository;
     private final JwtConfig jwtConfig;

@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.security.jwt.scheduler;
 
-import com.ddevuss.weather.oracle.security.jwt.JwtRefreshTokenRepository;
+import com.ddevuss.weather.oracle.security.jwt.domain.JwtRefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

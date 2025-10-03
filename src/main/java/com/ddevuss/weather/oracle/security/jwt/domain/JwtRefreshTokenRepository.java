@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.security.jwt;
+package com.ddevuss.weather.oracle.security.jwt.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

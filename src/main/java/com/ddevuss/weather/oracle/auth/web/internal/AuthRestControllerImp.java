@@ -8,7 +8,7 @@ import com.ddevuss.weather.oracle.auth.domain.UserService;
 import com.ddevuss.weather.oracle.auth.dto.AccessTokenDto;
 import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.auth.web.doc.AuthRestController;
-import com.ddevuss.weather.oracle.security.jwt.JwtService;
+import com.ddevuss.weather.oracle.security.jwt.domain.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

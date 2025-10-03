@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.security.jwt;
+package com.ddevuss.weather.oracle.security.jwt.domain;
 
 import com.ddevuss.weather.oracle.common.entity.BaseEntity;
 import com.ddevuss.weather.oracle.auth.domain.User;
