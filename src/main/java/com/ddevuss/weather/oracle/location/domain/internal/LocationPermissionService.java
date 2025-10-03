@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.security;
+package com.ddevuss.weather.oracle.location.domain.internal;
 
 import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class SecurityService {
+class LocationPermissionService {
 
     private final LocationRepository locationRepository;
 

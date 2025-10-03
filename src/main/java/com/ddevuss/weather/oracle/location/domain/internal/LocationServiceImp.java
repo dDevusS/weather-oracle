@@ -51,7 +51,7 @@ class LocationServiceImp implements LocationService {
     }
 
     @Transactional
-    @PreAuthorize("@securityService.hasPermissionToDeleteLocation(#locationId)")
+    @PreAuthorize("@locationPermissionService.hasPermissionToDeleteLocation(#locationId)")
     public void deleteById(Long locationId) {
         locationRepository.deleteById(locationId);
     }
