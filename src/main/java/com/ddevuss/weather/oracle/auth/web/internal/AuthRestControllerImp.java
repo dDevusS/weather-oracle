@@ -1,8 +1,13 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.web.internal;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.domain.UserService;
+import com.ddevuss.weather.oracle.auth.dto.AccessTokenDto;
+import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
+import com.ddevuss.weather.oracle.auth.web.doc.AuthRestController;
 import com.ddevuss.weather.oracle.security.jwt.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,7 +36,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
-public class UserAuthRestController implements UserAuthController {
+class AuthRestControllerImp implements AuthRestController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -56,8 +61,8 @@ public class UserAuthRestController implements UserAuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto user) {
-        UserDto createdUser = userService.save(user);
+    public ResponseEntity<UserCreateDto> registration(@RequestBody @Valid UserCreateDto user) {
+        UserCreateDto createdUser = userService.save(user);
         return ResponseEntity.status(CREATED).body(createdUser);
     }
 

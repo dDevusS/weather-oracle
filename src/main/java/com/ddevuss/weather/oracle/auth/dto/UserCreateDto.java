@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.dto;
 
 import com.ddevuss.weather.oracle.auth.validation.LoginConstraint;
 import com.ddevuss.weather.oracle.auth.validation.PasswordsMatches;
@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Getter
 @Builder
 @PasswordsMatches
-public class UserDto implements Serializable {
+public class UserCreateDto implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     Long id;

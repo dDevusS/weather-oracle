@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.web.internal;
 
 import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
 import jakarta.annotation.Nullable;
@@ -10,7 +10,7 @@ import java.time.Duration;
 
 @AllArgsConstructor
 @Service
-public class CookieCreatorService {
+class CookieCreatorService {
 
     private static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 

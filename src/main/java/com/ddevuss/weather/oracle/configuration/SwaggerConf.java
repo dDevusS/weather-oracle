@@ -1,9 +1,9 @@
 package com.ddevuss.weather.oracle.configuration;
 
-import com.ddevuss.weather.oracle.auth.AccessTokenDto;
+import com.ddevuss.weather.oracle.auth.dto.AccessTokenDto;
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
-import com.ddevuss.weather.oracle.auth.UserDto;
+import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -29,7 +29,7 @@ public class SwaggerConf {
         Components components = new Components();
 
         Class<?>[] classes = {
-                UserDto.class,
+                UserCreateDto.class,
                 ProblemDetail.class,
                 LocationDto.class,
                 AccessTokenDto.class,

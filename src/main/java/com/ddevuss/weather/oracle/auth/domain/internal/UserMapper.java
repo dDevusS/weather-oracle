@@ -1,5 +1,7 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.domain.internal;
 
+import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.common.mapper.DtoToEntityMapper;
 import com.ddevuss.weather.oracle.common.mapper.EntityToDtoMapper;
 import lombok.AllArgsConstructor;
@@ -8,12 +10,12 @@ import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 @Component
-public class UserMapper implements DtoToEntityMapper<UserDto, User>, EntityToDtoMapper<User, UserDto> {
+class UserMapper implements DtoToEntityMapper<UserCreateDto, User>, EntityToDtoMapper<User, UserCreateDto> {
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User dtoToEntity(UserDto dto) {
+    public User dtoToEntity(UserCreateDto dto) {
         return User.builder()
                 .login(dto.getLogin())
                 .password(passwordEncoder.encode(dto.getRawPassword()))
@@ -21,8 +23,8 @@ public class UserMapper implements DtoToEntityMapper<UserDto, User>, EntityToDto
     }
 
     @Override
-    public UserDto entityToDto(User entity) {
-        return UserDto.builder()
+    public UserCreateDto entityToDto(User entity) {
+        return UserCreateDto.builder()
                 .id(entity.getId())
                 .login(entity.getLogin())
                 .build();

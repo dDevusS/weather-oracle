@@ -1,5 +1,9 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.domain.internal;
 
+import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.domain.UserRepository;
+import com.ddevuss.weather.oracle.auth.domain.UserService;
+import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import com.ddevuss.weather.oracle.common.utils.UniqueConstraintTranslator;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,7 +18,7 @@ import static com.ddevuss.weather.oracle.common.entity.ConstraintKey.USER_LOGIN_
 @AllArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class UserService implements UserDetailsService {
+class UserServiceImp implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -31,15 +35,15 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDto save(UserDto userDto) {
+    public UserCreateDto save(UserCreateDto userCreateDto) {
         try {
-            User user = userMapper.dtoToEntity(userDto);
+            User user = userMapper.dtoToEntity(userCreateDto);
             User savedUser = userRepository.saveAndFlush(user);
             return userMapper.entityToDto(savedUser);
         }
         catch (DataIntegrityViolationException e) {
             UniqueConstraintTranslator.checkConstraint(e, USER_LOGIN_UNQ)
-                    .withMessage("The user with login '" + userDto.getLogin() + "' already exists")
+                    .withMessage("The user with login '" + userCreateDto.getLogin() + "' already exists")
                     .throwIfMatches();
             throw e;
         }

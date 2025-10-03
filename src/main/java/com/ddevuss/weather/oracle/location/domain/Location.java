@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.location.domain;
 
 import com.ddevuss.weather.oracle.common.entity.BaseEntity;
-import com.ddevuss.weather.oracle.auth.User;
+import com.ddevuss.weather.oracle.auth.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

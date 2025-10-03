@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.domain;
 
 import com.ddevuss.weather.oracle.common.entity.BaseEntity;
 import jakarta.persistence.Column;

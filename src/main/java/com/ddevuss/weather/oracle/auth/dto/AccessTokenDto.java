@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

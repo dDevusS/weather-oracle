@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.security.jwt;
 
 import com.ddevuss.weather.oracle.common.entity.BaseEntity;
-import com.ddevuss.weather.oracle.auth.User;
+import com.ddevuss.weather.oracle.auth.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

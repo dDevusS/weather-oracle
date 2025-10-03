@@ -1,5 +1,8 @@
-package com.ddevuss.weather.oracle.auth;
+package com.ddevuss.weather.oracle.auth.web.doc;
 
+import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.dto.AccessTokenDto;
+import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 @Tag(name = "Authentication")
-public interface UserAuthController {
+public interface AuthRestController {
 
     @Operation(
             summary = "Login for users",
@@ -48,7 +51,7 @@ public interface UserAuthController {
                             content =
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDto.class)
+                                    schema = @Schema(implementation = UserCreateDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -65,7 +68,7 @@ public interface UserAuthController {
                     )
             }
     )
-    ResponseEntity<UserDto> registration(UserDto user);
+    ResponseEntity<UserCreateDto> registration(UserCreateDto user);
 
     @Operation(
             summary = "Refresh token",
