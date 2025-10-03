@@ -5,10 +5,16 @@ import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
 import com.ddevuss.weather.oracle.security.jwt.TokenType;
 import com.ddevuss.weather.oracle.utils.ProblemDetailBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.event.AbstractAuthenticationEvent;
+import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -40,6 +46,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -144,10 +151,28 @@ public class SecurityConfiguration {
                 throw new JwtException("Invalid token type: " + type);
             }
 
+            MDC.put("username", jwt.getClaimAsString("sub"));
+
             return AuthorityUtils.NO_AUTHORITIES;
         });
 
         return converter;
+    }
+
+    @Bean
+    public ApplicationListener<AbstractAuthenticationEvent> authenticationLogger() {
+        return event -> {
+            if (event instanceof AuthenticationSuccessEvent success) {
+                log.atDebug()
+                        .addArgument(success.getAuthentication().getName())
+                        .log("Authentication success, login={}");
+            }
+            else if (event instanceof AbstractAuthenticationFailureEvent failure) {
+                log.atDebug()
+                        .addArgument(failure.getAuthentication().getName())
+                        .log("Authentication failed, login={}");
+            }
+        };
     }
 
 }

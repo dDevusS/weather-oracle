@@ -7,6 +7,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,12 +34,16 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+@Slf4j
 @AllArgsConstructor
 @ControllerAdvice
 public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
+    private static final String MESSAGE_URL_TEMPLATE = "Template URL";
+    private static final String MESSAGE_PATTERN = "{}: {} {}";
     private final MessageSource messageSource;
 
     @Override
@@ -49,7 +55,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
         var req = ((ServletWebRequest) webRequest).getRequest();
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title(getTitle("error.validation", req.getLocale()))
+                .title(getMessage("error.validation"))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -82,7 +88,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
         var req = ((ServletWebRequest) request).getRequest();
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title(getTitle("error.not.readable", req.getLocale()))
+                .title(getMessage("error.not.readable"))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -99,7 +105,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
         var req = ((ServletWebRequest) request).getRequest();
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title(getTitle("error.mismatch", req.getLocale()))
+                .title(getMessage("error.mismatch"))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -110,7 +116,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ProblemDetail handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(NOT_FOUND)
-                .title(getTitle("error.not.found", req.getLocale()))
+                .title(getMessage("error.not.found"))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -119,7 +125,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(CONFLICT)
-                .title(getTitle("error.violation", req.getLocale()))
+                .title(getMessage("error.violation"))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -128,7 +134,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(JWTVerificationException.class)
     public ProblemDetail handleJWTVerificationException(JWTVerificationException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(UNAUTHORIZED)
-                .title(getTitle("error.unauthorized", req.getLocale()))
+                .title(getMessage("error.unauthorized"))
                 .detail(ex.getMessage())
                 .uri(req)
                 .build();
@@ -137,7 +143,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TokenExpiredException.class)
     public ProblemDetail handleTokenExpiredException(TokenExpiredException ex, HttpServletRequest req) {
         return ProblemDetailBuilder.forStatus(UNAUTHORIZED)
-                .title(getTitle("error.unauthorized", req.getLocale()))
+                .title(getMessage("error.unauthorized"))
                 .detail(ex.getMessage())
                 .uri(req)
                 .build();
@@ -147,7 +153,7 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleConstraintViolation(ConstraintViolationException ex,
                                                    HttpServletRequest req) {
         var pd = ProblemDetailBuilder.forStatus(BAD_REQUEST)
-                .title(getTitle("error.validation", req.getLocale()))
+                .title(getMessage("error.validation"))
                 .uri(req)
                 .detail(ex.getMessage())
                 .build();
@@ -161,8 +167,11 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RestClientResponseException.class)
     public ProblemDetail handleRestClientResponseException(RestClientResponseException responseException, HttpServletRequest req) {
+        logUrlTemplate();
+        logRestClientResponseException(responseException);
+
         return ProblemDetailBuilder.forStatus(INTERNAL_SERVER_ERROR)
-                .title(getTitle("error.internal.server", req.getLocale()))
+                .title(getMessage("error.internal.server"))
                 .uri(req)
                 .detail(responseException.getMessage())
                 .build();
@@ -170,15 +179,65 @@ public class ApiProblemHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RestClientException.class)
     public ProblemDetail handleRestClientException(RestClientException clientException, HttpServletRequest req) {
+        logUrlTemplate();
+        String exceptionName = clientException.getClass().getSimpleName();
+        log.atError()
+                .addArgument(exceptionName)
+                .addArgument(getUsernameAndCorrelationId())
+                .addArgument(clientException.getMessage())
+                .log(MESSAGE_PATTERN);
+
         return ProblemDetailBuilder.forStatus(INTERNAL_SERVER_ERROR)
-                .title(getTitle("error.internal.server", req.getLocale()))
+                .title(getMessage("error.internal.server"))
                 .uri(req)
                 .detail(clientException.getMessage())
                 .build();
     }
 
-    private String getTitle(String code, Locale locale) {
-        return messageSource.getMessage(code, null, locale);
+    private String getMessage(String code) {
+        return messageSource.getMessage(code, null, Locale.ENGLISH);
+    }
+
+    private String getUsernameAndCorrelationId() {
+        return "username=" + MDC.get("username") + " correlationId=" + MDC.get("correlationId");
+    }
+
+    private void logUrlTemplate() {
+        log.atError()
+                .addArgument(MESSAGE_URL_TEMPLATE)
+                .addArgument(MDC.get("safeUrl"))
+                .addArgument(getUsernameAndCorrelationId())
+                .log(MESSAGE_PATTERN);
+    }
+
+    private void logRestClientResponseException(RestClientResponseException responseException) {
+        HttpStatusCode statusCode = responseException.getStatusCode();
+        String exceptionName = responseException.getClass().getSimpleName();
+
+        if (BAD_REQUEST == statusCode) {
+            String message = statusCode.value() + getMessage("rce.bad.request");
+            log.error(MESSAGE_PATTERN, exceptionName, message, getUsernameAndCorrelationId());
+        }
+        else if (NOT_FOUND == statusCode) {
+            String message = statusCode.value() + getMessage("rce.not.found");
+            log.error(MESSAGE_PATTERN, exceptionName, message, getUsernameAndCorrelationId());
+        }
+        else if (UNAUTHORIZED == statusCode) {
+            String message = statusCode.value() + getMessage("rce.unauthorized");
+            log.error(MESSAGE_PATTERN, exceptionName, message, getUsernameAndCorrelationId());
+        }
+        else if (TOO_MANY_REQUESTS == statusCode) {
+            String message = statusCode.value() + getMessage("rce.too.many.requests");
+            log.warn(MESSAGE_PATTERN, exceptionName, message, getUsernameAndCorrelationId());
+        }
+        else if (statusCode.is5xxServerError()) {
+            String message = statusCode.value() + getMessage("rce.server.error");
+            log.error(MESSAGE_PATTERN, exceptionName, message, getUsernameAndCorrelationId());
+        }
+        else {
+            String message = statusCode.value() + getMessage("rce.unknown");
+            log.error(MESSAGE_PATTERN, exceptionName, message, getUsernameAndCorrelationId());
+        }
     }
 
 }
