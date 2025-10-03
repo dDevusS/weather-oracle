@@ -3,7 +3,7 @@ package com.ddevuss.weather.oracle.controller.api;
 import com.ddevuss.weather.oracle.controller.api.docs.ForecastController;
 import com.ddevuss.weather.oracle.dto.ForecastDto;
 import com.ddevuss.weather.oracle.dto.LocationDto;
-import com.ddevuss.weather.oracle.service.OpenWeatherService;
+import com.ddevuss.weather.oracle.service.IOpenWeatherService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/forecast")
 public class ForecastRestController implements ForecastController {
 
-    private final OpenWeatherService openWeatherService;
+    private final IOpenWeatherService openWeatherService;
 
     @PostMapping
     public ResponseEntity<List<ForecastDto>> get(@RequestBody List<@Valid @NotNull LocationDto> locations) {

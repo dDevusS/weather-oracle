@@ -13,6 +13,7 @@ import com.ddevuss.weather.oracle.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -89,10 +91,16 @@ public class UserAuthRestController implements UserAuthController {
                 jwtService.revokeRefreshToken(token);
             }
             catch (TokenExpiredException e) {
-                log.warn("Attempt to use expired refresh token to logout");
+                log.atWarn()
+                        .addArgument(Optional.ofNullable(MDC.get("username")).orElse("unknown"))
+                        .addArgument(MDC.get("correlationId"))
+                        .log("Attempt to use expired refresh token to logout. username={} correlationId={}");
             }
             catch (JWTVerificationException e) {
-                log.warn("Attempt to use invalid refresh token to logout");
+                log.atWarn()
+                        .addArgument(Optional.ofNullable(MDC.get("username")).orElse("unknown"))
+                        .addArgument(MDC.get("correlationId"))
+                        .log("Attempt to use invalid refresh token to logout. username={} correlationId={}");
             }
         }
 

@@ -49,8 +49,8 @@ public interface LocationController {
     )
     ResponseEntity<List<LocationDto>> searchByName(
             @RequestParam
-            @NotBlank(message = "Location name should be not blank")
-            @Size(min = 3, message = "Location name should contain at least {min} characters")
+            @NotBlank(message = "{location.name.not.blank}")
+            @Size(min = 3, message = "{location.name.size.constraint}")
             String locationName);
 
     @Operation(

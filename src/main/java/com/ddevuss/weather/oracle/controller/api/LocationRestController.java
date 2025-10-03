@@ -3,6 +3,7 @@ package com.ddevuss.weather.oracle.controller.api;
 import com.ddevuss.weather.oracle.controller.api.docs.LocationController;
 import com.ddevuss.weather.oracle.dto.LocationDto;
 import com.ddevuss.weather.oracle.entity.Location;
+import com.ddevuss.weather.oracle.service.IOpenWeatherService;
 import com.ddevuss.weather.oracle.service.LocationService;
 import com.ddevuss.weather.oracle.service.OpenWeatherService;
 import jakarta.validation.Valid;
@@ -35,7 +36,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class LocationRestController implements LocationController {
 
     private final LocationService locationService;
-    private final OpenWeatherService openWeatherService;
+    private final IOpenWeatherService openWeatherService;
     private static final int MIN_SIZE_NAME_FOR_SEARCH = 3;
 
     @GetMapping("/search")
