@@ -11,6 +11,7 @@ import com.ddevuss.weather.oracle.auth.web.doc.AuthRestController;
 import com.ddevuss.weather.oracle.security.jwt.domain.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
@@ -66,6 +67,7 @@ class AuthRestControllerImp implements AuthRestController {
         return ResponseEntity.status(CREATED).body(createdUser);
     }
 
+    @SneakyThrows
     @PostMapping("/refresh")
     public ResponseEntity<AccessTokenDto> refresh(@CookieValue(name = "refreshToken") String refreshToken) {
         DecodedJWT token = jwtService.verifyAndDecodeToken(refreshToken);
@@ -81,6 +83,7 @@ class AuthRestControllerImp implements AuthRestController {
                 .body(new AccessTokenDto(accessToken));
     }
 
+    @SneakyThrows
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@CookieValue(name = "refreshToken", required = false) String refreshToken) {
 
