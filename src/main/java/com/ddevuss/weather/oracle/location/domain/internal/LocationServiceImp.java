@@ -7,6 +7,7 @@ import com.ddevuss.weather.oracle.location.domain.Location;
 import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import com.ddevuss.weather.oracle.location.domain.LocationService;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.mapper.LocationMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -31,16 +32,16 @@ class LocationServiceImp implements LocationService {
     public Slice<LocationDto> findAllByUserLogin(String login, Integer pageNumber) {
         PageRequest pageRequest = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("id"));
         return locationRepository.findAllByUserLogin(login, pageRequest)
-                .map(locationMapper::entityToDto);
+                .map(locationMapper::toDto);
     }
 
     @Transactional
     public LocationDto save(LocationDto locationDto, String userLogin) {
         try {
-            Location location = locationMapper.dtoToEntity(locationDto);
+            Location location = locationMapper.toEntity(locationDto);
             User user = userRepository.findByLogin(userLogin).orElseThrow();
             location.setUser(user);
-            return locationMapper.entityToDto(locationRepository.save(location));
+            return locationMapper.toDto(locationRepository.save(location));
         }
         catch (DataIntegrityViolationException e) {
             UniqueConstraintTranslator.checkConstraint(e, LOCATION_COORDINATE_UNIQUE)
