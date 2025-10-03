@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.forecast.web.doc;
 
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
-import com.ddevuss.weather.oracle.location.LocationDto;
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

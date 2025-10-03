@@ -1,9 +1,9 @@
 package com.ddevuss.weather.oracle.forecast.web.internal;
 
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
-import com.ddevuss.weather.oracle.forecast.api.OpenWeatherService;
+import com.ddevuss.weather.oracle.forecast.domain.OpenWeatherService;
 import com.ddevuss.weather.oracle.forecast.web.doc.ForecastRestController;
-import com.ddevuss.weather.oracle.location.LocationDto;
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/forecast")
-class ForecastRestControllerImpl implements ForecastRestController {
+class ForecastRestControllerImp implements ForecastRestController {
 
     private final OpenWeatherService openWeatherService;
 

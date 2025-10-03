@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast.api.internal;
+package com.ddevuss.weather.oracle.forecast.domain.internal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

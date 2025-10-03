@@ -1,7 +1,8 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.forecast.domain.internal;
 
 import com.ddevuss.weather.oracle.common.utils.MathUtil;
 import com.ddevuss.weather.oracle.common.utils.StreamUtils;
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class LocationDeduplicator {
+class LocationDeduplicator {
 
     private static final int TRUNCATE_SCALE = 2;
 
