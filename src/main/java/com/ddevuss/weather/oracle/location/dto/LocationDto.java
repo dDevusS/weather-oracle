@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.domain;
 
 import com.ddevuss.weather.oracle.common.entity.BaseEntity;
 import com.ddevuss.weather.oracle.auth.User;

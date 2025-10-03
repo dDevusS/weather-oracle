@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.security;
 
-import com.ddevuss.weather.oracle.location.LocationRepository;
+import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

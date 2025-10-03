@@ -1,6 +1,9 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.web.internal;
 
-import com.ddevuss.weather.oracle.forecast.api.OpenWeatherService;
+import com.ddevuss.weather.oracle.forecast.domain.OpenWeatherService;
+import com.ddevuss.weather.oracle.location.domain.LocationService;
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.web.doc.LocationRestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +31,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @Validated
 @RestController
 @RequestMapping("/api/locations")
-public class LocationRestController implements LocationController {
+public class LocationRestControllerImpl implements LocationRestController {
 
     private final LocationService locationService;
     private final OpenWeatherService openWeatherService;
@@ -45,8 +48,8 @@ public class LocationRestController implements LocationController {
     }
 
     @PostMapping
-    public ResponseEntity<Location> save(@RequestBody @Valid LocationDto locationDto, Principal principal) {
-        Location savedLocation = locationService.save(locationDto, principal.getName());
+    public ResponseEntity<LocationDto> save(@RequestBody @Valid LocationDto locationDto, Principal principal) {
+        LocationDto savedLocation = locationService.save(locationDto, principal.getName());
         return ResponseEntity.status(CREATED).body(savedLocation);
     }
 

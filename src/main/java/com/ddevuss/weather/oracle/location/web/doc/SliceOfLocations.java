@@ -1,5 +1,6 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.web.doc;
 
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import lombok.Getter;
 import lombok.Setter;
 

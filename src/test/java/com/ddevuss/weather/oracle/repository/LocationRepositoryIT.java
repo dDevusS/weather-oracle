@@ -1,9 +1,9 @@
 package com.ddevuss.weather.oracle.repository;
 
 import com.ddevuss.weather.oracle.IntegrationTestBase;
-import com.ddevuss.weather.oracle.location.Location;
+import com.ddevuss.weather.oracle.location.domain.Location;
 import com.ddevuss.weather.oracle.auth.User;
-import com.ddevuss.weather.oracle.location.LocationRepository;
+import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;

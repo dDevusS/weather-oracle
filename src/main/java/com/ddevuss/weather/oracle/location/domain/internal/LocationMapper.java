@@ -1,13 +1,15 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.domain.internal;
 
 import com.ddevuss.weather.oracle.common.mapper.DtoToEntityMapper;
 import com.ddevuss.weather.oracle.common.mapper.EntityToDtoMapper;
+import com.ddevuss.weather.oracle.location.domain.Location;
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class LocationMapper implements DtoToEntityMapper<LocationDto, Location>, EntityToDtoMapper<Location, LocationDto> {
+class LocationMapper implements DtoToEntityMapper<LocationDto, Location>, EntityToDtoMapper<Location, LocationDto> {
 
     @Override
     public Location dtoToEntity(LocationDto dto) {

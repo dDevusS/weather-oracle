@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.domain;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

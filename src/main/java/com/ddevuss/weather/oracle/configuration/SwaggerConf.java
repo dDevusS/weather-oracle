@@ -2,7 +2,7 @@ package com.ddevuss.weather.oracle.configuration;
 
 import com.ddevuss.weather.oracle.auth.AccessTokenDto;
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
-import com.ddevuss.weather.oracle.location.LocationDto;
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import com.ddevuss.weather.oracle.auth.UserDto;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;

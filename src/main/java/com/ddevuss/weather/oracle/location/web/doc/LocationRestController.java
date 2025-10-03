@@ -1,5 +1,6 @@
-package com.ddevuss.weather.oracle.location;
+package com.ddevuss.weather.oracle.location.web.doc;
 
+import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,7 +22,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "Locations")
-public interface LocationController {
+public interface LocationRestController {
 
     @Operation(
             summary = "Get locations API server",
@@ -78,7 +79,7 @@ public interface LocationController {
                     )
             }
     )
-    ResponseEntity<Location> save(@Valid LocationDto locationDto, Principal principal);
+    ResponseEntity<LocationDto> save(@Valid LocationDto locationDto, Principal principal);
 
     @Operation(
             summary = "Delete location",
