@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.repository;
 
 import com.ddevuss.weather.oracle.IntegrationTestBase;
-import com.ddevuss.weather.oracle.auth.domain.User;
-import com.ddevuss.weather.oracle.auth.domain.UserRepository;
+import com.ddevuss.weather.oracle.auth.domain.user.User;
+import com.ddevuss.weather.oracle.auth.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 

@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableConfigurationProperties
-@ConfigurationPropertiesScan(basePackages = "com.ddevuss.weather.oracle.configuration")
+@ConfigurationPropertiesScan(basePackages = "com.ddevuss.weather.oracle")
 @EnableScheduling
 public class WeatherOracleApplication {
 

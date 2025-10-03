@@ -2,7 +2,7 @@ package com.ddevuss.weather.oracle.forecast.client.internal;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
-import static com.ddevuss.weather.oracle.forecast.client.internal.OpenWeatherConstants.*;
+import static com.ddevuss.weather.oracle.forecast.client.OpenWeatherConstants.*;
 
 final class OpenWeatherUrlBuilder {
 

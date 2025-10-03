@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.location.domain.internal;
 
-import com.ddevuss.weather.oracle.auth.domain.User;
-import com.ddevuss.weather.oracle.auth.domain.UserRepository;
-import com.ddevuss.weather.oracle.common.utils.UniqueConstraintTranslator;
+import com.ddevuss.weather.oracle.auth.domain.user.User;
+import com.ddevuss.weather.oracle.auth.domain.user.UserRepository;
+import com.ddevuss.weather.oracle.common.util.UniqueConstraintTranslator;
 import com.ddevuss.weather.oracle.location.domain.Location;
 import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import com.ddevuss.weather.oracle.location.domain.LocationService;

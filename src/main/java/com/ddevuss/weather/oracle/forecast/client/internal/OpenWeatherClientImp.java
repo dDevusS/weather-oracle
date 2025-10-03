@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.forecast.client.internal;
 
-import com.ddevuss.weather.oracle.configuration.application.OpenWeatherApiProperties;
+import com.ddevuss.weather.oracle.forecast.client.config.OpenWeatherApiProperties;
 import com.ddevuss.weather.oracle.forecast.client.OpenWeatherClient;
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;

@@ -8,15 +8,23 @@ import org.slf4j.MDC;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import static com.ddevuss.weather.oracle.common.Constants.CORRELATION_ID;
+import static com.ddevuss.weather.oracle.common.Constants.USERNAME;
+
 @Slf4j
 @AllArgsConstructor
 @Service
 class LocationPermissionService {
 
+    private static final String USER_DOESNT_HAVE_PERMISSION_TEMPLATE = "User '{}' doesn't have permission to delete location {}. correlationId={}";
+    private static final String ACCESS_DENIED_EXCEPTION_MESSAGE_TEMPLATE = "User '%s' doesn't have permission to delete location %d";
+    private static final String LOCATION_NOT_FOUND_EXCEPTION_MESSAGE_TEMPLATE = "Location with id %d not found";
+
+
     private final LocationRepository locationRepository;
 
     public boolean hasPermissionToDeleteLocation(Long locationId) {
-        String currentUsername = MDC.get("username");
+        String currentUsername = MDC.get(USERNAME);
 
         return locationRepository.findById(locationId)
                 .map(location -> {
@@ -24,18 +32,18 @@ class LocationPermissionService {
                         log.atWarn()
                                 .addArgument(currentUsername)
                                 .addArgument(locationId)
-                                .addArgument(MDC.get("correlationId"))
-                                .log("User '{}' doesn't have permission to delete location {}. correlationId={}" );
+                                .addArgument(MDC.get(CORRELATION_ID))
+                                .log(USER_DOESNT_HAVE_PERMISSION_TEMPLATE);
 
                         throw new AccessDeniedException(
-                                String.format("User '%s' doesn't have permission to delete location %d",
+                                String.format(ACCESS_DENIED_EXCEPTION_MESSAGE_TEMPLATE,
                                         currentUsername, locationId)
                         );
                     }
                     return true;
                 })
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Location with id %d not found", locationId)
+                        String.format(LOCATION_NOT_FOUND_EXCEPTION_MESSAGE_TEMPLATE, locationId)
                 ));
     }
 

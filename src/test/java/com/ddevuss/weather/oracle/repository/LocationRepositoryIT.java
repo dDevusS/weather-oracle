@@ -2,7 +2,7 @@ package com.ddevuss.weather.oracle.repository;
 
 import com.ddevuss.weather.oracle.IntegrationTestBase;
 import com.ddevuss.weather.oracle.location.domain.Location;
-import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.domain.user.User;
 import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;

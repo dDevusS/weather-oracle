@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.auth.web.internal;
 
-import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
+import com.ddevuss.weather.oracle.auth.domain.jwt.configuration.model.JwtConfig;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseCookie;

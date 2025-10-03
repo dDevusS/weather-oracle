@@ -1,14 +1,18 @@
 package com.ddevuss.weather.oracle.forecast.client.internal;
 
-import com.ddevuss.weather.oracle.common.utils.MathUtil;
-import com.ddevuss.weather.oracle.common.utils.StreamUtils;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 class LocationDeduplicator {
 
@@ -17,15 +21,26 @@ class LocationDeduplicator {
     public static List<LocationDto> deduplicate(LocationDto[] locations) {
         return Arrays.stream(locations)
                 .filter(Objects::nonNull)
-                .filter(StreamUtils.distinctBy(l -> Map.entry(
-                        MathUtil.truncateCoordinate(l.getLat(), TRUNCATE_SCALE),
-                        MathUtil.truncateCoordinate(l.getLon(), TRUNCATE_SCALE)
+                .filter(distinctBy(l -> Map.entry(
+                        truncateCoordinate(l.getLat(), TRUNCATE_SCALE),
+                        truncateCoordinate(l.getLon(), TRUNCATE_SCALE)
                 )))
-                .filter(StreamUtils.distinctBy(l -> List.of(
+                .filter(distinctBy(l -> List.of(
                         Optional.ofNullable(l.getName()).orElse(""),
                         Optional.ofNullable(l.getState()).orElse(""),
                         Optional.ofNullable(l.getCountry()).orElse("")
                 )))
                 .toList();
+    }
+
+    private static double truncateCoordinate(double value, int precision) {
+        return BigDecimal.valueOf(value)
+                .setScale(precision, RoundingMode.FLOOR)
+                .doubleValue();
+    }
+
+    private static <T, K> Predicate<T> distinctBy(Function<? super T, K> keyExtractor) {
+        Set<K> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 }

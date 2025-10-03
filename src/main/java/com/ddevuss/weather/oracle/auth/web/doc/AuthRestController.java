@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.auth.web.doc;
 
-import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.domain.user.User;
 import com.ddevuss.weather.oracle.auth.dto.AccessTokenDto;
 import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import io.swagger.v3.oas.annotations.Operation;

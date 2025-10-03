@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.auth.mapper;
 
-import com.ddevuss.weather.oracle.auth.domain.User;
+import com.ddevuss.weather.oracle.auth.domain.user.User;
 import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
