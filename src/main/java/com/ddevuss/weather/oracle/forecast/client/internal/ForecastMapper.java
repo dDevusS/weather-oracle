@@ -1,11 +1,11 @@
-package com.ddevuss.weather.oracle.forecast.domain.internal;
+package com.ddevuss.weather.oracle.forecast.client.internal;
 
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 
 class ForecastMapper {
 
-    public static ForecastDto fromResponse(ForecastApiResponseDto response, LocationDto location) {
+    public static ForecastDto fromResponse(OpenWeatherExternalDto response, LocationDto location) {
         return ForecastDto.builder()
                 .locationId(location.getId())
                 .locationName(location.getName())

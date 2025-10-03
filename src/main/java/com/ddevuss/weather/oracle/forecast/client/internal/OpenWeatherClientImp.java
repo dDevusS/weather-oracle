@@ -1,7 +1,7 @@
-package com.ddevuss.weather.oracle.forecast.domain.internal;
+package com.ddevuss.weather.oracle.forecast.client.internal;
 
 import com.ddevuss.weather.oracle.configuration.application.OpenWeatherApiProperties;
-import com.ddevuss.weather.oracle.forecast.domain.OpenWeatherService;
+import com.ddevuss.weather.oracle.forecast.client.OpenWeatherClient;
 import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @AllArgsConstructor
 @Service
-class OpenWeatherServiceImp implements OpenWeatherService {
+class OpenWeatherClientImp implements OpenWeatherClient {
 
     private final RestClient openWeatherRestClient;
     private final OpenWeatherApiProperties apiProperties;
@@ -52,7 +52,7 @@ class OpenWeatherServiceImp implements OpenWeatherService {
                         log.warn("OpenWeather: 404 for location id={} lat={}, lon={}",
                                 location.getId(), location.getLat(), location.getLon());
                     })
-                    .toEntity(ForecastApiResponseDto.class);
+                    .toEntity(OpenWeatherExternalDto.class);
 
             if (responseEntity.getStatusCode().isError() || responseEntity.getBody() == null) {
                 continue;

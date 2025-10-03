@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast.domain.internal;
+package com.ddevuss.weather.oracle.forecast.client.internal;
 
 import com.ddevuss.weather.oracle.common.utils.MathUtil;
 import com.ddevuss.weather.oracle.common.utils.StreamUtils;

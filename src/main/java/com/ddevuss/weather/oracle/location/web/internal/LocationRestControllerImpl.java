@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.location.web.internal;
 
-import com.ddevuss.weather.oracle.forecast.domain.OpenWeatherService;
+import com.ddevuss.weather.oracle.forecast.client.OpenWeatherClient;
 import com.ddevuss.weather.oracle.location.domain.LocationService;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import com.ddevuss.weather.oracle.location.web.doc.LocationRestController;
@@ -34,7 +34,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class LocationRestControllerImpl implements LocationRestController {
 
     private final LocationService locationService;
-    private final OpenWeatherService openWeatherService;
+    private final OpenWeatherClient openWeatherClient;
     private static final int MIN_SIZE_NAME_FOR_SEARCH = 3;
 
     @GetMapping("/search")
@@ -43,7 +43,7 @@ public class LocationRestControllerImpl implements LocationRestController {
             @NotBlank(message = "{location.name.not.blank}")
             @Size(min = MIN_SIZE_NAME_FOR_SEARCH, message = "{location.name.size.constraint}")
             String locationName) {
-        List<LocationDto> locations = openWeatherService.searchLocationByName(locationName);
+        List<LocationDto> locations = openWeatherClient.searchLocationByName(locationName);
         return ResponseEntity.ok(locations);
     }
 

@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast.domain.internal;
+package com.ddevuss.weather.oracle.forecast.client.internal;
 
 final class OpenWeatherConstants {
 
