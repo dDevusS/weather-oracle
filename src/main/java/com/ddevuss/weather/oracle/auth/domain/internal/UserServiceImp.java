@@ -4,6 +4,7 @@ import com.ddevuss.weather.oracle.auth.domain.User;
 import com.ddevuss.weather.oracle.auth.domain.UserRepository;
 import com.ddevuss.weather.oracle.auth.domain.UserService;
 import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
+import com.ddevuss.weather.oracle.auth.mapper.UserMapper;
 import com.ddevuss.weather.oracle.common.utils.UniqueConstraintTranslator;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,9 +38,9 @@ class UserServiceImp implements UserDetailsService, UserService {
     @Transactional
     public UserCreateDto save(UserCreateDto userCreateDto) {
         try {
-            User user = userMapper.dtoToEntity(userCreateDto);
+            User user = userMapper.toEntity(userCreateDto);
             User savedUser = userRepository.saveAndFlush(user);
-            return userMapper.entityToDto(savedUser);
+            return userMapper.toDto(savedUser);
         }
         catch (DataIntegrityViolationException e) {
             UniqueConstraintTranslator.checkConstraint(e, USER_LOGIN_UNQ)
