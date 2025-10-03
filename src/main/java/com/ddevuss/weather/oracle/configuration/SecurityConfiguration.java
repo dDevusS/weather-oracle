@@ -3,7 +3,7 @@ package com.ddevuss.weather.oracle.configuration;
 import com.ddevuss.weather.oracle.configuration.application.CorsProperties;
 import com.ddevuss.weather.oracle.configuration.application.model.JwtConfig;
 import com.ddevuss.weather.oracle.security.jwt.TokenType;
-import com.ddevuss.weather.oracle.utils.ProblemDetailBuilder;
+import com.ddevuss.weather.oracle.common.utils.ProblemDetailBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
