@@ -1,5 +1,6 @@
-package com.ddevuss.weather.oracle.forecast;
+package com.ddevuss.weather.oracle.forecast.web.doc;
 
+import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.LocationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -15,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @Tag(name = "Forecasts")
-public interface ForecastController {
+public interface ForecastRestController {
 
     @Operation(
             tags = {"/api/forecast"},

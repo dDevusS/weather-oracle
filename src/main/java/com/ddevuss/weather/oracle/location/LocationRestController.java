@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.location;
 
-import com.ddevuss.weather.oracle.forecast.IOpenWeatherService;
+import com.ddevuss.weather.oracle.forecast.api.OpenWeatherService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,7 +31,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class LocationRestController implements LocationController {
 
     private final LocationService locationService;
-    private final IOpenWeatherService openWeatherService;
+    private final OpenWeatherService openWeatherService;
     private static final int MIN_SIZE_NAME_FOR_SEARCH = 3;
 
     @GetMapping("/search")

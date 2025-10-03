@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast.externalApi;
+package com.ddevuss.weather.oracle.forecast.api.internal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class ForecastApiResponseDto {
+class ForecastApiResponseDto {
 
     WeatherDescription[] weather;
 

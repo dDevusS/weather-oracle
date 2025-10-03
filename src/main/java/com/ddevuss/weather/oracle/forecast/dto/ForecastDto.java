@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast;
+package com.ddevuss.weather.oracle.forecast.dto;
 
 import lombok.Builder;
 import lombok.Value;

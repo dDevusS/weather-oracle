@@ -1,8 +1,8 @@
-package com.ddevuss.weather.oracle.forecast;
+package com.ddevuss.weather.oracle.forecast.api.internal;
 
 import com.ddevuss.weather.oracle.configuration.application.OpenWeatherApiProperties;
+import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.LocationDto;
-import com.ddevuss.weather.oracle.forecast.externalApi.ForecastApiResponseDto;
 import com.ddevuss.weather.oracle.location.LocationDeduplicator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class OpenWeatherService implements IOpenWeatherService {
+class OpenWeatherServiceImpl implements com.ddevuss.weather.oracle.forecast.api.OpenWeatherService {
 
     private final RestClient openWeatherRestClient;
     private final OpenWeatherApiProperties apiProperties;

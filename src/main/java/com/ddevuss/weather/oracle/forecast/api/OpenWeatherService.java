@@ -1,10 +1,11 @@
-package com.ddevuss.weather.oracle.forecast;
+package com.ddevuss.weather.oracle.forecast.api;
 
+import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.LocationDto;
 
 import java.util.List;
 
-public interface IOpenWeatherService {
+public interface OpenWeatherService {
 
     List<LocationDto> searchLocationByName(String locationName);
 

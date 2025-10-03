@@ -1,9 +1,9 @@
-package com.ddevuss.weather.oracle.forecast;
+package com.ddevuss.weather.oracle.forecast.api.internal;
 
+import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.LocationDto;
-import com.ddevuss.weather.oracle.forecast.externalApi.ForecastApiResponseDto;
 
-public class ForecastMapper {
+class ForecastMapper {
 
     public static ForecastDto fromResponse(ForecastApiResponseDto response, LocationDto location) {
         return ForecastDto.builder()

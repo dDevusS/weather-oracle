@@ -1,8 +1,8 @@
-package com.ddevuss.weather.oracle.forecast.logging;
+package com.ddevuss.weather.oracle.forecast.api.internal.logging;
 
-import com.ddevuss.weather.oracle.forecast.ForecastDto;
+import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
 import com.ddevuss.weather.oracle.location.LocationDto;
-import com.ddevuss.weather.oracle.forecast.IOpenWeatherService;
+import com.ddevuss.weather.oracle.forecast.api.OpenWeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -13,15 +13,15 @@ import java.util.List;
 @Slf4j
 @Primary
 @Service
-public class OpenWeatherLoggingDecorator implements IOpenWeatherService {
+class OpenWeatherLoggingDecorator implements OpenWeatherService {
 
-    private final IOpenWeatherService target;
+    private final OpenWeatherService target;
 
     private static final String MESSAGE_SUCCESS_TEMPLATE = "Request to Open Weather API for {} method has been processed successfully";
     private static final String MESSAGE_GEO_REQUEST_TEMPLATE = "Sending request to Open Weather API for searching location with name {}";
     private static final String MESSAGE_OW_REQUEST_TEMPLATE = "Sending requests to Open Weather API to get weather forecast for {} locations";
 
-    public OpenWeatherLoggingDecorator(@Qualifier("openWeatherService") IOpenWeatherService target) {
+    public OpenWeatherLoggingDecorator(@Qualifier("openWeatherServiceImpl") OpenWeatherService target) {
         this.target = target;
     }
 

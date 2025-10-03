@@ -1,8 +1,10 @@
-package com.ddevuss.weather.oracle.forecast;
+package com.ddevuss.weather.oracle.forecast.api.internal;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
-public final class OpenWeatherUrlBuilder {
+import static com.ddevuss.weather.oracle.forecast.api.internal.OpenWeatherConstants.*;
+
+final class OpenWeatherUrlBuilder {
 
     public static String buildUrlForGeoApi(String locationName, String appId) {
         return UriComponentsBuilder.fromPath(PATH_GEO_DIRECT)

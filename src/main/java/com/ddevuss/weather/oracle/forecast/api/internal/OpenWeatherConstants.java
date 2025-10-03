@@ -1,6 +1,6 @@
-package com.ddevuss.weather.oracle.common.utils;
+package com.ddevuss.weather.oracle.forecast.api.internal;
 
-public final class OpenWeatherConstants {
+final class OpenWeatherConstants {
 
     public static final String PATH_GEO_DIRECT = "/geo/1.0/direct";
     public static final String PATH_WEATHER = "/data/2.5/weather";
