@@ -15,6 +15,5 @@ application:
 
 logging:
   level:
-    com.ddevuss.weather.oracle.common.logging: debug
-    com.ddevuss.weather.oracle.service.logging: debug
-    com.ddevuss.weather.oracle.forecast.client.logging: debug
+    com.ddevuss.weather.oracle.common: debug
+    com.ddevuss.weather.oracle.forecast: debug

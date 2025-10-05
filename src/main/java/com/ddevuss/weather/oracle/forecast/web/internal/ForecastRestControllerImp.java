@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.forecast.web.internal;
 
-import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
-import com.ddevuss.weather.oracle.forecast.client.OpenWeatherClient;
+import com.ddevuss.weather.oracle.forecast.app.ForecastService;
+import com.ddevuss.weather.oracle.forecast.domain.Forecast;
 import com.ddevuss.weather.oracle.forecast.web.doc.ForecastRestController;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import jakarta.validation.Valid;
@@ -20,11 +20,11 @@ import java.util.List;
 @RequestMapping("/api/forecast")
 class ForecastRestControllerImp implements ForecastRestController {
 
-    private final OpenWeatherClient openWeatherClient;
+    private final ForecastService forecastService;
 
     @PostMapping
-    public ResponseEntity<List<ForecastDto>> get(@RequestBody List<@Valid @NotNull LocationDto> locations) {
+    public ResponseEntity<List<Forecast>> get(@RequestBody List<@Valid @NotNull LocationDto> locations) {
         if (locations.isEmpty()) return ResponseEntity.ok(List.of());
-        return ResponseEntity.ok(openWeatherClient.getWeatherForecast(locations));
+        return ResponseEntity.ok(forecastService.getForecasts(locations));
     }
 }

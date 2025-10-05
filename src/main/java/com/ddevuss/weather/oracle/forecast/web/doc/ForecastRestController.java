@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.forecast.web.doc;
 
-import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
+import com.ddevuss.weather.oracle.forecast.domain.Forecast;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -28,7 +28,7 @@ public interface ForecastRestController {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = ForecastDto.class))
+                                    array = @ArraySchema(schema = @Schema(implementation = Forecast.class))
                             )
                     ),
                     @ApiResponse(
@@ -41,5 +41,5 @@ public interface ForecastRestController {
                     )
             }
     )
-    ResponseEntity<List<ForecastDto>> get(List<@Valid @NotNull LocationDto> locations);
+    ResponseEntity<List<Forecast>> get(List<@Valid @NotNull LocationDto> locations);
 }
