@@ -13,7 +13,7 @@ class LocationDeduplicatorTest {
     private static LocationDto locationA;
     private static LocationDto locationB;
     private static LocationDto locationC;
-    private static LocationDto locationD;
+    private static LocationDto locationUnnamed;
 
     @BeforeAll
     static void setUp() {
@@ -41,7 +41,7 @@ class LocationDeduplicatorTest {
                 .lon(90.1234)
                 .build();
 
-        locationD = LocationDto.builder()
+        locationUnnamed = LocationDto.builder()
                 .name(null)
                 .state(null)
                 .country(null)
@@ -58,8 +58,8 @@ class LocationDeduplicatorTest {
                 locationC,
                 locationC, // Duplicate by name and truncated coords
 
-                locationD,
-                locationD // Duplicate by truncated coords
+                locationUnnamed,
+                locationUnnamed // Duplicate by truncated coords
         };
     }
 
@@ -71,6 +71,6 @@ class LocationDeduplicatorTest {
         assertTrue(deduplicated.stream().anyMatch(l -> locationA.equals(l)));
         assertTrue(deduplicated.stream().anyMatch(l -> locationB.equals(l)));
         assertTrue(deduplicated.stream().anyMatch(l -> locationC.equals(l)));
-        assertTrue(deduplicated.stream().anyMatch(l -> locationD.equals(l)));
+        assertTrue(deduplicated.stream().anyMatch(l -> locationUnnamed.equals(l)));
     }
 }
