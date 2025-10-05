@@ -22,8 +22,8 @@ class LocationDeduplicator {
         return Arrays.stream(locations)
                 .filter(Objects::nonNull)
                 .filter(distinctBy(l -> Map.entry(
-                        truncateCoordinate(l.getLat(), TRUNCATE_SCALE),
-                        truncateCoordinate(l.getLon(), TRUNCATE_SCALE)
+                        truncateCoordinate(l.getLat()),
+                        truncateCoordinate(l.getLon())
                 )))
                 .filter(distinctBy(l -> List.of(
                         Optional.ofNullable(l.getName()).orElse(""),
@@ -33,9 +33,9 @@ class LocationDeduplicator {
                 .toList();
     }
 
-    private static double truncateCoordinate(double value, int precision) {
+    private static double truncateCoordinate(double value) {
         return BigDecimal.valueOf(value)
-                .setScale(precision, RoundingMode.FLOOR)
+                .setScale(TRUNCATE_SCALE, RoundingMode.FLOOR)
                 .doubleValue();
     }
 
