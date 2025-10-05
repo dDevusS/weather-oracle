@@ -1,15 +1,16 @@
 package com.ddevuss.weather.oracle.location.domain;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 
-public interface LocationRepository extends JpaRepository<Location, Long> {
+import java.util.List;
 
-    @Modifying
-    int deleteAllByUserId(Long userId);
+public interface LocationRepository {
 
-    Slice<Location> findAllByUserLogin(String login, Pageable pageable);
+    Slice<LocationDto> findAllByUserLogin(String login, Integer pageNumber);
 
+    LocationDto save(LocationDto locationDto, String userLogin);
+
+    void deleteById(Long locationId);
+
+    List<LocationDto> searchLocationByName(String locationName);
 }

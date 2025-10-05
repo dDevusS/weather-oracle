@@ -1,9 +1,9 @@
-package com.ddevuss.weather.oracle.location.client.internal;
+package com.ddevuss.weather.oracle.location.infra.client.internal;
 
 import com.ddevuss.weather.oracle.common.client.config.OpenWeatherApiProperties;
 import com.ddevuss.weather.oracle.common.util.OpenWeatherUrlBuilder;
-import com.ddevuss.weather.oracle.location.client.LocationSearchClient;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.infra.client.LocationSearchClient;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

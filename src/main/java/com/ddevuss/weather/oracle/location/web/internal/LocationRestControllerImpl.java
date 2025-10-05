@@ -1,8 +1,8 @@
 package com.ddevuss.weather.oracle.location.web.internal;
 
-import com.ddevuss.weather.oracle.location.client.LocationSearchClient;
-import com.ddevuss.weather.oracle.location.domain.LocationService;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.app.LocationService;
+import com.ddevuss.weather.oracle.location.infra.client.LocationSearchClient;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import com.ddevuss.weather.oracle.location.web.doc.LocationRestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

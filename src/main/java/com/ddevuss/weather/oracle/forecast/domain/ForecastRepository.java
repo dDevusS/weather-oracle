@@ -1,6 +1,6 @@
 package com.ddevuss.weather.oracle.forecast.domain;
 
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 
 import java.util.List;
 

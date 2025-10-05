@@ -1,6 +1,5 @@
-package com.ddevuss.weather.oracle.location.domain.internal;
+package com.ddevuss.weather.oracle.location.infra;
 
-import com.ddevuss.weather.oracle.location.domain.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +20,12 @@ class LocationPermissionService {
     private static final String LOCATION_NOT_FOUND_EXCEPTION_MESSAGE_TEMPLATE = "Location with id %d not found";
 
 
-    private final LocationRepository locationRepository;
+    private final LocationJpaRepository locationJpaRepository;
 
     public boolean hasPermissionToDeleteLocation(Long locationId) {
         String currentUsername = MDC.get(USERNAME);
 
-        return locationRepository.findById(locationId)
+        return locationJpaRepository.findById(locationId)
                 .map(location -> {
                     if (!location.getUser().getLogin().equals(currentUsername)) {
                         log.atWarn()

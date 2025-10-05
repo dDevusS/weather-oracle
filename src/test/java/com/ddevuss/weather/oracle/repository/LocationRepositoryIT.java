@@ -3,7 +3,7 @@ package com.ddevuss.weather.oracle.repository;
 import com.ddevuss.weather.oracle.IntegrationTestBase;
 import com.ddevuss.weather.oracle.location.domain.Location;
 import com.ddevuss.weather.oracle.auth.domain.user.User;
-import com.ddevuss.weather.oracle.location.domain.LocationRepository;
+import com.ddevuss.weather.oracle.location.infra.LocationJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -13,30 +13,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor
 class LocationRepositoryIT extends IntegrationTestBase {
 
-    private final LocationRepository locationRepository;
+    private final LocationJpaRepository locationJpaRepository;
     private final static String USER_LOGIN = "user1";
 
     @Test
     void findAllByUserLogin() {
         int numberElementsOnPage = 4;
         PageRequest pageRequest = PageRequest.of(0, numberElementsOnPage);
-        var locations = locationRepository.findAllByUserLogin(USER_LOGIN, pageRequest);
+        var locations = locationJpaRepository.findAllByUserLogin(USER_LOGIN, pageRequest);
 
         assertThat(locations.getNumberOfElements()).isEqualTo(2);
     }
 
     @Test
     void deleteAllByUserId() {
-        var result = locationRepository.deleteAllByUserId(1L);
+        var result = locationJpaRepository.deleteAllByUserId(1L);
 
         assertThat(result).isEqualTo(2);
     }
 
     @Test
     void deleteById() {
-        locationRepository.deleteById(1L);
+        locationJpaRepository.deleteById(1L);
 
-        assertThat(locationRepository.findById(1L)).isEmpty();
+        assertThat(locationJpaRepository.findById(1L)).isEmpty();
     }
 
     @Test
@@ -51,7 +51,7 @@ class LocationRepositoryIT extends IntegrationTestBase {
                 .longitude(45.2345)
                 .build();
 
-        newLocation = locationRepository.save(newLocation);
+        newLocation = locationJpaRepository.save(newLocation);
         assertThat(newLocation.getId()).isNotNull();
     }
 

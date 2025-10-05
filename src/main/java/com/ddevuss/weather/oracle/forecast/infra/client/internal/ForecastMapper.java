@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.forecast.infra.client.internal;
 
 import com.ddevuss.weather.oracle.forecast.domain.Forecast;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 
 class ForecastMapper {
 

@@ -2,7 +2,7 @@ package com.ddevuss.weather.oracle.forecast.infra.client.logging;
 
 import com.ddevuss.weather.oracle.forecast.infra.client.ForecastClient;
 import com.ddevuss.weather.oracle.forecast.domain.Forecast;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;

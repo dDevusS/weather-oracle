@@ -1,7 +1,7 @@
-package com.ddevuss.weather.oracle.location.mapper;
+package com.ddevuss.weather.oracle.location.infra.mapper;
 
 import com.ddevuss.weather.oracle.location.domain.Location;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

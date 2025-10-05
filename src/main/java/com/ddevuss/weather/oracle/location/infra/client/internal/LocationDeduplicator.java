@@ -1,6 +1,6 @@
-package com.ddevuss.weather.oracle.location.client.internal;
+package com.ddevuss.weather.oracle.location.infra.client.internal;
 
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

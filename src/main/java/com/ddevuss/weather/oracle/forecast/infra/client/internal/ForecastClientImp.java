@@ -4,7 +4,7 @@ import com.ddevuss.weather.oracle.common.client.config.OpenWeatherApiProperties;
 import com.ddevuss.weather.oracle.common.util.OpenWeatherUrlBuilder;
 import com.ddevuss.weather.oracle.forecast.infra.client.ForecastClient;
 import com.ddevuss.weather.oracle.forecast.domain.Forecast;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

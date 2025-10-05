@@ -3,7 +3,7 @@ package com.ddevuss.weather.oracle.forecast.web.internal;
 import com.ddevuss.weather.oracle.forecast.app.ForecastService;
 import com.ddevuss.weather.oracle.forecast.domain.Forecast;
 import com.ddevuss.weather.oracle.forecast.web.doc.ForecastRestController;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

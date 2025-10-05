@@ -3,7 +3,7 @@ package com.ddevuss.weather.oracle.forecast.infra;
 import com.ddevuss.weather.oracle.forecast.domain.Forecast;
 import com.ddevuss.weather.oracle.forecast.domain.ForecastRepository;
 import com.ddevuss.weather.oracle.forecast.infra.client.ForecastClient;
-import com.ddevuss.weather.oracle.location.dto.LocationDto;
+import com.ddevuss.weather.oracle.location.domain.LocationDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
