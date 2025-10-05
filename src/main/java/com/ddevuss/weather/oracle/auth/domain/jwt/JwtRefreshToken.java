@@ -10,10 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
@@ -22,7 +22,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "jwt_refresh_tokens"
         , indexes = {@Index(name = "idx_refresh_token_user_id", columnList = "user_id"),
         @Index(name = "idx_refresh_token_hash", columnList = "token_hash"),

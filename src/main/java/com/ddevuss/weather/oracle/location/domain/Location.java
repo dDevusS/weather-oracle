@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.location.domain;
 
-import com.ddevuss.weather.oracle.common.entity.BaseEntity;
 import com.ddevuss.weather.oracle.auth.domain.user.User;
+import com.ddevuss.weather.oracle.common.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,17 +11,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "locations", indexes = @Index(name = "idx_base_target", columnList = "user_id, latitude, longitude"))
 public class Location extends BaseEntity {
 
