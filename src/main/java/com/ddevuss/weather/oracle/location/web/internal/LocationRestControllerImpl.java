@@ -34,7 +34,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class LocationRestControllerImpl implements LocationRestController {
 
     private final LocationService locationService;
-    private final LocationSearchClient locationSearchClient;
     private static final int MIN_SIZE_NAME_FOR_SEARCH = 3;
 
     @GetMapping("/search")
@@ -43,7 +42,7 @@ public class LocationRestControllerImpl implements LocationRestController {
             @NotBlank(message = "{location.name.not.blank}")
             @Size(min = MIN_SIZE_NAME_FOR_SEARCH, message = "{location.name.size.constraint}")
             String locationName) {
-        List<LocationDto> locations = locationSearchClient.searchLocationByName(locationName);
+        List<LocationDto> locations = locationService.searchLocationByName(locationName);
         return ResponseEntity.ok(locations);
     }
 
