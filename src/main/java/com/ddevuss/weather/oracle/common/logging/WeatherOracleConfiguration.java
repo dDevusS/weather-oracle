@@ -2,7 +2,7 @@ package com.ddevuss.weather.oracle.common.logging;
 
 import com.ddevuss.weather.oracle.auth.domain.jwt.configuration.SchedulerProperties;
 import com.ddevuss.weather.oracle.auth.domain.jwt.configuration.model.JwtConfig;
-import com.ddevuss.weather.oracle.forecast.client.config.OpenWeatherApiProperties;
+import com.ddevuss.weather.oracle.common.client.config.OpenWeatherApiProperties;
 import com.ddevuss.weather.oracle.security.CorsProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

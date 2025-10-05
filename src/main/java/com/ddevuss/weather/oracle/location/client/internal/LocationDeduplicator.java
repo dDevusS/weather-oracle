@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast.client.internal;
+package com.ddevuss.weather.oracle.location.client.internal;
 
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 

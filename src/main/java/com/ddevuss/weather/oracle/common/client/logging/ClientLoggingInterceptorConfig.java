@@ -1,6 +1,5 @@
-package com.ddevuss.weather.oracle.forecast.client.logging;
+package com.ddevuss.weather.oracle.common.client.logging;
 
-import com.ddevuss.weather.oracle.forecast.client.OpenWeatherConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
-import static com.ddevuss.weather.oracle.common.Constants.*;
+import static com.ddevuss.weather.oracle.common.Constants.CORRELATION_ID;
+import static com.ddevuss.weather.oracle.common.Constants.HIDDEN_VALUE;
+import static com.ddevuss.weather.oracle.common.Constants.PARAM_APPID;
+import static com.ddevuss.weather.oracle.common.Constants.SAFE_URL;
+import static com.ddevuss.weather.oracle.common.Constants.USERNAME;
 
 @Slf4j
 @Configuration
@@ -47,7 +50,7 @@ public class ClientLoggingInterceptorConfig {
                 log.atError().setCause(ex)
                         .addArgument(request.getMethod())
                         .addArgument(safeUri)
-                        .addArgument ((System.nanoTime() - startTime) / 1_000_000)
+                        .addArgument((System.nanoTime() - startTime) / 1_000_000)
                         .addArgument(MDC.get(USERNAME))
                         .addArgument(MDC.get(CORRELATION_ID))
                         .addArgument(ex)
@@ -59,7 +62,7 @@ public class ClientLoggingInterceptorConfig {
     }
 
     private static URI sanitizeUri(URI uri) {
-        Set<String> sensitiveParams = Set.of(OpenWeatherConstants.PARAM_APPID);
+        Set<String> sensitiveParams = Set.of(PARAM_APPID);
 
         var comp = UriComponentsBuilder.fromUri(uri).build();
         var qp = new LinkedMultiValueMap<>(comp.getQueryParams());

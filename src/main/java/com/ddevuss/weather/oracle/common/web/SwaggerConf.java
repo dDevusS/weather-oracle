@@ -1,7 +1,7 @@
 package com.ddevuss.weather.oracle.common.web;
 
 import com.ddevuss.weather.oracle.auth.dto.AccessTokenDto;
-import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
+import com.ddevuss.weather.oracle.forecast.domain.Forecast;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import com.ddevuss.weather.oracle.auth.dto.UserCreateDto;
 import io.swagger.v3.core.converter.ModelConverters;
@@ -33,7 +33,7 @@ public class SwaggerConf {
                 ProblemDetail.class,
                 LocationDto.class,
                 AccessTokenDto.class,
-                ForecastDto.class
+                Forecast.class
         };
 
         for (Class<?> clazz : classes) {

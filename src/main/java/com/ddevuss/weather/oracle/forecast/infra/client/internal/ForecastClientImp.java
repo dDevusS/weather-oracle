@@ -1,8 +1,9 @@
-package com.ddevuss.weather.oracle.forecast.client.internal;
+package com.ddevuss.weather.oracle.forecast.infra.client.internal;
 
-import com.ddevuss.weather.oracle.forecast.client.config.OpenWeatherApiProperties;
-import com.ddevuss.weather.oracle.forecast.client.OpenWeatherClient;
-import com.ddevuss.weather.oracle.forecast.dto.ForecastDto;
+import com.ddevuss.weather.oracle.common.client.config.OpenWeatherApiProperties;
+import com.ddevuss.weather.oracle.common.util.OpenWeatherUrlBuilder;
+import com.ddevuss.weather.oracle.forecast.infra.client.ForecastClient;
+import com.ddevuss.weather.oracle.forecast.domain.Forecast;
 import com.ddevuss.weather.oracle.location.dto.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,28 +19,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @AllArgsConstructor
 @Service
-class OpenWeatherClientImp implements OpenWeatherClient {
+class ForecastClientImp implements ForecastClient {
 
     private final RestClient openWeatherRestClient;
     private final OpenWeatherApiProperties apiProperties;
 
     @Override
-    public List<LocationDto> searchLocationByName(String locationName) {
-        locationName = locationName.trim();
-        String uri = OpenWeatherUrlBuilder.buildUrlForGeoApi(locationName, apiProperties.key());
-
-        var locations = openWeatherRestClient.get()
-                .uri(uri)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .body(LocationDto[].class);
-
-        return LocationDeduplicator.deduplicate(locations);
-    }
-
-    @Override
-    public List<ForecastDto> getWeatherForecast(List<LocationDto> locations) {
-        List<ForecastDto> forecasts = new ArrayList<>();
+    public List<Forecast> getWeatherForecast(List<LocationDto> locations) {
+        List<Forecast> forecasts = new ArrayList<>();
 
         for (LocationDto location : locations) {
             String uri = OpenWeatherUrlBuilder.buildUrlForWeatherApi(location.getLat(), location.getLon(), apiProperties.key());

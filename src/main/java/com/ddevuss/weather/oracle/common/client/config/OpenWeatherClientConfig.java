@@ -1,4 +1,4 @@
-package com.ddevuss.weather.oracle.forecast.client.config;
+package com.ddevuss.weather.oracle.common.client.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Configuration
-public class RestClientConfiguration {
+public class OpenWeatherClientConfig {
 
     @Bean
     public RestClient openWeatherRestClient(OpenWeatherApiProperties properties,

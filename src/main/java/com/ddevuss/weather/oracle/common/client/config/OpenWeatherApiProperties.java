@@ -1,11 +1,11 @@
-package com.ddevuss.weather.oracle.forecast.client.config;
+package com.ddevuss.weather.oracle.common.client.config;
 
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.validation.annotation.Validated;
 
-import static com.ddevuss.weather.oracle.forecast.client.OpenWeatherConstants.DEFAULT_OPEN_WEATHER_API_URL;
+import static com.ddevuss.weather.oracle.common.Constants.DEFAULT_OPEN_WEATHER_API_URL;
 
 @Validated
 @ConfigurationProperties(prefix = "application.open-weather-api", ignoreInvalidFields = true)
