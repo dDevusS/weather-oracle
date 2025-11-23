@@ -6,7 +6,7 @@ It was developed for educational purposes as part of the [Java Backend Learning 
 
 **Try the application at:**
 
-[https://weather-oracle.ddevuss.com](https://weather-oracle.ddevuss.com)
+[https://demo.weather-oracle.ddevuss.com](https://weather-oracle.ddevuss.com)
 
 Please note that the application might not work correctly due to potential issues with the connection to the Open Weather API server.
 
