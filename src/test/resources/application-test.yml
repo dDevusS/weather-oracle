@@ -10,7 +10,3 @@ spring:
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
     enabled: true
-
-application:
-  open-weather-api:
-    key: e2ddfdfb3e5aa91ef56467e12096117d
